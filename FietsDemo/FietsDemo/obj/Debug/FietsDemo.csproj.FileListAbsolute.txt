@@ -1,0 +1,10 @@
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\bin\Debug\FietsDemo.exe.config
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\bin\Debug\FietsDemo.exe
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\bin\Debug\FietsDemo.pdb
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\bin\Debug\BLELibrary.dll
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.AssemblyReference.cache
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.SuggestedBindingRedirects.cache
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.CoreCompileInputs.cache
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.CopyComplete
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.exe
+D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.pdb
