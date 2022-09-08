@@ -8,13 +8,11 @@ using Avans.TI.BLE;
 
 namespace FietsDemo
 {
-    internal static class Program
+    class Program
     {
-        
-        
-        
-        private static async Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
+            /*
             int errorCode = 0;
             BLE bleBike = new BLE();
             BLE bleHeart = new BLE();
@@ -53,7 +51,21 @@ namespace FietsDemo
 
             bleHeart.SubscriptionValueChanged += BleBike_SubscriptionValueChanged;
             await bleHeart.SubscribeToCharacteristic("HeartRateMeasurement");
-             
+            */
+
+            DataCollector collector = new DataCollector();
+            Bike bike = new Bike(collector);
+            HeartRate heart = new HeartRate(collector);
+            
+            if (!bike.MakeConnection().Result)
+            {
+                Console.WriteLine("Could not connect with bike");
+            }
+
+            if (!heart.MakeConnection().Result)
+            {
+                Console.WriteLine("Could not connect with heart rate device");
+            }
 
             Console.Read();
         }
