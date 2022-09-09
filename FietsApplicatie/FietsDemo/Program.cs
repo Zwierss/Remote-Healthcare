@@ -69,7 +69,8 @@ namespace FietsDemo
 
             Console.Read();
         }
-
+        
+        /*
         private static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             
@@ -90,6 +91,6 @@ namespace FietsDemo
 
             //Console.WriteLine(BitConverter.ToString(e.Data));
         }
-
+        */
     }
 }

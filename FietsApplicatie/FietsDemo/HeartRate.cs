@@ -19,14 +19,13 @@ public class HeartRate
 
     public async Task<bool> MakeConnection()
     {
-        int errorCode = 1;
         Thread.Sleep(1000);
 
-        errorCode = await _ble.OpenDevice("Decathlon Dual HR");
+        int errorCode = await _ble.OpenDevice("Decathlon Dual HR");
         if (errorCode == 1) return false;
         
         await _ble.SetService("HeartRate");
-        _ble.SubscriptionValueChanged += _collector.SetSubscriptionValue;
+        _ble.SubscriptionValueChanged += _collector.GetMessages;
         await _ble.SubscribeToCharacteristic("HeartRateMeasurement");
 
         return true;
