@@ -9,12 +9,10 @@ public class HeartRate
 {
 
     private readonly BLE _ble;
-    private DataCollector _collector;
-    
-    public HeartRate(DataCollector collector)
+
+    public HeartRate()
     {
         _ble = new BLE();
-        _collector = new DataCollector();
     }
 
     public async Task<bool> MakeConnection()
@@ -25,7 +23,7 @@ public class HeartRate
         if (errorCode == 1) return false;
         
         await _ble.SetService("HeartRate");
-        _ble.SubscriptionValueChanged += _collector.GetMessages;
+        _ble.SubscriptionValueChanged += Program.BleBike_SubscriptionValueChanged;
         await _ble.SubscribeToCharacteristic("HeartRateMeasurement");
 
         return true;
