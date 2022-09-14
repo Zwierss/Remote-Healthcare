@@ -10,7 +10,7 @@ namespace FietsDemo
 {
     class Program
     {
-        public static async Task Main(string[] args)
+        public static Task Main(string[] args)
         {
             /*
             int errorCode = 0;
@@ -67,6 +67,7 @@ namespace FietsDemo
             }
 
             Console.Read();
+            return Task.CompletedTask;
         }
         
         
@@ -134,6 +135,29 @@ namespace FietsDemo
             Console.WriteLine("Instantaneous Power MSB: " + Convert.ToInt32(splitted.Substring(0,4), 2));
             Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(4,4), 2));
         }
+
+        public static void BleHeartRate_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
+        {
+            string[] data = BitConverter.ToString(e.Data).Split('-');
+            int[] values = new int[data.Length];
+            
+            for (int i = 0; i < data.Length; i++)
+            {
+                values[i] = int.Parse(data[i],System.Globalization.NumberStyles.HexNumber);
+            }
+            
+            PrintHeartData(values);
+        }
         
+        private static void PrintHeartData(int[] values)
+        {
+            Console.WriteLine("Received Heart Rate Data");
+            Console.WriteLine("-----------");
+            for (int i = 0; i < values.Length; i++)
+            {
+                Console.Write(values[i]);
+            }
+            Console.WriteLine();
+        }
     }
 }
