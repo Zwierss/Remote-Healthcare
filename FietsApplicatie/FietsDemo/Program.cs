@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
@@ -115,11 +115,11 @@ namespace FietsDemo
             Console.WriteLine("Received General Data");
             Console.WriteLine("-----------");
             Console.WriteLine("Equipment Type: " + values[6]);
-            Console.WriteLine("Elapsed Time: " + values[7]);
-            Console.WriteLine("Distance Traveled: " + values[8]);
-            Console.WriteLine("Speed LSB: " + values[9]);
-            Console.WriteLine("Speed MSB: " + values[10]);
-            Console.WriteLine("Heart Rate: " + values[11]);
+            Console.WriteLine("Elapsed Time: " + (values[7])+ " seconds");
+            Console.WriteLine("Distance Traveled: " + values[8] + " meters");
+            Console.WriteLine("Speed LSB: " + values[9] + " m/s");
+            Console.WriteLine("Speed MSB: " + values[10] + " m/s");
+            Console.WriteLine("Heart Rate: " + values[11] + " bpm");
         }
 
         private static void PrintBikeData(int[] values)
@@ -127,12 +127,12 @@ namespace FietsDemo
             Console.WriteLine("Received Bike Data");
             Console.WriteLine("-----------");
             Console.WriteLine("Event Count: " + values[6]);
-            Console.WriteLine("Instantaneous Cadence: " + values[7]);
-            Console.WriteLine("Accumulated Power LSB: " + values[8]);
-            Console.WriteLine("Accumulated Power MSB: " + values[9]);
-            Console.WriteLine("Instantaneous Power LSB: " + values[10]);
+            Console.WriteLine("Instantaneous Cadence: " + values[7] + " rpm");
+            Console.WriteLine("Accumulated Power LSB: " + values[8] + " W");
+            Console.WriteLine("Accumulated Power MSB: " + values[9] + " W");
+            Console.WriteLine("Instantaneous Power LSB: " + values[10] + " W");
             string splitted = Convert.ToString(values[11], 2);
-            Console.WriteLine("Instantaneous Power MSB: " + Convert.ToInt32(splitted.Substring(0,4), 2));
+            Console.WriteLine("Instantaneous Power MSB: " + Convert.ToInt32(splitted.Substring(0,4), 2) + " W");
             Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(4,4), 2));
         }
 
@@ -155,7 +155,7 @@ namespace FietsDemo
             Console.WriteLine("-----------");
             for (int i = 0; i < values.Length; i++)
             {
-                Console.Write(values[i]);
+                Console.Write(values[i] + "bpm" );
             }
             Console.WriteLine();
         }
