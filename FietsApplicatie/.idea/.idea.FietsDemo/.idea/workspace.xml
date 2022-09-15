@@ -8,10 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e6903719-203e-41c7-9a46-c1a21a17a3f9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FietsApplicatie/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FietsApplicatie/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FietsDemo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FietsApplicatie/Program.cs" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/FietsDemo/Simulator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FietsDemo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FietsDemo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FietsApplicatie/FietsApplicatie.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FietsApplicatie/FietsApplicatie.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FietsDemo/Bike.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FietsDemo/Bike.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FietsDemo/FietsDemo.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FietsDemo/FietsDemo.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FietsDemo/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FietsDemo/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,10 +28,7 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/xande/RiderProjects/Remote-Healthcare/FietsApplicatie/FietsDemo/Bike.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/xande/RiderProjects/Remote-Healthcare/FietsApplicatie/FietsDemo/HeartRate.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/FietsDemo/Program.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/xande/RiderProjects/Remote-Healthcare/FietsApplicatie/FietsDemo/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/FietsDemo/Properties/AssemblyInfo.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -114,6 +113,7 @@
       <workItem from="1662745995843" duration="1595000" />
       <workItem from="1663163922311" duration="1064000" />
       <workItem from="1663176744761" duration="897000" />
+      <workItem from="1663234302848" duration="4479000" />
     </task>
     <task id="LOCAL-00001" summary="added first systems">
       <created>1662471679836</created>
