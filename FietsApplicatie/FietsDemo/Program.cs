@@ -55,22 +55,49 @@ namespace FietsDemo
             
             Bike bike = new Bike();
             HeartRate heart = new HeartRate();
-            
-            if (!bike.MakeConnection().Result)
-            {
-                Console.WriteLine("Could not connect with bike");
-            }
 
-            if (!heart.MakeConnection().Result)
+            Console.WriteLine("Trying connection with devices");
+            bool bikeConnection = bike.MakeConnection().Result;
+
+            if (!bikeConnection)
             {
-                Console.WriteLine("Could not connect with heart rate device");
+                bool hearRateConnection = heart.MakeConnection().Result;
+
+                if(!hearRateConnection){
+                    Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
+                    string input = Console.ReadLine();
+                    if (input == "y")
+                    {
+                        Console.WriteLine("Starting Simulation");
+                        runSimulation();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Closing down application");
+                        return Task.CompletedTask;
+                    }
+                }
             }
 
             Console.Read();
             return Task.CompletedTask;
         }
-        
-        
+
+        public static void runSimulation()
+        {
+            bool running = true;
+            while (running)
+            {
+                Thread.Sleep(250);
+                int[] values = Simulator.SimulateGeneralData();
+                PrintGeneralData(values);
+                Thread.Sleep(250);
+                int[] bikeData = Simulator.simulateBikeData();
+                PrintBikeData(bikeData);
+            }
+        }
+
+
         public static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             /*
@@ -89,7 +116,7 @@ namespace FietsDemo
             
             Console.WriteLine("");
             */
-            
+
             string[] data = BitConverter.ToString(e.Data).Split('-');
             int[] values = new int[data.Length];
             
@@ -98,12 +125,12 @@ namespace FietsDemo
                 values[i] = int.Parse(data[i],System.Globalization.NumberStyles.HexNumber);
             }
 
-            switch (data[5])
+            switch (data[4])
             {
-                case "0x10":
+                case "10":
                     PrintGeneralData(values);
                     break;
-                case "0x19":
+                case "19":
                     PrintBikeData(values);
                     break;
             }
@@ -158,6 +185,7 @@ namespace FietsDemo
                 Console.Write(values[i] + "bpm" );
             }
             Console.WriteLine();
+            Console.WriteLine("-----------");
         }
     }
 }

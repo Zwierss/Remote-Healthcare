@@ -30,6 +30,8 @@ public class Bike
         errorCode = await _ble.SubscribeToCharacteristic("6e40fec2-b5a3-f393-e0a9-e50e24dcca9e");
         if (errorCode == 1) return false;
         
+        Console.WriteLine("Connected");
+        
         return true;
     }
 }
