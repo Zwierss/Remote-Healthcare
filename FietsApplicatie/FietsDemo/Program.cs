@@ -141,26 +141,28 @@ namespace FietsDemo
         {
             Console.WriteLine("Received General Data");
             Console.WriteLine("-----------");
-            Console.WriteLine("Equipment Type: " + values[6]);
-            Console.WriteLine("Elapsed Time: " + (values[7])+ " seconds");
-            Console.WriteLine("Distance Traveled: " + values[8] + " meters");
-            Console.WriteLine("Speed LSB: " + values[9] + " m/s");
-            Console.WriteLine("Speed MSB: " + values[10] + " m/s");
-            Console.WriteLine("Heart Rate: " + values[11] + " bpm");
+            Console.WriteLine("Equipment Type: " + values[5]);
+            Console.WriteLine("Elapsed Time: " + (values[6])+ " seconds");
+            Console.WriteLine("Distance Traveled: " + values[7] + " meters");
+            Console.WriteLine("Speed LSB: " + values[8] + " m/s");
+            Console.WriteLine("Speed MSB: " + values[9] + " m/s");
+            Console.WriteLine("Heart Rate: " + values[10] + " bpm");
+            Console.WriteLine("-----------");
         }
 
         private static void PrintBikeData(int[] values)
         {
             Console.WriteLine("Received Bike Data");
             Console.WriteLine("-----------");
-            Console.WriteLine("Event Count: " + values[6]);
-            Console.WriteLine("Instantaneous Cadence: " + values[7] + " rpm");
-            Console.WriteLine("Accumulated Power LSB: " + values[8] + " W");
-            Console.WriteLine("Accumulated Power MSB: " + values[9] + " W");
-            Console.WriteLine("Instantaneous Power LSB: " + values[10] + " W");
-            string splitted = Convert.ToString(values[11], 2);
+            Console.WriteLine("Event Count: " + values[5]);
+            Console.WriteLine("Instantaneous Cadence: " + values[6] + " rpm");
+            Console.WriteLine("Accumulated Power LSB: " + values[7] + " W");
+            Console.WriteLine("Accumulated Power MSB: " + values[8] + " W");
+            Console.WriteLine("Instantaneous Power LSB: " + values[9] + " W");
+            string splitted = Convert.ToString(values[10], 2);
             Console.WriteLine("Instantaneous Power MSB: " + Convert.ToInt32(splitted.Substring(0,4), 2) + " W");
             Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(4,4), 2));
+            Console.WriteLine("-----------");
         }
 
         public static void BleHeartRate_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
