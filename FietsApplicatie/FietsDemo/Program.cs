@@ -12,57 +12,19 @@ namespace FietsDemo
     {
         public static Task Main(string[] args)
         {
-            /*
-            int errorCode = 0;
-            BLE bleBike = new BLE();
-            BLE bleHeart = new BLE();
-            Thread.Sleep(1000); // We need some time to list available devices
 
-            // List available devices
-            List<string> bleBikeList = bleBike.ListDevices();
-            Console.WriteLine("Devices found: ");
-            foreach (var name in bleBikeList)
-            {
-                Console.WriteLine($"Device: {name}");
-            }
-
-            // Connecting
-            errorCode = errorCode = await bleBike.OpenDevice("Tacx Flux 01140");
-            // __TODO__ Error check
-
-            var services = bleBike.GetServices;
-            foreach(var service in services)
-            {
-                //Console.WriteLine($"Service: {service.}");
-            }
-
-            // Set service
-            errorCode = await bleBike.SetService("6e40fec1-b5a3-f393-e0a9-e50e24dcca9e");
-            // __TODO__ error check
-
-            // Subscribe
-            bleBike.SubscriptionValueChanged += BleBike_SubscriptionValueChanged;
-            errorCode = await bleBike.SubscribeToCharacteristic("6e40fec2-b5a3-f393-e0a9-e50e24dcca9e");
-
-            // Heart rate
-            errorCode =  await bleHeart.OpenDevice("Decathlon Dual HR");
-
-            await bleHeart.SetService("HeartRate");
-
-            bleHeart.SubscriptionValueChanged += BleBike_SubscriptionValueChanged;
-            await bleHeart.SubscribeToCharacteristic("HeartRateMeasurement");
-            */
+            runSimulation();
             
             Bike bike = new Bike();
             HeartRate heart = new HeartRate();
 
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
+            while(!bikeConnection) Thread.Sleep(1000);
+            bool hearRateConnection = heart.MakeConnection().Result;
 
             if (!bikeConnection)
             {
-                bool hearRateConnection = heart.MakeConnection().Result;
-
                 if(!hearRateConnection){
                     Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
                     string input = Console.ReadLine();
@@ -100,7 +62,6 @@ namespace FietsDemo
 
         public static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
-            /*
             string[] data = BitConverter.ToString(e.Data).Split('-');
             int[] values = new int[data.Length];
             
@@ -109,31 +70,24 @@ namespace FietsDemo
                 values[i] = int.Parse(data[i],System.Globalization.NumberStyles.HexNumber);
             }
 
-            for (int i = 0; i < values.Length; i++)
+            if (data.Length < 13)
             {
-                Console.Write(values[i] + "-");
+                PrintHeartData(values);
             }
-            
-            Console.WriteLine("");
-            */
+            else
+            {
+                switch (data[4])
+                {
+                    case "10":
+                        PrintGeneralData(values);
+                        break;
+                    case "19":
+                        PrintBikeData(values);
+                        break;
+                }
+            }
 
-            string[] data = BitConverter.ToString(e.Data).Split('-');
-            int[] values = new int[data.Length];
             
-            for (int i = 0; i < data.Length; i++)
-            {
-                values[i] = int.Parse(data[i],System.Globalization.NumberStyles.HexNumber);
-            }
-
-            switch (data[4])
-            {
-                case "10":
-                    PrintGeneralData(values);
-                    break;
-                case "19":
-                    PrintBikeData(values);
-                    break;
-            }
             
         }
         
@@ -144,8 +98,7 @@ namespace FietsDemo
             Console.WriteLine("Equipment Type: " + values[5]);
             Console.WriteLine("Elapsed Time: " + (values[6])+ " seconds");
             Console.WriteLine("Distance Traveled: " + values[7] + " meters");
-            Console.WriteLine("Speed LSB: " + values[8] + " m/s");
-            Console.WriteLine("Speed MSB: " + values[9] + " m/s");
+            Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
             Console.WriteLine("Heart Rate: " + values[10] + " bpm");
             Console.WriteLine("-----------");
         }
@@ -161,7 +114,7 @@ namespace FietsDemo
             Console.WriteLine("Instantaneous Power LSB: " + values[9] + " W");
             string splitted = Convert.ToString(values[10], 2);
             Console.WriteLine("Instantaneous Power MSB: " + Convert.ToInt32(splitted.Substring(0,4), 2) + " W");
-            Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(4,4), 2));
+            Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3,4), 2));
             Console.WriteLine("-----------");
         }
 
@@ -182,11 +135,7 @@ namespace FietsDemo
         {
             Console.WriteLine("Received Heart Rate Data");
             Console.WriteLine("-----------");
-            for (int i = 0; i < values.Length; i++)
-            {
-                Console.Write(values[i] + "bpm" );
-            }
-            Console.WriteLine();
+            Console.WriteLine(values[1] + " bpm");
             Console.WriteLine("-----------");
         }
     }
