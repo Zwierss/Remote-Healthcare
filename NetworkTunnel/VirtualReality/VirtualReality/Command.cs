@@ -2,7 +2,7 @@
 
 namespace VirtualReality;
 
-public interface CommandHandler
+public interface Command
 {
-    public void handleCommand(Client client, JObject ob);
+    public void OnCommandReceived(JObject ob);
 }

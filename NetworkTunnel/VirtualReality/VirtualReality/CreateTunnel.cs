@@ -1,6 +1,14 @@
-﻿namespace VirtualReality;
+﻿using Newtonsoft.Json.Linq;
 
-public class CreateTunnel
+namespace VirtualReality;
+
+public class CreateTunnel : Command
 {
-    
+    public void OnCommandReceived(JObject ob)
+    {
+        if(ob["data"]["status"].ToObject<string>().Equals("ok"))
+        {
+            Client.GetInstance().SetTunnel(ob["data"]["id"].ToObject<string>());
+        }
+    }
 }
