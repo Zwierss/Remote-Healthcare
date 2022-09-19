@@ -1,4 +1,6 @@
 ﻿using System.Collections.Specialized;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace VirtualReality;
 
@@ -11,16 +13,18 @@ public class Program
 #pragma warning restore CS4014
 
         int count = 0;
+        bool onlyOnce = true;
         
         while (true)
         {
-            // if (count == 10)
+            // if (count == 100)
             // {
             //     count = 0;
-            //     Client.GetInstance().SendData(@"{""id"": ""session/list""}");
+            //     Client.GetInstance().SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/get.json"))));
             // }
-            Thread.Sleep(100);
-            //count++;
+            // count++;
+            
+            Thread.Sleep(10);
         }
     }
 }

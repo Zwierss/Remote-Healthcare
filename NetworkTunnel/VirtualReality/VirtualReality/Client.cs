@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Nodes;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace VirtualReality;
@@ -17,13 +18,13 @@ public class Client
     private byte[] _totalBuffer = new byte[0];
     private readonly byte[] _buffer = new byte[1024];
 
-    public string? _tunnelID = null;
+    private string? _tunnelID = null;
 
     private static Client? _instance;
 
     private static string _HOSTNAME = "145.48.6.10";
     private static int _PORT = 6666;
-    
+
     public static Client GetInstance()
     {
         if (_instance == null)
@@ -67,16 +68,17 @@ public class Client
         _stream.Write(requestLength, 0 , requestLength.Length);
         _stream.Write(request, 0, request.Length);
     }
-    
-    public void SendData(JObject j)
+
+    public void SendData(JObject o)
     {
-        SendData(j.ToString());
+        SendData(o.ToString());
     }
 
     public void SetTunnel(string id)
     {
         Console.WriteLine("Setting Tunnel ID");
         _tunnelID = id;
+        SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/get.json"))));
     }
 
     public void CreateTunnel(string id)
@@ -124,8 +126,8 @@ public class Client
             else
                 break;
         }
-        Console.WriteLine("Begin Read");
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+        Console.WriteLine("Begin Read");
     }
     
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
