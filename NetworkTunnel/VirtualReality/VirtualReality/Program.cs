@@ -14,13 +14,13 @@ public class Program
         
         while (true)
         {
-            if (count == 10)
-            {
-                count = 0;
-                Client.GetInstance().SendData(@"{""id"": ""session/list""}");
-            }
+            // if (count == 10)
+            // {
+            //     count = 0;
+            //     Client.GetInstance().SendData(@"{""id"": ""session/list""}");
+            // }
             Thread.Sleep(100);
-            count++;
+            //count++;
         }
     }
 }

@@ -66,6 +66,11 @@ public class Client
         _stream.Write(requestLength, 0 , requestLength.Length);
         _stream.Write(request, 0, request.Length);
     }
+    
+    // public void SendData(JObject j)
+    // {
+    //     SendData(j.ToString());
+    // }
 
     public void SetTunnel(string id)
     {
@@ -81,7 +86,6 @@ public class Client
 
     public void OnRead(IAsyncResult ar)
     {
-        Console.WriteLine("Message sent");
         try
         {
             int rc = _stream.EndRead(ar);
@@ -131,5 +135,6 @@ public class Client
     {
         _commands.Add("session/list", new SessionList());
         _commands.Add("tunnel/create", new CreateTunnel());
+        _commands.Add("scene/reset", new ResetScene());
     }
 }

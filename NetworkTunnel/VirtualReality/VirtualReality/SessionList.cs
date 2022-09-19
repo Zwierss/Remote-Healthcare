@@ -4,6 +4,9 @@ namespace VirtualReality;
 
 public class SessionList : Command
 {
+
+    public static string _FORMAT = "dd/MM/yyyy HH:mm:ss";
+    
     public void OnCommandReceived(JObject ob)
     {
         JObject? currentObject = null;
@@ -14,31 +17,30 @@ public class SessionList : Command
             Console.WriteLine(Environment.UserName);
             Console.WriteLine(Environment.MachineName);
 
-            //try
-            //{
+            try
+            {
                 if (o["clientinfo"]["host"].ToObject<string>().ToLower() == Environment.MachineName.ToLower() &&
                     o["clientinfo"]["user"].ToObject<string>().ToLower() == Environment.UserName.ToLower())
                 {
+                    
                     if (currentObject == null)
                     {
                         currentObject = o;
                         Console.WriteLine(o["lastPing"].ToObject<string>());
-                        parsedDate = DateTime.Parse(o["lastPing"].ToObject<string>());
+                        parsedDate = DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, null);
                     }
                     else
                     {
-                        if (parsedDate < DateTime.Parse(o["lastPing"].ToObject<string>()))
+                        if (parsedDate < DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, null))
                         {
                             currentObject = o;
-                            parsedDate = DateTime.Parse(o["lastPing"].ToObject<string>());
+                            parsedDate = DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, null);
                         }
                     }
                 }
-            // }
-            // catch
-            // {
-            //     Console.WriteLine("Werkt niet");
-            // }
+            }
+            catch
+            { Console.WriteLine("Werkt niet"); }
         }
         
         if (currentObject != null)
