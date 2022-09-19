@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
@@ -67,10 +68,10 @@ public class Client
         _stream.Write(request, 0, request.Length);
     }
     
-    // public void SendData(JObject j)
-    // {
-    //     SendData(j.ToString());
-    // }
+    public void SendData(JObject j)
+    {
+        SendData(j.ToString());
+    }
 
     public void SetTunnel(string id)
     {
@@ -86,6 +87,7 @@ public class Client
 
     public void OnRead(IAsyncResult ar)
     {
+        Console.WriteLine("Method Checked");
         try
         {
             int rc = _stream.EndRead(ar);
@@ -96,6 +98,8 @@ public class Client
             Console.WriteLine("Error");
             return;
         }
+        
+        Console.WriteLine("Didnt get returned");
         while (_totalBuffer.Length >= 4)
         {
             int packetSize = BitConverter.ToInt32(_totalBuffer, 0);
@@ -120,6 +124,7 @@ public class Client
             else
                 break;
         }
+        Console.WriteLine("Begin Read");
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
     
@@ -135,6 +140,6 @@ public class Client
     {
         _commands.Add("session/list", new SessionList());
         _commands.Add("tunnel/create", new CreateTunnel());
-        _commands.Add("scene/reset", new ResetScene());
+        _commands.Add("get", new ResetScene());
     }
 }

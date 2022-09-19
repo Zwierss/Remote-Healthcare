@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Globalization;
+using Newtonsoft.Json.Linq;
 
 namespace VirtualReality;
 
 public class SessionList : Command
 {
 
-    public static string _FORMAT = "dd/MM/yyyy HH:mm:ss";
+    public static string _FORMAT = "MM/dd/yyyy HH:mm:ss";
     
     public void OnCommandReceived(JObject ob)
     {
@@ -17,8 +18,8 @@ public class SessionList : Command
             Console.WriteLine(Environment.UserName);
             Console.WriteLine(Environment.MachineName);
 
-            try
-            {
+            // try
+            // {
                 if (o["clientinfo"]["host"].ToObject<string>().ToLower() == Environment.MachineName.ToLower() &&
                     o["clientinfo"]["user"].ToObject<string>().ToLower() == Environment.UserName.ToLower())
                 {
@@ -27,20 +28,21 @@ public class SessionList : Command
                     {
                         currentObject = o;
                         Console.WriteLine(o["lastPing"].ToObject<string>());
-                        parsedDate = DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, null);
+                        string dateInString = o["lastPing"].ToObject<string>();
+                        parsedDate = DateTime.ParseExact(dateInString, _FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None);
                     }
                     else
                     {
-                        if (parsedDate < DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, null))
+                        if (parsedDate < DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None))
                         {
                             currentObject = o;
-                            parsedDate = DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, null);
+                            parsedDate = DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None);
                         }
                     }
                 }
-            }
-            catch
-            { Console.WriteLine("Werkt niet"); }
+            // }
+            // catch
+            // { Console.WriteLine("Werkt niet"); }
         }
         
         if (currentObject != null)

@@ -6,6 +6,6 @@ public class ResetScene : Command
 {
     public void OnCommandReceived(JObject ob)
     {
-        
+        Console.WriteLine("received shit back");
     }
 }
