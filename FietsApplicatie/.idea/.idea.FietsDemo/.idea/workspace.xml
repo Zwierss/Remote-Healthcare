@@ -8,12 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e6903719-203e-41c7-9a46-c1a21a17a3f9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FietsDemo/Simulator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FietsDemo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FietsDemo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FietsApplicatie/FietsApplicatie.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FietsApplicatie/FietsApplicatie.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FietsDemo/Bike.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FietsDemo/Bike.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FietsDemo/FietsDemo.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FietsDemo/FietsDemo.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FietsDemo/HeartRate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FietsDemo/HeartRate.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FietsDemo/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FietsDemo/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/bin/Debug/FietsDemo.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/bin/Debug/FietsDemo.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/bin/Debug/FietsDemo.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/bin/Debug/FietsDemo.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.pdb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +58,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected=".NET Project.FietsDemo (1)">
+  <component name="RunManager" selected=".NET Project.FietsDemo">
     <configuration name="FietsDemo (1)" type="DotNetProject" factoryName=".NET Project" temporary="true">
       <option name="EXE_PATH" value="$PROJECT_DIR$/FietsDemo/bin/Debug/FietsDemo.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -73,19 +78,19 @@
       </method>
     </configuration>
     <configuration name="FietsDemo" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/FietsDemo/bin/Debug/FietsDemo.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FietsDemo/bin/Debug" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/FietsApplicatie/FietsApplicatie.csproj" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/FietsDemo/FietsDemo.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="Unloaded" />
-      <option name="PROJECT_TFM" value="" />
+      <option name="PROJECT_KIND" value="Console" />
+      <option name="PROJECT_TFM" value=".NETFramework,Version=v4.7.2" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -114,6 +119,8 @@
       <workItem from="1663163922311" duration="1064000" />
       <workItem from="1663176744761" duration="897000" />
       <workItem from="1663234302848" duration="4479000" />
+      <workItem from="1663246410387" duration="4159000" />
+      <workItem from="1663316718316" duration="1079000" />
     </task>
     <task id="LOCAL-00001" summary="added first systems">
       <created>1662471679836</created>
