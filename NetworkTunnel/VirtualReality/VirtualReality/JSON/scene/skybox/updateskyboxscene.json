@@ -1,7 +1,7 @@
 {
   "id": "scene/skybox/update",
   "data": {
-    "type": "static",
+    "type": "dynamic",
     "files": {
       "xpos": "data/NetworkEngine/textures/SkyBoxes/interstellar/interstellar_rt.png",
       "xneg": "data/NetworkEngine/textures/SkyBoxes/interstellar/interstellar_lf.png",

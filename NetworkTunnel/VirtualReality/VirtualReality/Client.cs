@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using VirtualReality.components;
 
 namespace VirtualReality;
 
@@ -18,20 +19,21 @@ public class Client
     private byte[] _totalBuffer = new byte[0];
     private readonly byte[] _buffer = new byte[1024];
 
-    private string? _tunnelID = null;
-
-    private static Client? _instance;
+    public string? _tunnelID { get; set; }
 
     private static string _HOSTNAME = "145.48.6.10";
     private static int _PORT = 6666;
 
     private bool _tunnelCreated;
 
+    private Skybox _skybox;
+
     public Client()
     {
         _commands = new Dictionary<string, Command>();
         InitCommands();
         _tunnelCreated = false;
+        _skybox = new(this);
     }
 
     public async Task StartConnection()
@@ -82,7 +84,6 @@ public class Client
 
     public void OnRead(IAsyncResult ar)
     {
-        Console.WriteLine("Method Checked");
         try
         {
             int rc = _stream.EndRead(ar);
@@ -94,7 +95,6 @@ public class Client
             return;
         }
         
-        Console.WriteLine("Didnt get returned");
         while (_totalBuffer.Length >= 4)
         {
             int packetSize = BitConverter.ToInt32(_totalBuffer, 0);
@@ -120,16 +120,16 @@ public class Client
                 break;
         }
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
-        Console.WriteLine("Begin Read");
 
         if (_tunnelCreated)
         {
-            _tunnelCreated = false;
-            SendData(PacketSender.SendReplacedObject("data", PacketSender.GetJson("scene\\reset.json"), 1, 
-                PacketSender.SendReplacedObject("dest", _tunnelID, 1, "tunnelsend.json")));
+            if (!_skybox._set)
+            {
+                new Thread(new ThreadStart(_skybox.update)).Start();
+            }
         }
     }
-    
+
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];

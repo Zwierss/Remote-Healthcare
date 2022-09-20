@@ -15,6 +15,7 @@ public class TunnelCommand : Command
 
     public void OnCommandReceived(JObject ob, Client client)
     {
+        Console.WriteLine("received: " + ob);
     }
 
     private void InitCommands()
