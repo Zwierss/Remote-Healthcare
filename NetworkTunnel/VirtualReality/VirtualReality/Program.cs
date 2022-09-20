@@ -1,15 +1,13 @@
-﻿using System.Collections.Specialized;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace VirtualReality;
+﻿namespace VirtualReality;
 
 public class Program
 {
     public static void Main(string[] args)
     {
+
+        Client client = new Client();
 #pragma warning disable CS4014
-        Client.GetInstance().StartConnection();
+        client.StartConnection();
 #pragma warning restore CS4014
 
         int count = 0;
@@ -17,13 +15,7 @@ public class Program
         
         while (true)
         {
-            // if (count == 100)
-            // {
-            //     count = 0;
-            //     Client.GetInstance().SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/get.json"))));
-            // }
-            // count++;
-            
+
             Thread.Sleep(10);
         }
     }

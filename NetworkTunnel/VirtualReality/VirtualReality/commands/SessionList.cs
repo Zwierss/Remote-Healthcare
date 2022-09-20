@@ -8,7 +8,7 @@ public class SessionList : Command
 
     public static string _FORMAT = "MM/dd/yyyy HH:mm:ss";
     
-    public void OnCommandReceived(JObject ob)
+    public void OnCommandReceived(JObject ob, Client client)
     {
         JObject? currentObject = null;
         DateTime? parsedDate = null;
@@ -47,7 +47,7 @@ public class SessionList : Command
         
         if (currentObject != null)
         {
-            Client.GetInstance().CreateTunnel(currentObject["id"].ToObject<string>());
+            client.CreateTunnel(currentObject["id"].ToObject<string>());
         }
         else
         {

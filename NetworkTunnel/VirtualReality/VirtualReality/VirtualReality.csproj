@@ -11,4 +11,13 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="JSON\route" />
+      <Folder Include="JSON\scene\node" />
+      <Folder Include="JSON\scene\panel" />
+      <Folder Include="JSON\scene\road" />
+      <Folder Include="JSON\scene\skybox" />
+      <Folder Include="JSON\scene\terrain" />
+    </ItemGroup>
+
 </Project>

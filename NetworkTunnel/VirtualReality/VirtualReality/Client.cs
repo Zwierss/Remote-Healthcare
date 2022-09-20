@@ -25,15 +25,6 @@ public class Client
     private static string _HOSTNAME = "145.48.6.10";
     private static int _PORT = 6666;
 
-    public static Client GetInstance()
-    {
-        if (_instance == null)
-        {
-            _instance = new Client();
-        }
-        return _instance;
-    }
-
     public Client()
     {
         _commands = new Dictionary<string, Command>();
@@ -49,7 +40,7 @@ public class Client
             _client = new TcpClient();
             await _client.ConnectAsync(_HOSTNAME, _PORT);
             _stream = _client.GetStream();
-            SendData(@"{""id"": ""session/list""}");
+            SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/sessionlist.json"))));
         }
         catch(Exception e)
         {
@@ -78,7 +69,6 @@ public class Client
     {
         Console.WriteLine("Setting Tunnel ID");
         _tunnelID = id;
-        SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/get.json"))));
     }
 
     public void CreateTunnel(string id)
@@ -113,7 +103,7 @@ public class Client
                 if(_commands.ContainsKey(jData["id"].ToObject<string>()))
                 {
                     Console.WriteLine("Received Command " + jData);
-                    _commands[jData["id"].ToObject<string>()].OnCommandReceived(jData);
+                    _commands[jData["id"].ToObject<string>()].OnCommandReceived(jData, this);
                 }
                 else
                 {
