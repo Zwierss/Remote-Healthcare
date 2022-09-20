@@ -1,0 +1,16 @@
+{
+  "id": "scene/node/update",
+  "data": {
+    "id": { "guid" },
+    "parent": { "guid" },
+    "transform": {
+      "position": [ 0, 0, 0 ],
+      "scale": 1.0,
+      "rotation": [ 0, 0, 0 ]
+    },
+    "animation": {
+      "name": "walk",
+      "speed": 0.5
+    }
+  }
+}

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using VirtualReality.components;
 
 namespace VirtualReality;
 
@@ -18,17 +19,21 @@ public class Client
     private byte[] _totalBuffer = new byte[0];
     private readonly byte[] _buffer = new byte[1024];
 
-    private string? _tunnelID = null;
-
-    private static Client? _instance;
+    public string? _tunnelID { get; set; }
 
     private static string _HOSTNAME = "145.48.6.10";
     private static int _PORT = 6666;
+
+    private bool _tunnelCreated;
+
+    private Skybox _skybox;
 
     public Client()
     {
         _commands = new Dictionary<string, Command>();
         InitCommands();
+        _tunnelCreated = false;
+        _skybox = new(this);
     }
 
     public async Task StartConnection()
@@ -40,7 +45,7 @@ public class Client
             _client = new TcpClient();
             await _client.ConnectAsync(_HOSTNAME, _PORT);
             _stream = _client.GetStream();
-            SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/sessionlist.json"))));
+            SendData(PacketSender.GetJson("sessionlist.json"));
         }
         catch(Exception e)
         {
@@ -51,8 +56,9 @@ public class Client
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
-    public void SendData(string message)
+    public void SendData(JObject o)
     {
+        string message = o.ToString();
         Console.WriteLine("Sending message " + message);
         byte[] requestLength = BitConverter.GetBytes(message.Length);
         byte[] request = Encoding.ASCII.GetBytes(message);
@@ -60,26 +66,24 @@ public class Client
         _stream.Write(request, 0, request.Length);
     }
 
-    public void SendData(JObject o)
-    {
-        SendData(o.ToString());
-    }
-
     public void SetTunnel(string id)
     {
         Console.WriteLine("Setting Tunnel ID");
         _tunnelID = id;
+        _tunnelCreated = true;
     }
 
     public void CreateTunnel(string id)
     {
         Console.WriteLine("Setting Tunnel");
-        SendData($@"{{""id"": ""tunnel/create"", ""data"":{{""session"":""{id}"", ""key"":""""}}}}");
+        SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
+
+        //SendData($@"{{""id"": ""tunnel/create"", ""data"":{{""session"":""{id}"", ""key"":""""}}}}");
+        //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/createtunnel.json"))));
     }
 
     public void OnRead(IAsyncResult ar)
     {
-        Console.WriteLine("Method Checked");
         try
         {
             int rc = _stream.EndRead(ar);
@@ -91,7 +95,6 @@ public class Client
             return;
         }
         
-        Console.WriteLine("Didnt get returned");
         while (_totalBuffer.Length >= 4)
         {
             int packetSize = BitConverter.ToInt32(_totalBuffer, 0);
@@ -117,21 +120,28 @@ public class Client
                 break;
         }
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
-        Console.WriteLine("Begin Read");
+
+        if (_tunnelCreated)
+        {
+            if (!_skybox._set)
+            {
+                new Thread(new ThreadStart(_skybox.update)).Start();
+            }
+        }
     }
-    
+
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];
-        System.Buffer.BlockCopy(b1, 0, r, 0, b1.Length);
-        System.Buffer.BlockCopy(b2, 0, r, b1.Length, count);
+        Buffer.BlockCopy(b1, 0, r, 0, b1.Length);
+        Buffer.BlockCopy(b2, 0, r, b1.Length, count);
         return r;
     }
 
     private void InitCommands()
     {
-        _commands.Add("session/list", new SessionList());
-        _commands.Add("tunnel/create", new CreateTunnel());
-        _commands.Add("get", new ResetScene());
+        _commands.Add("session/list", new SessionListCommand());
+        _commands.Add("tunnel/create", new CreateTunnelCommand());
+        _commands.Add("tunnel/send", new TunnelCommand());
     }
 }

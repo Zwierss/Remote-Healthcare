@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace VirtualReality;
 
-public class SessionList : Command
+public class SessionListCommand : Command
 {
 
     public static string _FORMAT = "MM/dd/yyyy HH:mm:ss";

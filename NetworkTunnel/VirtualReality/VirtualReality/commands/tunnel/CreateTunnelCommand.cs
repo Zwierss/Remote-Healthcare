@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace VirtualReality;
 
-public class CreateTunnel : Command
+public class CreateTunnelCommand : Command
 {
     public void OnCommandReceived(JObject ob, Client client)
     {
