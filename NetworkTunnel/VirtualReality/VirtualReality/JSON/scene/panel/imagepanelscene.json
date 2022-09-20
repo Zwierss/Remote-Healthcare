@@ -1,3 +1,9 @@
 {
-
+  "id": "scene/panel/image",
+  "data": {
+    "id": { "panelid" },
+    "image": "data/NetworkEngine/textures/SkyBoxes/interstellar/interstellar_up.png",
+    "position": [ 0.0, 0.0 ],
+    "size": [ 512.0, 512.0 ]
+  }
 }
