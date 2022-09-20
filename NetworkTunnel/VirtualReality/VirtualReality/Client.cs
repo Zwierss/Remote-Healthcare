@@ -51,18 +51,14 @@ public class Client
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
-    public void SendData(string message)
+    public void SendData(JObject o)
     {
+        string message = o.ToString();
         Console.WriteLine("Sending message " + message);
         byte[] requestLength = BitConverter.GetBytes(message.Length);
         byte[] request = Encoding.ASCII.GetBytes(message);
         _stream.Write(requestLength, 0 , requestLength.Length);
         _stream.Write(request, 0, request.Length);
-    }
-
-    public void SendData(JObject o)
-    {
-        SendData(o.ToString());
     }
 
     public void SetTunnel(string id)
@@ -74,7 +70,10 @@ public class Client
     public void CreateTunnel(string id)
     {
         Console.WriteLine("Setting Tunnel");
-        SendData($@"{{""id"": ""tunnel/create"", ""data"":{{""session"":""{id}"", ""key"":""""}}}}");
+        SendData(PacketHandler.ReplaceObject("session", id, 1, "createtunnel.json"));
+
+        //SendData($@"{{""id"": ""tunnel/create"", ""data"":{{""session"":""{id}"", ""key"":""""}}}}");
+        //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/createtunnel.json"))));
     }
 
     public void OnRead(IAsyncResult ar)
@@ -123,8 +122,8 @@ public class Client
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];
-        System.Buffer.BlockCopy(b1, 0, r, 0, b1.Length);
-        System.Buffer.BlockCopy(b2, 0, r, b1.Length, count);
+        Buffer.BlockCopy(b1, 0, r, 0, b1.Length);
+        Buffer.BlockCopy(b2, 0, r, b1.Length, count);
         return r;
     }
 
@@ -132,6 +131,5 @@ public class Client
     {
         _commands.Add("session/list", new SessionList());
         _commands.Add("tunnel/create", new CreateTunnel());
-        _commands.Add("get", new ResetScene());
     }
 }
