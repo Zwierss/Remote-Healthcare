@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Data.SqlTypes;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace VirtualReality;
@@ -10,7 +11,6 @@ public class PacketHandler
 
     public static JObject ReplaceObject(string variable, string replacement, int position, string filename)
     {
-        Console.WriteLine(_PATHDIR);
         JObject data = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(_PATHDIR + filename)));
         JObject currentObject = data;
         for (int i = 0; i < position; i++)
@@ -20,5 +20,10 @@ public class PacketHandler
 
         currentObject[variable] = replacement;
         return data;
+    }
+
+    public static JObject GetJson(string filename)
+    {
+        return (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(_PATHDIR + filename)));
     }
 }

@@ -24,7 +24,6 @@
       <Folder Include="JSON\scene\road" />
       <Folder Include="JSON\scene\skybox" />
       <Folder Include="JSON\scene\terrain" />
-      <Folder Include="packethandlers" />
     </ItemGroup>
 
 </Project>

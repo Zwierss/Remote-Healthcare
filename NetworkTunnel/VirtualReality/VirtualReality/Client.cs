@@ -40,7 +40,7 @@ public class Client
             _client = new TcpClient();
             await _client.ConnectAsync(_HOSTNAME, _PORT);
             _stream = _client.GetStream();
-            SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/sessionlist.json"))));
+            SendData(PacketHandler.GetJson("sessionlist.json"));
         }
         catch(Exception e)
         {
