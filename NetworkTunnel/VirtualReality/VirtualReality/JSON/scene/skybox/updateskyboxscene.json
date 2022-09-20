@@ -1,3 +1,14 @@
 {
-
+  "id": "scene/skybox/update",
+  "data": {
+    "type": "static",
+    "files": {
+      "xpos": "data/NetworkEngine/textures/SkyBoxes/interstellar/interstellar_rt.png",
+      "xneg": "data/NetworkEngine/textures/SkyBoxes/interstellar/interstellar_lf.png",
+      "ypos": "data/NetworkEngine/textures/SkyBoxes/interstellar/interstellar_up.png",
+      "yneg": "data/NetworkEngine/textures/SkyBoxes/interstellar/interstellar_dn.png",
+      "zpos": "data/NetworkEngine/textures/SkyBoxes/interstellar/interstellar_bk.png",
+      "zneg": "data/NetworkEngine/textures/SkyBoxes/interstellar/interstellar_ft.png"
+    }
+  }
 }

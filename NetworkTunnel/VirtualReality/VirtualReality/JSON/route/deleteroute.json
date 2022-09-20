@@ -1,3 +1,6 @@
 {
-
+  "id": "route/delete",
+  "data": {
+    "id": "uuid"
+  }
 }
