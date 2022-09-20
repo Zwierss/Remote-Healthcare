@@ -1,3 +1,6 @@
 {
-
+  "id": "scene/node/delete",
+  "data": {
+    "id": { "guid" }
+  }
 }

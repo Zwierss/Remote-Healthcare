@@ -15,7 +15,6 @@ public class TunnelCommand : Command
 
     public void OnCommandReceived(JObject ob, Client client)
     {
-        Console.WriteLine("Heil Hitler");
     }
 
     private void InitCommands()
