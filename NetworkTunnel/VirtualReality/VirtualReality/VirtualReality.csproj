@@ -12,12 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="commands\route" />
-      <Folder Include="commands\scene\node" />
-      <Folder Include="commands\scene\panel" />
-      <Folder Include="commands\scene\road" />
-      <Folder Include="commands\scene\skybox" />
-      <Folder Include="commands\scene\terrain" />
       <Folder Include="JSON\route" />
       <Folder Include="JSON\scene\node" />
       <Folder Include="JSON\scene\panel" />

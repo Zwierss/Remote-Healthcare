@@ -25,10 +25,13 @@ public class Client
     private static string _HOSTNAME = "145.48.6.10";
     private static int _PORT = 6666;
 
+    private bool _tunnelCreated;
+
     public Client()
     {
         _commands = new Dictionary<string, Command>();
         InitCommands();
+        _tunnelCreated = false;
     }
 
     public async Task StartConnection()
@@ -40,7 +43,7 @@ public class Client
             _client = new TcpClient();
             await _client.ConnectAsync(_HOSTNAME, _PORT);
             _stream = _client.GetStream();
-            SendData(PacketHandler.GetJson("sessionlist.json"));
+            SendData(PacketSender.GetJson("sessionlist.json"));
         }
         catch(Exception e)
         {
@@ -65,12 +68,13 @@ public class Client
     {
         Console.WriteLine("Setting Tunnel ID");
         _tunnelID = id;
+        _tunnelCreated = true;
     }
 
     public void CreateTunnel(string id)
     {
         Console.WriteLine("Setting Tunnel");
-        SendData(PacketHandler.ReplaceObject("session", id, 1, "createtunnel.json"));
+        SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
 
         //SendData($@"{{""id"": ""tunnel/create"", ""data"":{{""session"":""{id}"", ""key"":""""}}}}");
         //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/createtunnel.json"))));
@@ -117,6 +121,13 @@ public class Client
         }
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         Console.WriteLine("Begin Read");
+
+        if (_tunnelCreated)
+        {
+            _tunnelCreated = false;
+            SendData(PacketSender.SendReplacedObject("data", PacketSender.GetJson("scene\\reset.json"), 1, 
+                PacketSender.SendReplacedObject("dest", _tunnelID, 1, "tunnelsend.json")));
+        }
     }
     
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
@@ -129,7 +140,8 @@ public class Client
 
     private void InitCommands()
     {
-        _commands.Add("session/list", new SessionList());
-        _commands.Add("tunnel/create", new CreateTunnel());
+        _commands.Add("session/list", new SessionListCommand());
+        _commands.Add("tunnel/create", new CreateTunnelCommand());
+        _commands.Add("tunnel/send", new TunnelCommand());
     }
 }

@@ -4,5 +4,5 @@ namespace VirtualReality;
 
 public interface Command
 {
-    public void OnCommandReceived(JObject ob, Client client);
+    void OnCommandReceived(JObject ob, Client client);
 }
