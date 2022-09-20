@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.Json.Nodes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using VirtualReality.commands;
+using System.IO;
 
 namespace VirtualReality;
 
@@ -41,8 +43,9 @@ public class Client
             await _client.ConnectAsync(_HOSTNAME, _PORT);
             _stream = _client.GetStream();
             SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/sessionlist.json"))));
+
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }
@@ -51,7 +54,7 @@ public class Client
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
-    public void SendData(string message)
+    public async void SendData(string message)
     {
         Console.WriteLine("Sending message " + message);
         byte[] requestLength = BitConverter.GetBytes(message.Length);
@@ -69,6 +72,17 @@ public class Client
     {
         Console.WriteLine("Setting Tunnel ID");
         _tunnelID = id;
+    }
+
+    public void Sendtime(double time)
+    {
+
+        var jObject = JObject.Parse(File.ReadAllText("C:\\Users\\karsv\\OneDrive\\Documenten\\GitHub\\Remote-Healthcare\\NetworkTunnel\\VirtualReality\\VirtualReality\\JSON\\scene\\skybox\\set.time.json"));
+        jObject["data"]["dest"] = _tunnelID;
+        jObject["data"]["data"]["data"]["time"] = time;
+
+        var json = JsonConvert.SerializeObject(jObject);
+        SendData(json);
     }
 
     public void CreateTunnel(string id)
@@ -117,9 +131,13 @@ public class Client
                 break;
         }
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
-        Console.WriteLine("Begin Read");
+        Console.WriteLine("Begin Read " + _tunnelID);
+        Sendtime(19);
+        //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/scene/skybox/change.time.json"))));
+        //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/scene/skybox/set.time.json"))));
+
     }
-    
+
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];
@@ -133,5 +151,7 @@ public class Client
         _commands.Add("session/list", new SessionList());
         _commands.Add("tunnel/create", new CreateTunnel());
         _commands.Add("get", new ResetScene());
+        _commands.Add("time/change", new ChangeTime());
+        _commands.Add("tunnel/send", new TunnelSend());
     }
 }
