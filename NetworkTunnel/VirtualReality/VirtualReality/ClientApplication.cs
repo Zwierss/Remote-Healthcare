@@ -13,15 +13,20 @@ namespace VirtualReality
 {
     internal class ClientApplication
     {
-        private static NetworkStream stream;
+        private static string password;
         private static TcpClient client;
+        private static NetworkStream stream;
         private static byte[] buffer = new byte[1024];
         private static string totalBuffer;
+        private static string username;
+
         private static bool loggedIn = false;
         public ClientApplication()
         {
             client = new TcpClient();
             client.BeginConnect("192.168.43.137", 15243, new AsyncCallback(OnConnect), null);
+
+
 
             while (true)
             {
@@ -33,19 +38,16 @@ namespace VirtualReality
                     Console.WriteLine("Je bent nog niet ingelogd");
             }
         }
-        private static void write(string data)
-        {
-            var dataAsBytes = System.Text.Encoding.ASCII.GetBytes(data + "\r\n\r\n");
-            stream.Write(dataAsBytes, 0, dataAsBytes.Length);
-            stream.Flush();
-        }
+
         private static void OnConnect(IAsyncResult ar)
         {
             client.EndConnect(ar);
             Console.WriteLine("Verbonden!");
             stream = client.GetStream();
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
+            write($"login\r\n{username}\r\n{password}");
         }
+
         private static void OnRead(IAsyncResult ar)
         {
             int receivedBytes = stream.EndRead(ar);
@@ -61,6 +63,13 @@ namespace VirtualReality
             }
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
+        private static void write(string data)
+        {
+            var dataAsBytes = System.Text.Encoding.ASCII.GetBytes(data + "\r\n\r\n");
+            stream.Write(dataAsBytes, 0, dataAsBytes.Length);
+            stream.Flush();
+        }
+
         private static void handleData(string[] packetData)
         {
             Console.WriteLine($"Packet ontvangen: {packetData[0]}");
@@ -80,15 +89,9 @@ namespace VirtualReality
                     Console.WriteLine($"Chat ontvangen: '{packetData[1]}'");
                     break;
             }
+
         }
-           
-        public static string ReadTextMessage(TcpClient client)
-        {
-            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
-            {
-                return stream.ReadLine();
-            }
-        }
-    
     }
 }
+
+
