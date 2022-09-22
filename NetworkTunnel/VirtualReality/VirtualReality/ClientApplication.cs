@@ -23,10 +23,9 @@ namespace VirtualReality
         private static bool loggedIn = false;
         public ClientApplication()
         {
+            Console.WriteLine(GetLocalIPAddress());
             client = new TcpClient();
             client.BeginConnect("192.168.43.137", 15243, new AsyncCallback(OnConnect), null);
-
-
 
             while (true)
             {
@@ -48,6 +47,18 @@ namespace VirtualReality
             write($"login\r\n{username}\r\n{password}");
         }
 
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
+        }
         private static void OnRead(IAsyncResult ar)
         {
             int receivedBytes = stream.EndRead(ar);
