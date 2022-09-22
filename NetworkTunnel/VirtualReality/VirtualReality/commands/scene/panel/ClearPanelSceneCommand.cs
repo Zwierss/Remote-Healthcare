@@ -4,8 +4,7 @@ namespace VirtualReality;
 
 public class ClearPanelSceneCommand : TunnelCallback
 {
-
-	public void OnCommandReceived(JObject ob, TunnelCommand parent)
+	public void OnCommandReceived(JObject o, Client parent)
 	{
 
 	}

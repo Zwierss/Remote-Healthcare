@@ -22,6 +22,18 @@ public class PacketSender
         return data;
     }
     
+    public static JObject SendReplacedObject(string variable, string replacement, int position, JObject targetObject)
+    {
+        JObject currentObject = targetObject;
+        for (int i = 0; i < position; i++)
+        {
+            currentObject = ((JObject?)currentObject!["data"])!;
+        }
+
+        currentObject[variable] = replacement;
+        return targetObject;
+    }
+
     public static JObject SendReplacedObject(string variable, double replacement, int position, string filename)
     {
         JObject data = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(_PATHDIR + filename)));
@@ -34,7 +46,7 @@ public class PacketSender
         currentObject![variable] = replacement;
         return data;
     }
-    
+
     public static JObject SendReplacedObject(string variable, JObject replacement, int position, string filename)
     {
         JObject data = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(_PATHDIR + filename)));
@@ -73,5 +85,4 @@ public class PacketSender
     {
         return SendReplacedObject("data", o, 1, SendReplacedObject("dest", id, 1, "tunnelsend.json"));
     }
-    
 }

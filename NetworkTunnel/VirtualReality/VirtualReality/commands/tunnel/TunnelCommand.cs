@@ -15,7 +15,13 @@ public class TunnelCommand : Command
 
     public void OnCommandReceived(JObject ob, Client client)
     {
-        Console.WriteLine("received: " + ob);
+        foreach (string key in _commands.Keys)
+        {
+            if (_commands.ContainsKey(ob["data"]["data"]["id"].ToString()))
+            {
+                _commands[ob["data"]["data"]["id"].ToString()].OnCommandReceived((JObject)ob["data"]["data"], client);
+            }
+        }
     }
 
     private void InitCommands()

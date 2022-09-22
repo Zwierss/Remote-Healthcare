@@ -20,6 +20,7 @@ public class Client
     private readonly byte[] _buffer = new byte[1024];
 
     public string? _tunnelID { get; set; }
+    public string? _nodeID { get; set; }
 
     private static string _HOSTNAME = "145.48.6.10";
     private static int _PORT = 6666;
@@ -27,6 +28,7 @@ public class Client
     private bool _tunnelCreated;
 
     private Skybox _skybox;
+    private HeightMap _map;
 
     public Client()
     {
@@ -34,6 +36,7 @@ public class Client
         InitCommands();
         _tunnelCreated = false;
         _skybox = new(this);
+        _map = new(this);
     }
 
     public async Task StartConnection()
@@ -64,6 +67,16 @@ public class Client
         byte[] request = Encoding.ASCII.GetBytes(message);
         _stream.Write(requestLength, 0 , requestLength.Length);
         _stream.Write(request, 0, request.Length);
+    }
+    
+    public void sendTunnel(string _id, dynamic _data)
+    {
+        var command = new { id = "tunnel/send", data = new { dest = _tunnelID, data = new { id = _id, data = _data }  } };
+        Console.WriteLine("Sending message " + command);
+        byte[] d = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(command));
+        _stream.WriteAsync(BitConverter.GetBytes(d.Length), 0, 4).Wait();
+        _stream.WriteAsync(d, 0, d.Length).Wait();
+        Thread.Sleep(50);
     }
 
     public void SetTunnel(string id)
@@ -123,10 +136,9 @@ public class Client
 
         if (_tunnelCreated)
         {
-            if (!_skybox._set)
-            {
-                new Thread(new ThreadStart(_skybox.update)).Start();
-            }
+            _tunnelCreated = false;
+            _map.RenderHeightMap();
+            new Thread(new ThreadStart(_skybox.update)).Start();
         }
     }
 
