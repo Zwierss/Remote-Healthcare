@@ -6,8 +6,9 @@ public class Program
     {
 
         Client client = new Client();
+        ClientApplication  clientApplication = new ClientApplication();
 #pragma warning disable CS4014
-        client.StartConnection();
+        //client.StartConnection();
 #pragma warning restore CS4014
 
         int count = 0;
