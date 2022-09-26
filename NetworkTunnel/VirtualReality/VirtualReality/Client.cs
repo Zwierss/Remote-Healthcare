@@ -32,7 +32,6 @@ public class Client
     private Skybox _skybox;
     private HeightMap _map;
     private Route _route;
-    private Node _node;
 
     public Client()
     {
@@ -42,7 +41,6 @@ public class Client
         _skybox = new(this);
         _map = new(this);
         _route = new(this);
-        _node = new(this);
         _heights = new float[200];
     }
 

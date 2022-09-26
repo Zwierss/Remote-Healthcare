@@ -23,7 +23,7 @@ public class Skybox
             }
 
             _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<double, string>("time", _count, 1, "scene\\skybox\\settimeskyboxscene.json")!, _parent._tunnelID!)!);
-            _count += 0.005;
+            _count += 0.05;
             Thread.Sleep(500);
             
         }
