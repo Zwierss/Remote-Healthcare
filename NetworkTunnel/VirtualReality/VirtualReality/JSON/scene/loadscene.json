@@ -1,3 +1,6 @@
 {
-
+  "id": "scene/load",
+  "data": {
+    "filename": "cookie.json"
+  }
 }

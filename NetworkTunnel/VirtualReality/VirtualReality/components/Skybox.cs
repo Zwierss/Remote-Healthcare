@@ -1,31 +1,30 @@
-﻿namespace VirtualReality.components;
+﻿using Newtonsoft.Json.Linq;
+
+namespace VirtualReality.components;
 
 public class Skybox
 {
-    public bool _set { get; set; }
     private Client _parent;
     private double _count;
     
     public Skybox(Client parent)
     {
-        _set = false;
         _parent = parent;
-        _count = 0.0;
+        _count = 24.0;
     }
 
     public void update()
     {
         while (true)
         {
-            if (!_set)
+            if (_count >= 24.0)
             {
-                _set = true;
-                //_parent.SendData(PacketSender.GetJsonThroughTunnel("scene\\skybox\\updateskyboxscene.json", _parent._tunnelID));
-                
+                _count = 0.0;
             }
-            _parent.SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject("time", _count, 1, "scene\\skybox\\settimeskyboxscene.json"), _parent._tunnelID));
-            _count += 0.01;
-            Thread.Sleep(10);
+
+            _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<double, string>("time", _count, 1, "scene\\skybox\\settimeskyboxscene.json")!, _parent._tunnelID!)!);
+            _count += 0.005;
+            Thread.Sleep(500);
             
         }
     }

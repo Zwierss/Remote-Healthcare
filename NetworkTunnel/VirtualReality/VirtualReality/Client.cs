@@ -78,10 +78,10 @@ public class Client
     {
         var command = new { id = "tunnel/send", data = new { dest = _tunnelID, data = new { id = _id, data = _data }  } };
         Console.WriteLine("Sending message " + command);
-        byte[] d = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(command));
+        byte[] d = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(command));
         _stream.WriteAsync(BitConverter.GetBytes(d.Length), 0, 4).Wait();
         _stream.WriteAsync(d, 0, d.Length).Wait();
-        Thread.Sleep(50);
+        
     }
 
     public void SetTunnel(string id)
@@ -94,7 +94,7 @@ public class Client
     public void CreateTunnel(string id)
     {
         Console.WriteLine("Setting Tunnel");
-        SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
+        SendData(PacketSender.SendReplacedObject<string,string>("session", id, 1, "createtunnel.json")!);
 
         //SendData($@"{{""id"": ""tunnel/create"", ""data"":{{""session"":""{id}"", ""key"":""""}}}}");
         //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/createtunnel.json"))));
@@ -144,7 +144,7 @@ public class Client
             _tunnelCreated = false;
             _map.RenderHeightMap();
             _route.CreateRoute();
-            //new Thread(new ThreadStart(_skybox.update)).Start();
+            new Thread(_skybox.update).Start();
         }
     }
 

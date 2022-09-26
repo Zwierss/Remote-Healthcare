@@ -4,7 +4,30 @@
     "name": "name",
     "parent": "guid",
     "components": {
-      
+      "transform": {
+        "position": [ 0, 0, 0 ],
+        "scale": 1,
+        "rotation": [ 0, 0, 0 ]
+      },
+      "model": {
+        "file": "filename",
+        "cullbackfaces": true,
+        "animated": false,
+        "animation": "animationname"
+      },
+      "terrain": {
+        "smoothnormals": true
+      },
+      "panel": {
+        "size": [ 1, 1 ],
+        "resolution": [ 512, 512 ],
+        "background": [ 1, 1, 1, 1 ],
+        "castShadow": true
+      },
+      "water": {
+        "size": [ 20, 20 ],
+        "resolution": 0.1
+      }
     }
   }
 }
