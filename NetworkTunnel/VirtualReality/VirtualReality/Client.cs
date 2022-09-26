@@ -21,6 +21,8 @@ public class Client
 
     public string? _tunnelID { get; set; }
     public string? _nodeID { get; set; }
+    public string? _routeID { get; set; }
+    public float[] _heights { get; set; }
 
     private static string _HOSTNAME = "145.48.6.10";
     private static int _PORT = 6666;
@@ -29,6 +31,7 @@ public class Client
 
     private Skybox _skybox;
     private HeightMap _map;
+    private Route _route;
 
     public Client()
     {
@@ -37,6 +40,8 @@ public class Client
         _tunnelCreated = false;
         _skybox = new(this);
         _map = new(this);
+        _route = new(this);
+        _heights = new float[200];
     }
 
     public async Task StartConnection()
@@ -138,7 +143,8 @@ public class Client
         {
             _tunnelCreated = false;
             _map.RenderHeightMap();
-            new Thread(new ThreadStart(_skybox.update)).Start();
+            _route.CreateRoute();
+            //new Thread(new ThreadStart(_skybox.update)).Start();
         }
     }
 
