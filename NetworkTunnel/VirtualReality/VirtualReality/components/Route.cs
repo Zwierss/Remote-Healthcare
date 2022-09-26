@@ -1,4 +1,6 @@
-﻿namespace VirtualReality.components;
+﻿using Newtonsoft.Json.Linq;
+
+namespace VirtualReality.components;
 
 public class Route
 {
@@ -12,43 +14,11 @@ public class Route
 
     public void CreateRoute()
     {
-        // _parent.SendData(PacketSender.GetJsonThroughTunnel("route\\addroute.json", _parent._tunnelID));
-        // Thread.Sleep(1000);
-        // _parent.SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject(
-        //     "route", _parent._routeID, 1, "scene\\road\\addroadscene.json"
-        // ), _parent._tunnelID));
-        double x = 0.0;
-        double y = 0.0;
-
-        List<double[]> coordinates = new();
-        
-        for (int i = 0; i < 200; i++)
-        {
-
-            coordinates.Add(new[]{x,y});
-            
-            if (i < 50)
-            {
-                x += 1.0;
-            }
-            else if (i < 100)
-            {
-                y += 1.0;
-            }
-            else if (i < 150)
-            {
-                x -= 1.0;
-            }
-            else
-            {
-                y -= 1.0;
-            }
-        }
-
-        _parent.sendTunnel("scene/terrain/getheight", new {
-            positions = coordinates.Select(a => new[]{(float)a[0], (float)a[1]}.ToArray())
-        });
-        
+        _parent.SendData(PacketSender.GetJsonThroughTunnel("route\\addroute.json", _parent._tunnelID));
+        Thread.Sleep(1000);
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, string>(
+            "route", _parent._routeID, 1, "scene\\road\\addroadscene.json"
+        ), _parent._tunnelID));
         
     }
 }

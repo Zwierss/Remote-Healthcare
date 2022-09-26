@@ -17,9 +17,9 @@ public class TunnelCommand : Command
     {
         foreach (string key in _commands.Keys)
         {
-            if (_commands.ContainsKey(ob["data"]["data"]["id"].ToString()))
+            if (key == ob["data"]["data"]["id"].ToObject<string>())
             {
-                _commands[ob["data"]["data"]["id"].ToString()].OnCommandReceived((JObject)ob["data"]["data"], client);
+                _commands[key].OnCommandReceived((JObject)ob["data"]["data"], client);
             }
         }
     }

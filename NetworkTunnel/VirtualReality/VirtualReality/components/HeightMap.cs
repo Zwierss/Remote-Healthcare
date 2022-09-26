@@ -45,7 +45,7 @@ public class HeightMap
                 {
                     transform = new
                     {
-                        position = new[] { -128, -14, -128 },
+                        position = new[] { -128, 0, -128 },
                         scale = 1
                     },
                     terrain = new
