@@ -14,6 +14,13 @@ public class Camera
 
     public void SetCamera()
     {
-        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("name", "camera", 1, "scene\\node\\findnodescene.json")!, _parent.TunnelId!)!);
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("name", "Camera", 1, "scene\\node\\findnodescene.json")!, _parent.TunnelId!)!);
+        Thread.Sleep(2000);
+
+        _parent.SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject<string,JObject>(
+            "id", _parent.CameraId!, 1, PacketSender.SendReplacedObject<string,string>(
+                "parent", _parent.BikeId!, 1, "scene\\node\\updatenodescene.json"
+            )!
+        ), _parent.TunnelId!)!);
     }
 }
