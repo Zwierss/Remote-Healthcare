@@ -41,6 +41,16 @@ public static class PacketSender
                 currentObject![variable] = (JToken)double.Parse(r);
                 break;
             }
+            case float[][] f:
+                JArray a = new JArray();
+                foreach (var t in f)
+                {
+                    JArray j = new JArray(t);
+                    a.Add(j);
+                }
+
+                currentObject![variable] = a;
+                break;
         }
 
         return data;

@@ -1,5 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
+using VirtualReality.commands.scene;
 using VirtualReality.commands.scene.node;
+using VirtualReality.commands.scene.panel;
+using VirtualReality.commands.scene.terrain;
 
 namespace VirtualReality;
 

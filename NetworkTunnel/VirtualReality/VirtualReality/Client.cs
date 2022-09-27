@@ -37,6 +37,7 @@ public class Client
     private readonly Route _route;
     private readonly Bike _bike;
     private readonly Camera _camera;
+    private readonly Tree _tree;
 
     public Client()
     {
@@ -48,6 +49,7 @@ public class Client
         _route = new Route(this);
         _bike = new Bike(this);
         _camera = new Camera(this);
+        _tree = new Tree(this);
         Heights = new float[200];
     }
 
@@ -152,6 +154,7 @@ public class Client
         _route.CreateRoute();
         _bike.PlaceBike();
         _camera.SetCamera();
+        _tree.PlaceTrees();
         //new Thread(_skybox.Update).Start();
     }
 
