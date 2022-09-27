@@ -2,7 +2,7 @@
 
 namespace VirtualReality;
 
-public class TunnelCommand : Command
+public class TunnelCommand : ICommand
 {
 
     private  Dictionary<string, TunnelCallback> _commands;

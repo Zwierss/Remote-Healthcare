@@ -6,6 +6,6 @@ public class AddNodeSceneCommand : TunnelCallback
 {
 	public void OnCommandReceived(JObject o, Client parent)
 	{
-		parent._nodeID = o["data"]["uuid"].ToString();
+		parent.NodeId = o["data"]["uuid"].ToString();
 	}
 }

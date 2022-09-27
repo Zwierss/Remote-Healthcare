@@ -4,7 +4,7 @@ namespace VirtualReality.components;
 
 public class Skybox
 {
-    private Client _parent;
+    private readonly Client _parent;
     private double _count;
     
     public Skybox(Client parent)
@@ -13,7 +13,7 @@ public class Skybox
         _count = 24.0;
     }
 
-    public void update()
+    public void Update()
     {
         while (true)
         {
@@ -22,7 +22,7 @@ public class Skybox
                 _count = 0.0;
             }
 
-            _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<double, string>("time", _count, 1, "scene\\skybox\\settimeskyboxscene.json")!, _parent._tunnelID!)!);
+            _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<double, string>("time", _count, 1, "scene\\skybox\\settimeskyboxscene.json")!, _parent.TunnelId!)!);
             _count += 0.05;
             Thread.Sleep(500);
             

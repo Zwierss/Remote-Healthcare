@@ -5,7 +5,7 @@ namespace VirtualReality.components;
 public class Route
 {
 
-    private Client _parent;
+    private readonly Client _parent;
 
     public Route(Client parent)
     {
@@ -14,11 +14,11 @@ public class Route
 
     public void CreateRoute()
     {
-        _parent.SendData(PacketSender.GetJsonThroughTunnel("route\\addroute.json", _parent._tunnelID));
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<string>("route\\addroute.json", _parent.TunnelId!)!);
         Thread.Sleep(1000);
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, string>(
-            "route", _parent._routeID, 1, "scene\\road\\addroadscene.json"
-        ), _parent._tunnelID));
+            "route", _parent.RouteId!, 1, "scene\\road\\addroadscene.json"
+        )!, _parent.TunnelId!)!);
         
     }
 }
