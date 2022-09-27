@@ -18,6 +18,8 @@ public class HeightMap
 
     public void RenderHeightMap()
     {
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<string>("scene\\resetscene.json", _parent.TunnelId!)!);
+        Thread.Sleep(2000);
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("name", "GroundPlane", 1, "scene\\node\\findnodescene.json")!, _parent.TunnelId!)!);
         Thread.Sleep(2000);
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("id", _parent.TerrainId!, 1, "scene\\node\\deletenodescene.json")!, _parent.TunnelId!)!);
@@ -32,7 +34,7 @@ public class HeightMap
         {
             for (int y = 0; y < heightmap.Height; y++)
             {
-                heightBits[x, y] = (heightmap.GetPixel(x, y).R / 256.0f) * 10.0f;
+                heightBits[x, y] = (heightmap.GetPixel(x, y).R / 256.0f) * 12.0f;
             }
         }
     
