@@ -1,6 +1,6 @@
 using Newtonsoft.Json.Linq;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.scene.node;
 
 public class DeleteNodeSceneCommand : TunnelCallback
 {

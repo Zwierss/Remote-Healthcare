@@ -1,7 +1,6 @@
 using Newtonsoft.Json.Linq;
-using VirtualReality.components;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.scene.terrain;
 
 public class GetheightTerrainSceneCommand : TunnelCallback
 {

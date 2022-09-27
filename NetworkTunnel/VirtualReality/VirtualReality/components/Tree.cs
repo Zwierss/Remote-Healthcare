@@ -17,7 +17,7 @@ public class Tree
     public void PlaceTrees()
     {
         List<float[]> r = new();
-        int quantity = 300;
+        int quantity = 50;
         
         for (int i = 0; i < quantity; i++)
         {

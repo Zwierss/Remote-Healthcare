@@ -1,6 +1,6 @@
 using Newtonsoft.Json.Linq;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.scene.panel;
 
 public class ClearPanelSceneCommand : TunnelCallback
 {
