@@ -6,6 +6,6 @@
     "normal":  "texture.png" ,
     "minHeight": 0,
     "maxHeight": 10,
-    "fadeDist": 20
+    "fadeDist": 30
   }
 }

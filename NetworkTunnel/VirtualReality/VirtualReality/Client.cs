@@ -21,9 +21,11 @@ public class Client
     private readonly byte[] _buffer = new byte[1024];
 
     public string? TunnelId { get; set; }
-    public string? NodeId { get; set; }
+    public string? TerrainId { get; set; }
     public string? RouteId { get; set; }
     public float[] Heights { get; set; }
+    public string? BikeId { get; set; }
+    public string? CameraId { get; set; }
 
     private const string Hostname = "145.48.6.10";
     private const int Port = 6666;
@@ -33,6 +35,8 @@ public class Client
     private readonly Skybox _skybox;
     private readonly HeightMap _map;
     private readonly Route _route;
+    private readonly Bike _bike;
+    private readonly Camera _camera;
 
     public Client()
     {
@@ -42,6 +46,8 @@ public class Client
         _skybox = new Skybox(this);
         _map = new HeightMap(this);
         _route = new Route(this);
+        _bike = new Bike(this);
+        _camera = new Camera(this);
         Heights = new float[200];
     }
 
@@ -144,7 +150,9 @@ public class Client
         _tunnelCreated = false;
         _map.RenderHeightMap();
         _route.CreateRoute();
-        new Thread(_skybox.Update).Start();
+        _bike.PlaceBike();
+        _camera.SetCamera();
+        //new Thread(_skybox.Update).Start();
     }
 
     private static byte[] Concat(byte[] b1, byte[] b2, int count)

@@ -58,7 +58,7 @@ public class HeightMap
         Thread.Sleep(1000);
             
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, JObject>(
-            "id", _parent.NodeId!, 1, PacketSender.SendReplacedObject<string, JObject>(
+            "id", _parent.TerrainId!, 1, PacketSender.SendReplacedObject<string, JObject>(
                 "diffuse", Path + "grass_normal.png", 1, PacketSender.SendReplacedObject<string, string>(
                     "normal", Path + "grass_normal.png", 1, "scene\\node\\addlayernodescene.json"
                 )!
