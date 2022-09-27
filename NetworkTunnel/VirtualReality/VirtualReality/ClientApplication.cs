@@ -23,36 +23,48 @@ namespace VirtualReality
         private static bool loggedIn = false;
         public ClientApplication()
         {
-            Console.WriteLine(GetLocalIPAddress());
+            Console.WriteLine("Client started");
             client = new TcpClient();
-            client.BeginConnect("192.168.43.137", 15243, new AsyncCallback(OnConnect), null);
+            client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
 
-            // Boolean firstConnectMessage = true;
-            
-            // while (true)
-            // {
-            //     write($"chat\r\n{""}");
-            // }
-            //
-            // while (true)
-            // {
-            //     Console.WriteLine("Voer een chatbericht in:");
-            //     string newChatMessage = Console.ReadLine();
-            //     if (loggedIn)
-            //         write($"chat\r\n{newChatMessage}");
-            //     else
-            //         Console.WriteLine("Je bent nog niet ingelogd");
-            // }
+           
+
+            //boolean firstconnectmessage = true;
+
+            //while (true)
+            //{
+            //    write($"chat\r\n{""}");
+            //}
+
+            //while (true)
+            //{
+            //    console.writeline("voer een chatbericht in:");
+            //    string newchatmessage = console.readline();
+            //    if (loggedin)
+            //        write($"chat\r\n{newchatmessage}");
+            //    else
+            //        console.writeline("je bent nog niet ingelogd");
+            //}
         }
 
         private static void OnConnect(IAsyncResult ar)
         {
             client.EndConnect(ar);
             Console.WriteLine("Verbonden!");
+
+            Console.WriteLine(ReadTextMessage(client));
+            Console.WriteLine("Voer cliëntnummer in");
+            username = Console.ReadLine();
+            WriteTextMessage(client, username);
+            Console.WriteLine(ReadTextMessage(client));
+
             stream = client.GetStream();
+
             // stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
             Console.WriteLine(ReadTextMessage(client));
             // write($"login\r\n{username}\r\n{password}");
+
+
         }
 
         public static string ReadTextMessage(TcpClient client)
@@ -61,21 +73,17 @@ namespace VirtualReality
             {
                 return stream.ReadLine();
             }
+
         }
 
-        public static string GetLocalIPAddress()
+        public static void WriteTextMessage(TcpClient client, string message)
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
+            var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
             {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
+                stream.Write(message); stream.Flush();
             }
-            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
-        
+
         // private static void OnRead(IAsyncResult ar)
         // {
         //     int receivedBytes = stream.EndRead(ar);
@@ -91,7 +99,7 @@ namespace VirtualReality
         //     }
         //     stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         // }
-        
+
         private static void write(string data)
         {
             var dataAsBytes = System.Text.Encoding.ASCII.GetBytes(data + "\r\n\r\n");
