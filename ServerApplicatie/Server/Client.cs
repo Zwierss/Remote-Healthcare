@@ -3,8 +3,6 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace Server
 {
@@ -17,15 +15,29 @@ namespace Server
         private string totalBuffer = "";
         #endregion
 
-        public string userName { get; set; }
-        public string password { get; set; }
+        public string patientId { get; set; }
 
 
         public Client(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
 
-            ClientLogin();
+            //ClientLogin();
+
+            //Thread thread = new Thread(HandleData);
+            //thread.Start();
+
+            //this.userName = userName;
+
+            //this.stream = this.tcpClient.GetStream();
+            //stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
+        }
+        
+        public Client()
+        {
+            this.tcpClient = null;
+
+            //ClientLogin();
 
             //Thread thread = new Thread(HandleData);
             //thread.Start();
@@ -38,9 +50,21 @@ namespace Server
 
         public void ClientLogin()
         {
-            WriteTextMessage(this.tcpClient, "Welkom!\nVul je patiënt ID in: ");
-            string answer = ReadTextMessage(tcpClient);
-            DataSaver.AddNewClient(new Client(new TcpClient()));
+            //Voer patient id in: \n
+            WriteTextMessage(this.tcpClient, "Welkom!\n");
+            string patientId = ReadTextMessage(tcpClient);
+            Console.WriteLine(patientId);
+
+            if (DataSaver.ClientExists(patientId))
+            {
+                WriteTextMessage(this.tcpClient, "Patient gevonden\n");
+            }
+            else
+            {
+                this.patientId = patientId;
+                DataSaver.AddNewClient(this);
+                WriteTextMessage(this.tcpClient, "Nieuw account aangemaakt\n");
+            }
         }
 
         /*

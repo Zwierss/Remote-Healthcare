@@ -29,7 +29,9 @@ namespace Server
         {
             var tcpClient = listener.EndAcceptTcpClient(ar);
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
-            clients.Add(new Client(tcpClient));
+            Client newClient = new Client(tcpClient);
+            clients.Add(newClient);
+            newClient.ClientLogin();
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 

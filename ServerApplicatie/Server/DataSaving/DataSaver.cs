@@ -14,8 +14,8 @@ namespace Server.DataSaving
         public static void AddNewClient(Client client)
         {
             Console.WriteLine(Environment.CurrentDirectory);
-            string path = Environment.CurrentDirectory + "\\Clients\\" + client.userName + ".JSON";
-            File.Create(path);
+            string path = Environment.CurrentDirectory + "\\Clients\\" + client.patientId + ".JSON";
+            File.Create(path).Close();
 
             string clientAsJson = JsonConvert.SerializeObject(client);
             File.WriteAllText(path, clientAsJson);
@@ -23,8 +23,19 @@ namespace Server.DataSaving
 
         public static bool ClientExists(string patientId)
         {
+            string[] clientFiles = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients");
+            foreach (string clientPath in clientFiles)
+            {
+                var clientInJson = JObject.Parse(File.ReadAllText(clientPath));
+                Client client = new Client();
+                client.patientId = clientInJson["patientId"].ToString();
+                if(client.patientId == patientId)
+                {
+                    return true;
+                }
+            }
 
-            return true;
+            return false;
         }
     }
 }
