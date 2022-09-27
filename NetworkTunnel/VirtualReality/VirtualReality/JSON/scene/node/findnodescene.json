@@ -1,6 +1,6 @@
 {
   "id": "scene/node/find",
   "data": {
-    "name": { "name" }
+    "name":  "name" 
   }
 }

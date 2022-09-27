@@ -1,77 +1,75 @@
 ﻿using System.Data.SqlTypes;
+using System.Reflection.Emit;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace VirtualReality;
 
-public class PacketSender
+public static class PacketSender
 {
 
-    private static string _PATHDIR = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("bin", StringComparison.Ordinal)) + "JSON\\";
-
-    public static JObject SendReplacedObject(string variable, string replacement, int position, string filename)
+    private static readonly string PathDir = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("bin", StringComparison.Ordinal)) + "JSON\\";
+    
+    public static JObject? SendReplacedObject<TR,TO>(string variable, TR replacement, int position, TO targetObject)
     {
-        JObject data = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(_PATHDIR + filename)));
-        JObject currentObject = data;
+        JObject? data = targetObject switch
+        {
+            string => (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(PathDir + targetObject))),
+            JObject jObject => jObject,
+            _ => null
+        };
+
+        JObject? currentObject = data;
+
         for (int i = 0; i < position; i++)
         {
             currentObject = ((JObject?)currentObject!["data"])!;
         }
 
-        currentObject![variable] = replacement;
+        switch (replacement)
+        {
+            case string s:
+                currentObject![variable] = s;
+                break;
+            case JObject jObject:
+                currentObject![variable] = jObject;
+                break;
+            case double:
+            {
+                string r = replacement.ToString()!;
+                currentObject![variable] = (JToken)double.Parse(r);
+                break;
+            }
+            case float[][] f:
+                JArray a = new JArray();
+                foreach (var t in f)
+                {
+                    JArray j = new JArray(t);
+                    a.Add(j);
+                }
+
+                currentObject![variable] = a;
+                break;
+        }
+
         return data;
     }
-    
-    public static JObject SendReplacedObject(string variable, double replacement, int position, string filename)
+
+    public static JObject GetJson(string? filename)
     {
-        JObject data = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(_PATHDIR + filename)));
-        JObject currentObject = data;
-        for (int i = 0; i < position; i++)
+        return (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(PathDir + filename)));
+    }
+
+    public static JObject? GetJsonThroughTunnel<T>(T o, string id)
+    {
+        JObject? data = o! switch
         {
-            currentObject = ((JObject?)currentObject!["data"])!;
-        }
+            string => GetJson(o as string),
+            JObject => o as JObject,
+            _ => null
+        };
 
-        currentObject![variable] = replacement;
-        return data;
+        return SendReplacedObject<JObject, JObject>("data", data!, 1, SendReplacedObject<string, string>("dest", id, 1, "tunnelsend.json")!);
     }
-    
-    public static JObject SendReplacedObject(string variable, JObject replacement, int position, string filename)
-    {
-        JObject data = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(_PATHDIR + filename)));
-        JObject currentObject = data;
-        for (int i = 0; i < position; i++)
-        {
-            currentObject = ((JObject?)currentObject!["data"])!;
-        }
-
-        currentObject[variable] = replacement;
-        return data;
-    }
-    
-    public static JObject SendReplacedObject(string variable, JObject replacement, int position, JObject targetObject)
-    {
-        JObject currentObject = targetObject;
-        for (int i = 0; i < position; i++)
-        {
-            currentObject = ((JObject?)currentObject!["data"])!;
-        }
-
-        currentObject[variable] = replacement;
-        return targetObject;
-    }
-
-    public static JObject GetJson(string filename)
-    {
-        return (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(_PATHDIR + filename)));
-    }
-
-    public static JObject GetJsonThroughTunnel(string filename, string id)
-    {
-        return SendReplacedObject("data", GetJson(filename), 1, SendReplacedObject("dest", id, 1, "tunnelsend.json"));
-    }
-    public static JObject GetJsonThroughTunnel(JObject o, string id)
-    {
-        return SendReplacedObject("data", o, 1, SendReplacedObject("dest", id, 1, "tunnelsend.json"));
-    }
-    
 }

@@ -1,11 +1,11 @@
 {
   "id": "scene/node/addlayer",
   "data": {
-    "id": { "uuid" },
-    "diffuse": { "texture.png" },
-    "normal": { "texture.png" },
+    "id":  "uuid" ,
+    "diffuse":  "texture.png" ,
+    "normal":  "texture.png" ,
     "minHeight": 0,
     "maxHeight": 10,
-    "fadeDist": 1
+    "fadeDist": 10
   }
 }
