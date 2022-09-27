@@ -49,7 +49,7 @@ public class Tree
                     },
                     model = new
                     {
-                        file = BikePath + "fantasy\\tree1.obj",
+                        file = BikePath + "trees\\fantasy\\tree1.obj",
                         animated = false
                     }
                 }

@@ -32,7 +32,7 @@ public class HeightMap
         {
             for (int y = 0; y < heightmap.Height; y++)
             {
-                heightBits[x, y] = ((heightmap.GetPixel(x, y).R / 256.0f) * 25.0f) -10;
+                heightBits[x, y] = (heightmap.GetPixel(x, y).R / 256.0f) * 10.0f;
             }
         }
     
