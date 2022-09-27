@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Server.DataSaving;
+using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Server
 {
@@ -14,17 +17,35 @@ namespace Server
         private string totalBuffer = "";
         #endregion
 
-        public string UserName { get; set; }
+        public string userName { get; set; }
+        public string password { get; set; }
 
 
         public Client(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
 
-            this.stream = this.tcpClient.GetStream();
-            stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
+            ClientLogin();
+
+            //Thread thread = new Thread(HandleData);
+            //thread.Start();
+
+            //this.userName = userName;
+
+            //this.stream = this.tcpClient.GetStream();
+            //stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
+
+        public void ClientLogin()
+        {
+            WriteTextMessage(this.tcpClient, "Welkom!\nVul je patiënt ID in: ");
+            string answer = ReadTextMessage(tcpClient);
+            DataSaver.AddNewClient(new Client(new TcpClient()));
+        }
+
+        /*
         #region connection stuff
+
         private void OnRead(IAsyncResult ar)
         {
             try
@@ -48,7 +69,35 @@ namespace Server
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
         #endregion
+        */
 
+        public void HandleData()
+        {
+            bool connected = true;
+            while (connected)
+            {
+                string received = ReadTextMessage(this.tcpClient);
+            }
+        }
+
+        public static void WriteTextMessage(TcpClient client, string message)
+        {
+            var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
+            {
+                stream.Write(message);
+                stream.Flush();
+            }
+        }
+
+        public static string ReadTextMessage(TcpClient client)
+        {
+            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+            {
+                return stream.ReadLine();
+            }
+        }
+
+        /*
         private void handleData(string[] packetData)
         {
             Console.WriteLine($"Got a packet: {packetData[0]}");
@@ -78,13 +127,14 @@ namespace Server
                         if (!assertPacketData(packetData, 3))
                             return;
                         string message = $"{this.UserName} : {packetData[2]}";
-                        Program.SendToUser(packetData[1], message);
+                        //Program.SendToUser(packetData[1], message);
                         break;
                     }
             }
 
 
         }
+        */
 
         private bool assertPacketData(string[] packetData, int requiredLength)
         {

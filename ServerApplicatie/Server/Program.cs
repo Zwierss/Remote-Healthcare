@@ -47,6 +47,7 @@ namespace Server
             Console.WriteLine("Client disconnected");
         }
 
+        /*
         internal static void SendToUser(string user, string packet)
         {
             foreach(var client in clients.Where(c => c.UserName == user))
@@ -54,5 +55,6 @@ namespace Server
                 client.Write(packet);
             }
         }
+        */
     }
 }
