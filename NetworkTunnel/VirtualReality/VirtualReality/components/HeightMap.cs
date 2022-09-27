@@ -23,8 +23,7 @@ public class HeightMap
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("id", _parent.TerrainId!, 1, "scene\\node\\deletenodescene.json")!, _parent.TunnelId!)!);
         Thread.Sleep(2000);
         
-        using Bitmap heightmap = new Bitmap(Path + "heightmap.png");
-        //_parent.SendData(PacketSender.GetJsonThroughTunnel<string>("scene\\resetscene.json", _parent.TunnelId));
+        using Bitmap heightmap = new Bitmap(Path + "heightmap-0.png");
         //_parent.SendData(PacketSender.GetJsonThroughTunnel("pause.json", _parent._tunnelID));
 
         float[,] heightBits = new float[heightmap.Width, heightmap.Height];
@@ -64,8 +63,8 @@ public class HeightMap
             
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, JObject>(
             "id", _parent.TerrainId!, 1, PacketSender.SendReplacedObject<string, JObject>(
-                "diffuse", Path + "grass_normal.png", 1, PacketSender.SendReplacedObject<string, string>(
-                    "normal", Path + "grass_normal.png", 1, "scene\\node\\addlayernodescene.json"
+                "diffuse", Path + "grass_green.png", 1, PacketSender.SendReplacedObject<string, string>(
+                    "normal", Path + "grass_green.png", 1, "scene\\node\\addlayernodescene.json"
                 )!
             )!
         )!, _parent.TunnelId)!);

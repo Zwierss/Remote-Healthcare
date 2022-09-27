@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
-      <PackageReference Include="System.Drawing.Common" Version="7.0.0-rc.1.22426.10" />
+      <None Remove="resources\heightmap.png" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="resources" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
+      <PackageReference Include="System.Drawing.Common" Version="7.0.0-rc.1.22426.10" />
     </ItemGroup>
 
 </Project>
