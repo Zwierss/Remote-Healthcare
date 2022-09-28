@@ -1,27 +1,42 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
 
+
 namespace FietsDemo
 {
     class Program
     {
+        private static TcpClient _client;
+        private static NetworkStream _stream;
         public static Task Main(string[] args)
         {
 
-            runSimulation();
-            
+            //runSimulation();
+            Console.WriteLine("Client started");
+            client = new TcpClient();
+            client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
+
+
             Bike bike = new Bike();
             HeartRate heart = new HeartRate();
 
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
-            while(!bikeConnection) Thread.Sleep(1000);
+            Console.WriteLine("c");
+            //while(!bikeConnection) Thread.Sleep(1000);
+            Console.WriteLine("d");
             bool hearRateConnection = heart.MakeConnection().Result;
+            Console.WriteLine("e");
+
+            bool clientConnection = client.MakeConnection().Result;
+
 
             if (!bikeConnection)
             {
@@ -36,12 +51,14 @@ namespace FietsDemo
                     else
                     {
                         Console.WriteLine("Closing down application");
+                        Console.WriteLine("b");
                         return Task.CompletedTask;
                     }
                 }
             }
 
             Console.Read();
+            Console.WriteLine("a");
             return Task.CompletedTask;
         }
 
@@ -101,6 +118,12 @@ namespace FietsDemo
             Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
             Console.WriteLine("Heart Rate: " + values[10] + " bpm");
             Console.WriteLine("-----------");
+
+            JsonFile jsonfile = new JsonFile
+            {
+
+            }
+
         }
 
         private static void PrintBikeData(int[] values)
@@ -137,6 +160,30 @@ namespace FietsDemo
             Console.WriteLine("-----------");
             Console.WriteLine(values[1] + " bpm");
             Console.WriteLine("-----------");
+        }
+        private static void OnConnect(IAsyncResult ar)
+        {
+            _client.EndConnect(ar);
+            Console.WriteLine("Verbonden!");
+
+            Console.WriteLine(ReadTextMessage(client));
+            Console.WriteLine("Voer cliëntnummer in");
+            username = Console.ReadLine();
+            WriteTextMessage(client, username);
+            Console.WriteLine(ReadTextMessage(client));
+
+            stream = client.GetStream();
+
+            handlingServer();
+        }
+        public static void SendData(JsonFile jsonFile)
+        {
+
+        }
+
+        private static void receiveData()
+        {
+
         }
     }
 }
