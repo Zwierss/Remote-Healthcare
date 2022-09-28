@@ -19,8 +19,7 @@ namespace VirtualReality
         private static byte[] buffer = new byte[1024];
         private static string totalBuffer;
         private static string username;
-
-        private static bool loggedIn = false;
+        
         public ClientApplication()
         {
             Console.WriteLine("Client started");
@@ -45,6 +44,7 @@ namespace VirtualReality
             //    else
             //        console.writeline("je bent nog niet ingelogd");
             //}
+
         }
 
         private static void OnConnect(IAsyncResult ar)
@@ -60,11 +60,17 @@ namespace VirtualReality
 
             stream = client.GetStream();
 
-            // stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
-            Console.WriteLine(ReadTextMessage(client));
-            // write($"login\r\n{username}\r\n{password}");
+            handlingServer();
+        }
 
-
+        public static void handlingServer()
+        {
+            while (true)
+            {
+                Console.WriteLine(ReadTextMessage(client));
+                String messageLine = Console.ReadLine();
+                WriteTextMessage(client, messageLine);
+            }
         }
 
         public static string ReadTextMessage(TcpClient client)
@@ -80,7 +86,8 @@ namespace VirtualReality
         {
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
             {
-                stream.Write(message); stream.Flush();
+                stream.Write(message);
+                stream.Flush();
             }
         }
 
@@ -128,6 +135,7 @@ namespace VirtualReality
         //     }
         //
         // }
+
     }
 }
 
