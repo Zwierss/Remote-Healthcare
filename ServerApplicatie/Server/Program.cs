@@ -35,6 +35,7 @@ namespace Server
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
+        /*
         internal static void Broadcast(string packet)
         {
             foreach(var client in clients)
@@ -42,6 +43,7 @@ namespace Server
                 client.Write(packet);
             }
         }
+        */
 
         internal static void Disconnect(Client client)
         {
