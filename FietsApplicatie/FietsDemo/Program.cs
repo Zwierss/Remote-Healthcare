@@ -20,22 +20,21 @@ namespace FietsDemo
 
             //runSimulation();
             Console.WriteLine("Client started");
-            client = new TcpClient();
-            client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
+            _client = new TcpClient();
+            _client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
 
 
             Bike bike = new Bike();
             HeartRate heart = new HeartRate();
+            Client client = new Client();
 
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
-            Console.WriteLine("c");
+            
             //while(!bikeConnection) Thread.Sleep(1000);
-            Console.WriteLine("d");
             bool hearRateConnection = heart.MakeConnection().Result;
-            Console.WriteLine("e");
-
-            bool clientConnection = client.MakeConnection().Result;
+           
+            //bool clientConnection = _client.MakeConnection().Result;
 
 
             if (!bikeConnection)
@@ -51,14 +50,12 @@ namespace FietsDemo
                     else
                     {
                         Console.WriteLine("Closing down application");
-                        Console.WriteLine("b");
                         return Task.CompletedTask;
                     }
                 }
             }
 
             Console.Read();
-            Console.WriteLine("a");
             return Task.CompletedTask;
         }
 
@@ -119,11 +116,6 @@ namespace FietsDemo
             Console.WriteLine("Heart Rate: " + values[10] + " bpm");
             Console.WriteLine("-----------");
 
-            JsonFile jsonfile = new JsonFile
-            {
-
-            }
-
         }
 
         private static void PrintBikeData(int[] values)
@@ -132,11 +124,9 @@ namespace FietsDemo
             Console.WriteLine("-----------");
             Console.WriteLine("Event Count: " + values[5]);
             Console.WriteLine("Instantaneous Cadence: " + values[6] + " rpm");
-            Console.WriteLine("Accumulated Power LSB: " + values[7] + " W");
-            Console.WriteLine("Accumulated Power MSB: " + values[8] + " W");
-            Console.WriteLine("Instantaneous Power LSB: " + values[9] + " W");
+            Console.WriteLine("Accumulated Power: " + (values[7] + (values[8] << 8)) + " W");
             string splitted = Convert.ToString(values[10], 2);
-            Console.WriteLine("Instantaneous Power MSB: " + Convert.ToInt32(splitted.Substring(0,4), 2) + " W");
+            Console.WriteLine("Instantaneous Power: " + (values[9] + Convert.ToInt32(splitted.Substring(0, 4), 2) << 8) + " W");
             Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3,4), 2));
             Console.WriteLine("-----------");
         }
@@ -161,22 +151,14 @@ namespace FietsDemo
             Console.WriteLine(values[1] + " bpm");
             Console.WriteLine("-----------");
         }
+
         private static void OnConnect(IAsyncResult ar)
         {
-            _client.EndConnect(ar);
+            //_client.EndConnect(ar);
             Console.WriteLine("Verbonden!");
-
-            Console.WriteLine(ReadTextMessage(client));
-            Console.WriteLine("Voer cliëntnummer in");
-            username = Console.ReadLine();
-            WriteTextMessage(client, username);
-            Console.WriteLine(ReadTextMessage(client));
-
-            stream = client.GetStream();
-
-            handlingServer();
         }
-        public static void SendData(JsonFile jsonFile)
+       
+        private static void sendData()
         {
 
         }
