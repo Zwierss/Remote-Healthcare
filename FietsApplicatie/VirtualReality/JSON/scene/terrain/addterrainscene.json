@@ -1,0 +1,7 @@
+{
+  "id": "scene/terrain/add",
+  "data": {
+    "size": [ 256, 256 ],
+    "heights": [ 0, 0, 0, "......", 0, 0, 0 ] // 65536 values
+  }
+}
