@@ -34,7 +34,6 @@ namespace Server
         public Client()
         {
             this.tcpClient = null;
-
         }
 
         public void HandleClient()
@@ -77,9 +76,8 @@ namespace Server
 
         public void SaveSession(List<JObject> sessionData)
         {
-
-
             WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
+            DataSaver.AddPatientFile(tcpClient, sessionData);
         }
 
         public static void WriteJsonMessage(TcpClient client, string jsonMessage)
