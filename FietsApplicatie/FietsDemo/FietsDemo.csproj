@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bike.cs" />
-    <Compile Include="JsonData.cs" />
+    <Compile Include="JsonMessage.cs" />
     <Compile Include="HeartRate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

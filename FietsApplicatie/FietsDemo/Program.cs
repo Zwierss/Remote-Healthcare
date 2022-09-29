@@ -25,7 +25,7 @@ namespace FietsDemo
             //runSimulation();
             Console.WriteLine("Client started");
             _client = new TcpClient();
-            _client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
+            _client.BeginConnect("192.168.43.137", 15243, new AsyncCallback(OnConnect), null);
 
 
             Bike bike = new Bike();
@@ -75,6 +75,7 @@ namespace FietsDemo
                 Thread.Sleep(250);
                 int[] bikeData = Simulator.simulateBikeData();
                 PrintBikeData(bikeData);
+                convertData(values);
             }
         }
 
@@ -103,7 +104,7 @@ namespace FietsDemo
                         break;
                     case "19":
                         PrintBikeData(values);
-                        convertData(values);
+                        //convertData(values);
                         break;
                 }
             }
@@ -199,8 +200,9 @@ namespace FietsDemo
         {
             var stream = new StreamWriter(_client.GetStream(), Encoding.ASCII);
             {
-                stream.Write(ob);
+                stream.Write(ob + "\n");
                 stream.Flush();
+                Console.WriteLine("sent!");
             }
         }
 

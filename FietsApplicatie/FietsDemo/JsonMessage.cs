@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 namespace FietsDemo
 {
-
+    public class JsonMessage
+    {
+        public string id { get; set; }
+        public JsonData Data { get; set; }  
+    }
     public class JsonData
     {
-        public string ID { get; set; }
-        public string Username { get; set; }
-        public double Speed { get; set; }
-        public int Heartrate { get; set; }
+        public int heartrate { get; set; }
+        public double speed{ get; set; }
+        public DateTime time { get; set; }
+        public int timestamp { get; set; }
+        public bool endOfSession { get; set; }
 
     }
+    
 }
