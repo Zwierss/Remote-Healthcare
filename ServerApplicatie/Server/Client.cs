@@ -66,6 +66,7 @@ namespace Server
                     sessionData.Add(jsonMessage);
                     SaveSession(sessionData);
                     sessionData.RemoveRange(0, sessionData.Count);
+                    WriteJsonMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
                 }
                 else
                 {
