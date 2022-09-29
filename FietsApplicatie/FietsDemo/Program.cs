@@ -75,7 +75,7 @@ namespace FietsDemo
                 Thread.Sleep(250);
                 int[] bikeData = Simulator.simulateBikeData();
                 PrintBikeData(bikeData);
-                convertData(values);
+                ConvertData(values);
             }
         }
 
@@ -100,7 +100,7 @@ namespace FietsDemo
                 {
                     case "10":
                         PrintGeneralData(values);
-                        convertData(values);
+                        ConvertData(values);
                         break;
                     case "19":
                         PrintBikeData(values);
@@ -166,7 +166,7 @@ namespace FietsDemo
             Console.WriteLine("Verbonden!");
 
         }
-        private static void convertData(int[] values)
+        private static void ConvertData(int[] values)
         {
             //JObject jsonString = new JObject();
             //JObject dataString = new JObject();
@@ -177,10 +177,10 @@ namespace FietsDemo
             //dataString.Add("endOfSession", false);
             //jsonString.Add("id", "client/received");
             //jsonString.Add("data", dataString
-            JsonMessage jsonMessage = new JsonMessage()
+            DataMessage dataMessage = new DataMessage()
             {
                 id = "client/received",
-                Data = new JsonData()
+                Data = new SpecificDataMessage()
                 {
                     heartrate = values[10],
                     speed = (values[9] + (values[8] << 8)) * 0.001,
@@ -190,13 +190,13 @@ namespace FietsDemo
                 }
             };
 
-           sendData(JsonConvert.SerializeObject(jsonMessage));
+           SendData(JsonConvert.SerializeObject(dataMessage));
 
 
             //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
         }
 
-        private static void sendData(string ob)
+        private static void SendData(string ob)
         {
             var stream = new StreamWriter(_client.GetStream(), Encoding.ASCII);
             {
@@ -206,9 +206,18 @@ namespace FietsDemo
             }
         }
 
-        private static void receiveData()
-        { 
-
+        public static string ReadJsonMessage(TcpClient client)
+        {
+            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+            {
+                string message = "";
+                while (stream.Peek() != -1)
+                {
+                    message += stream.ReadLine();
+                }
+                Console.WriteLine(message);
+                return message;
+            }
         }
     }
 }
