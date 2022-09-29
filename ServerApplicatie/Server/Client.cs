@@ -25,8 +25,7 @@ namespace Server
         public Client(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
-            string okMessage = GetJsonOkMessage("client/connected");
-            Console.WriteLine("okmessage: " + okMessage);
+            string okMessage = JsonMessageGenerator.GetJsonOkMessage("client/connected");
             WriteJsonMessage(this.tcpClient, okMessage + "\r\n");
             Thread thread = new Thread(HandleClient);
             thread.Start();
@@ -43,12 +42,18 @@ namespace Server
             bool loggedIn = false;
             while (!loggedIn)
             {
-                Console.WriteLine(ReadTextMessage(tcpClient) + "fffff");
-                //JObject message = JObject.Parse(ReadTextMessage(tcpClient));
-                //if(message["id"].ToString() == "server/login")
-                //{
-                //    ClientLogin(message["data"]["patientId"].ToString());
-                //}
+                JObject loginRequest = JObject.Parse(ReadJsonMessage(tcpClient));
+                if(DataSaver.ClientExists(loginRequest["data"]["patientId"].ToString()))
+                {
+                    this.patientId = patientId;
+                    WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(false) + "\n");
+                }
+                else
+                {
+                    this.patientId = patientId;
+                    DataSaver.AddNewClient(this);
+                    WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(true) + "\n");
+                }
             }
             while (true)
             {
@@ -67,23 +72,7 @@ namespace Server
             }
         }
 
-        public void ClientLogin(string patientId)
-        {
-            Console.WriteLine(patientId);
-
-            if (DataSaver.ClientExists(patientId))
-            {
-                this.patientId = patientId;
-                WriteTextMessage(this.tcpClient, GetJsonLoggedinMessage(false));
-            }
-            else
-            {
-                this.patientId = patientId;
-                DataSaver.AddNewClient(this);
-                WriteTextMessage(this.tcpClient, GetJsonLoggedinMessage(true));
-            }
-        }
-
+        /*
         public string GetJsonOkMessage(string id)
         {
             JObject message = new JObject();
@@ -101,12 +90,13 @@ namespace Server
 
             return message.ToString();
         }
+        */
 
         public void SaveSession(List<JObject> sessionData)
         {
 
 
-            WriteTextMessage(tcpClient, GetJsonOkMessage("client/received"));
+            WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
         }
 
         public void HandleData()
@@ -133,6 +123,21 @@ namespace Server
             {
                 stream.Write(message);
                 stream.Flush();
+            }
+        }
+
+        public static string ReadJsonMessage(TcpClient client)
+        {
+            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+            {
+                string message = "";
+                string line = "";
+                while (stream.Peek() != -1)
+                {
+                    message += stream.ReadLine();
+                }
+                Console.WriteLine(message);
+                return message;
             }
         }
 
