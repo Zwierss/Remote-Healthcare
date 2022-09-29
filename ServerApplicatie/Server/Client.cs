@@ -39,6 +39,7 @@ namespace Server
 
         public void HandleClient()
         {
+            
             bool loggedIn = false;
             while (!loggedIn)
             {
@@ -57,8 +58,9 @@ namespace Server
             }
             while (true)
             {
-                string message = ReadTextMessage(tcpClient);
-                JObject jsonMessage = JObject.Parse(message);
+                string jsonSessionData = ReadJsonMessage(tcpClient);
+                Console.WriteLine(jsonSessionData);
+                JObject jsonMessage = JObject.Parse(jsonSessionData);
                 if ((bool) jsonMessage["data"]["endOfSession"])
                 {
                     sessionData.Add(jsonMessage);
@@ -72,40 +74,11 @@ namespace Server
             }
         }
 
-        /*
-        public string GetJsonOkMessage(string id)
-        {
-            JObject message = new JObject();
-            message.Add("id", id);
-            message.Add("status", "ok");
-
-            return message.ToString();
-        }
-
-        public string GetJsonLoggedinMessage(bool newAccount)
-        {
-            JObject message = new JObject();
-            message.Add("id", "client/login");
-            message.Add("newAccount", newAccount);
-
-            return message.ToString();
-        }
-        */
-
         public void SaveSession(List<JObject> sessionData)
         {
 
 
             WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
-        }
-
-        public void HandleData()
-        {
-            bool connected = true;
-            while (connected)
-            {
-                string received = ReadTextMessage(this.tcpClient);
-            }
         }
 
         public static void WriteJsonMessage(TcpClient client, string jsonMessage)
@@ -136,7 +109,7 @@ namespace Server
                 {
                     message += stream.ReadLine();
                 }
-                Console.WriteLine(message);
+                
                 return message;
             }
         }
