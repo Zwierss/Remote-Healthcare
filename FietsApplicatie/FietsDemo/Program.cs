@@ -20,7 +20,7 @@ namespace FietsDemo
     {
         private static TcpClient _client;
         private static NetworkStream _stream;
-        private static String _username;
+        private static string _username;
         public static Task Main(string[] args)
         {
 
