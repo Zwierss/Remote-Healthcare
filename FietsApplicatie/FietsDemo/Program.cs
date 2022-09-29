@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Net.Sockets;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +29,6 @@ namespace FietsDemo
 
             Bike bike = new Bike();
             HeartRate heart = new HeartRate();
-            Client client = new Client();
 
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
@@ -98,11 +98,11 @@ namespace FietsDemo
                 {
                     case "10":
                         PrintGeneralData(values);
-                        sendData(values);
+                        convertData(values);
                         break;
                     case "19":
                         PrintBikeData(values);
-                        sendData(values);
+                        convertData(values);
                         break;
                 }
             }
@@ -166,18 +166,23 @@ namespace FietsDemo
         }
         private static void convertData(int[] values)
         {
-            JsonData data = new JsonData
-            {
-                Username = _username,
-                Speed = values[9] + (values[8] << 8) * 0.001,
-                Heartrate = values[10]
-            };
-            sendData(data);
+            JObject jsonString = new JObject();
+            JObject dataString = new JObject();
+            dataString.Add("heartrate", values[10]);
+            dataString.Add("speed", values[9] + (values[8] << 8) * 0.001);
+            dataString.Add("time", "");
+            dataString.Add("timestamp", values[6]);
+            dataString.Add("endOfSession", false);
+            jsonString.Add("id", "client/received");
+            jsonString.Add("data", dataString);
+            sendData(jsonString);
+
+            //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
         }
 
-        private static void sendData(JsonData ob)
+        private static void sendData(JObject ob)
         {
-
+         
         }
 
         private static void receiveData()
