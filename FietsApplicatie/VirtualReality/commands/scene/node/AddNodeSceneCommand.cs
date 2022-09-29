@@ -4,7 +4,7 @@ namespace VirtualReality.commands.scene.node;
 
 public class AddNodeSceneCommand : TunnelCallback
 {
-	public void OnCommandReceived(JObject o, Client parent)
+	public void OnCommandReceived(JObject o, VRClient parent)
 	{
 		if (o["data"]!["name"]!.ToString() == "floor")
 		{

@@ -4,7 +4,7 @@ namespace VirtualReality;
 
 public class UpdateRouteCommand : TunnelCallback
 {
-	public void OnCommandReceived(JObject o, Client parent)
+	public void OnCommandReceived(JObject o, VRClient parent)
 	{
 
 	}

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json.Nodes;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtualReality.commands;
@@ -10,7 +10,7 @@ using VirtualReality.components;
 
 namespace VirtualReality;
 
-public class Client
+public class VRClient
 {
     private TcpClient _client = null!;
     private NetworkStream _stream = null!;
@@ -26,6 +26,7 @@ public class Client
     public float[] Heights { get; set; }
     public string? BikeId { get; set; }
     public string? CameraId { get; set; }
+    public bool IsSet { get; set; }
 
     private const string Hostname = "145.48.6.10";
     private const int Port = 6666;
@@ -39,7 +40,10 @@ public class Client
     private readonly Camera _camera;
     private readonly Tree _tree;
 
-    public Client()
+    
+    
+    
+    public VRClient()
     {
         _commands = new Dictionary<string, ICommand>();
         InitCommands();
@@ -51,6 +55,7 @@ public class Client
         _camera = new Camera(this);
         _tree = new Tree(this);
         Heights = new float[200];
+        IsSet = false;
     }
 
     public async Task StartConnection()
@@ -155,7 +160,17 @@ public class Client
         _bike.PlaceBike();
         _camera.SetCamera();
         _tree.PlaceTrees();
+        IsSet = true;
         //new Thread(_skybox.Update).Start();
+    }
+
+    public void UpdateBikeSpeed(double speed)
+    {
+        SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject(
+            "node", BikeId, 1, PacketSender.SendReplacedObject(
+                "speed", speed, 1, "route\\speedfollowroute.json"
+            )
+        ), TunnelId!)!);
     }
 
     private static byte[] Concat(byte[] b1, byte[] b2, int count)

@@ -17,13 +17,13 @@ public class TunnelCommand : ICommand
         InitCommands();
     }
 
-    public void OnCommandReceived(JObject ob, Client client)
+    public void OnCommandReceived(JObject ob, VRClient vrClient)
     {
         foreach (string key in _commands.Keys)
         {
             if (key == ob["data"]["data"]["id"].ToObject<string>())
             {
-                _commands[key].OnCommandReceived((JObject)ob["data"]["data"], client);
+                _commands[key].OnCommandReceived((JObject)ob["data"]["data"], vrClient);
             }
         }
     }

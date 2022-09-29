@@ -4,10 +4,10 @@ namespace VirtualReality.components;
 
 public class Skybox
 {
-    private readonly Client _parent;
+    private readonly VRClient _parent;
     private double _count;
     
-    public Skybox(Client parent)
+    public Skybox(VRClient parent)
     {
         _parent = parent;
         _count = 24.0;

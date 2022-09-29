@@ -8,10 +8,10 @@ namespace VirtualReality.components;
 public class HeightMap
 {
 
-    private readonly Client _parent;
-    private static readonly string Path = string.Concat(Environment.CurrentDirectory.AsSpan(0, Environment.CurrentDirectory.LastIndexOf("bin", StringComparison.Ordinal)), "resources\\");
+    private readonly VRClient _parent;
+    private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("FietsDemo", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
 
-    public HeightMap(Client parent)
+    public HeightMap(VRClient parent)
     {
         _parent = parent;
     }
@@ -24,6 +24,8 @@ public class HeightMap
         Thread.Sleep(2000);
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("id", _parent.TerrainId!, 1, "scene\\node\\deletenodescene.json")!, _parent.TunnelId!)!);
         Thread.Sleep(2000);
+
+        Console.WriteLine(Path + "heightmap-0.png");
         
         using Bitmap heightmap = new Bitmap(Path + "heightmap-0.png");
         //_parent.SendData(PacketSender.GetJsonThroughTunnel("pause.json", _parent._tunnelID));

@@ -4,7 +4,7 @@ namespace VirtualReality;
 
 public class SawpPanelSceneCommand : TunnelCallback
 {
-	public void OnCommandReceived(JObject o, Client parent)
+	public void OnCommandReceived(JObject o, VRClient parent)
 	{
 
 	}

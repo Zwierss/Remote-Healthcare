@@ -1,7 +1,7 @@
 {
   "id": "route/follow/speed",
   "data": {
-    "node": { "nodeid" },
+    "node":  "nodeid" ,
     "speed": 1.0
   }
 }

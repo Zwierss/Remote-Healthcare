@@ -9,7 +9,7 @@ namespace VirtualReality;
 public static class PacketSender
 {
 
-    private static readonly string PathDir = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("bin", StringComparison.Ordinal)) + "JSON\\";
+    private static readonly string PathDir = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("FietsDemo", StringComparison.Ordinal)) + "VirtualReality\\JSON\\";
     
     public static JObject? SendReplacedObject<TR,TO>(string variable, TR replacement, int position, TO targetObject)
     {
@@ -35,12 +35,9 @@ public static class PacketSender
             case JObject jObject:
                 currentObject![variable] = jObject;
                 break;
-            case double:
-            {
-                string r = replacement.ToString()!;
-                currentObject![variable] = (JToken)double.Parse(r);
+            case double d:
+                currentObject![variable] = d;
                 break;
-            }
             case float[][] f:
                 JArray a = new JArray();
                 foreach (var t in f)
@@ -50,6 +47,9 @@ public static class PacketSender
                 }
 
                 currentObject![variable] = a;
+                break;
+            case int j:
+                currentObject![variable] = j;
                 break;
         }
 

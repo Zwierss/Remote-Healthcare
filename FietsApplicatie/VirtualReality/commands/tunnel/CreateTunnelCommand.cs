@@ -5,11 +5,11 @@ namespace VirtualReality;
 
 public class CreateTunnelCommand : ICommand
 {
-    public void OnCommandReceived(JObject ob, Client client)
+    public void OnCommandReceived(JObject ob, VRClient vrClient)
     {
         if(ob["data"]["status"].ToObject<string>().Equals("ok"))
         {
-            client.SetTunnel(ob["data"]["id"].ToObject<string>());
+            vrClient.SetTunnel(ob["data"]["id"].ToObject<string>());
         }
         Console.WriteLine("Done with command");
         

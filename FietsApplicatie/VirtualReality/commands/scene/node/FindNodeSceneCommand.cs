@@ -4,7 +4,7 @@ namespace VirtualReality.commands.scene.node;
 
 public class FindNodeSceneCommand : TunnelCallback
 {
-	public void OnCommandReceived(JObject o, Client parent)
+	public void OnCommandReceived(JObject o, VRClient parent)
 	{
 		if (o["data"]![0]!["name"]!.ToString() == "Camera")
 		{

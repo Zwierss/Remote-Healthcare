@@ -5,9 +5,9 @@ namespace VirtualReality.components;
 public class Route
 {
 
-    private readonly Client _parent;
+    private readonly VRClient _parent;
 
-    public Route(Client parent)
+    public Route(VRClient parent)
     {
         _parent = parent;
     }

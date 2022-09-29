@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace VirtualReality;
-
-public interface ICommand
+namespace VirtualReality
 {
-    void OnCommandReceived(JObject ob, Client client);
+    public interface ICommand
+    {
+        void OnCommandReceived(JObject ob, VRClient vrClient);
+    }
 }
+

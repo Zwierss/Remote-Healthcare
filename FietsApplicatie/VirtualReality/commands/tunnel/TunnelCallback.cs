@@ -4,5 +4,5 @@ namespace VirtualReality;
 
 public interface TunnelCallback
 {
-    void OnCommandReceived(JObject ob, Client parent);
+    void OnCommandReceived(JObject ob, VRClient parent);
 }

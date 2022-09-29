@@ -7,7 +7,7 @@ public class SessionListCommand : ICommand
 {
     private const string Format = "MM/dd/yyyy HH:mm:ss";
 
-    public void OnCommandReceived(JObject ob, Client client)
+    public void OnCommandReceived(JObject ob, VRClient vrClient)
     {
         JObject? currentObject = null;
         DateTime? parsedDate = null;
@@ -47,7 +47,7 @@ public class SessionListCommand : ICommand
         
         if (currentObject != null)
         {
-            client.CreateTunnel(currentObject["id"]!.ToObject<string>()!);
+            vrClient.CreateTunnel(currentObject["id"]!.ToObject<string>()!);
         }
         else
         {

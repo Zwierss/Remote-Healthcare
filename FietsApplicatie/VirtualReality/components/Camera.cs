@@ -5,9 +5,9 @@ namespace VirtualReality.components;
 public class Camera
 {
 
-    private readonly Client _parent;
+    private readonly VRClient _parent;
 
-    public Camera(Client parent)
+    public Camera(VRClient parent)
     {
         _parent = parent;
     }

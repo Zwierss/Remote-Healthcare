@@ -5,11 +5,10 @@ namespace VirtualReality.components;
 public class Bike
 {
 
-    private readonly Client _parent;
+    private readonly VRClient _parent;
     
-    private static readonly string BikePath = string.Concat(Environment.CurrentDirectory.AsSpan(0, Environment.CurrentDirectory.LastIndexOf("bin", StringComparison.Ordinal)), "resources\\");
-
-    public Bike(Client parent)
+    private static readonly string BikePath = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("FietsDemo", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
+    public Bike(VRClient parent)
     {
         _parent = parent;
     }
