@@ -14,7 +14,9 @@ namespace Server.DataSaving
         public static void AddNewClient(Client client)
         {
             Console.WriteLine(Environment.CurrentDirectory);
-            string path = Environment.CurrentDirectory + "\\Clients\\" + client.patientId + ".JSON";
+            string directoryPath = Environment.CurrentDirectory + "\\Clients\\" + client.patientId;
+            Directory.CreateDirectory(directoryPath);
+            string path = Environment.CurrentDirectory + "\\Clients\\" + client.patientId + client.patientId + ".JSON";
             File.Create(path).Close();
 
             string clientAsJson = JsonConvert.SerializeObject(client);

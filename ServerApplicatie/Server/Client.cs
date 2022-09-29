@@ -1,78 +1,93 @@
-﻿using Server.DataSaving;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Server.DataSaving;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace Server
 {
     internal class Client
     {
-        #region connection stuff
         private TcpClient tcpClient;
         private NetworkStream stream;
         private byte[] buffer = new byte[1024];
         private string totalBuffer = "";
-        #endregion
 
         public string patientId { get; set; }
+
+        List<JObject> sessionData = new List<JObject>();
 
 
         public Client(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
-
-            //ClientLogin();
-
-            //Thread thread = new Thread(HandleData);
-            //thread.Start();
-
-            //this.userName = userName;
-
-            //this.stream = this.tcpClient.GetStream();
-            //stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
+            string okMessage = JsonMessageGenerator.GetJsonOkMessage("client/connected");
+            WriteJsonMessage(this.tcpClient, okMessage + "\r\n");
+            Thread thread = new Thread(HandleClient);
+            thread.Start();
         }
         
         public Client()
         {
             this.tcpClient = null;
 
-            //ClientLogin();
-
-            //Thread thread = new Thread(HandleData);
-            //thread.Start();
-
-            //this.userName = userName;
-
-            //this.stream = this.tcpClient.GetStream();
-            //stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
 
-        public void ClientLogin()
+        public void HandleClient()
         {
-            //Voer patient id in: \n
-            WriteTextMessage(this.tcpClient, "Welkom!\n");
-            string patientId = ReadTextMessage(tcpClient);
-            Console.WriteLine(patientId);
-
-            if (DataSaver.ClientExists(patientId))
+            
+            bool loggedIn = false;
+            while (!loggedIn)
             {
-                WriteTextMessage(this.tcpClient, "Patient gevonden\n");
+                JObject loginRequest = JObject.Parse(ReadJsonMessage(tcpClient));
+                if(DataSaver.ClientExists(loginRequest["data"]["patientId"].ToString()))
+                {
+                    this.patientId = patientId;
+                    WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(false) + "\n");
+                }
+                else
+                {
+                    this.patientId = patientId;
+                    DataSaver.AddNewClient(this);
+                    WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(true) + "\n");
+                }
             }
-            else
+            while (true)
             {
-                this.patientId = patientId;
-                DataSaver.AddNewClient(this);
-                WriteTextMessage(this.tcpClient, "Nieuw account aangemaakt\n");
+                string jsonSessionData = ReadJsonMessage(tcpClient);
+                Console.WriteLine(jsonSessionData);
+                JObject jsonMessage = JObject.Parse(jsonSessionData);
+                if ((bool) jsonMessage["data"]["endOfSession"])
+                {
+                    sessionData.Add(jsonMessage);
+                    SaveSession(sessionData);
+                    sessionData.RemoveRange(0, sessionData.Count);
+                    WriteJsonMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
+                }
+                else
+                {
+                    sessionData.Add(jsonMessage);
+                }
             }
         }
 
-        public void HandleData()
+        public void SaveSession(List<JObject> sessionData)
         {
-            bool connected = true;
-            while (connected)
+
+
+            WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
+        }
+
+        public static void WriteJsonMessage(TcpClient client, string jsonMessage)
+        {
+            var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
             {
-                string received = ReadTextMessage(this.tcpClient);
+                stream.Write(jsonMessage);
+                stream.Flush();
             }
         }
 
@@ -85,6 +100,21 @@ namespace Server
             }
         }
 
+        public static string ReadJsonMessage(TcpClient client)
+        {
+            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+            {
+                string message = "";
+                string line = "";
+                while (stream.Peek() != -1)
+                {
+                    message += stream.ReadLine();
+                }
+                
+                return message;
+            }
+        }
+
         public static string ReadTextMessage(TcpClient client)
         {
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
@@ -92,26 +122,5 @@ namespace Server
                 return stream.ReadLine();
             }
         }
-
-        /*
-        private bool assertPacketData(string[] packetData, int requiredLength)
-        {
-            if (packetData.Length < requiredLength)
-            {
-                Write("error");
-                return false;
-            }
-            return true;
-        }
-        */
-
-        /*
-        public void Write(string data)
-        {
-            var dataAsBytes = System.Text.Encoding.ASCII.GetBytes(data + "\r\n\r\n");
-            stream.Write(dataAsBytes, 0, dataAsBytes.Length);
-            stream.Flush();
-        }
-        */
     }
 }
