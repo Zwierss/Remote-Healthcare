@@ -1,27 +1,41 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
 
+
 namespace FietsDemo
 {
     class Program
     {
+        private static TcpClient _client;
+        private static NetworkStream _stream;
         public static Task Main(string[] args)
         {
 
-            runSimulation();
-            
+            //runSimulation();
+            Console.WriteLine("Client started");
+            _client = new TcpClient();
+            _client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
+
+
             Bike bike = new Bike();
             HeartRate heart = new HeartRate();
+            Client client = new Client();
 
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
-            while(!bikeConnection) Thread.Sleep(1000);
+            
+            //while(!bikeConnection) Thread.Sleep(1000);
             bool hearRateConnection = heart.MakeConnection().Result;
+           
+            //bool clientConnection = _client.MakeConnection().Result;
+
 
             if (!bikeConnection)
             {
@@ -101,6 +115,7 @@ namespace FietsDemo
             Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
             Console.WriteLine("Heart Rate: " + values[10] + " bpm");
             Console.WriteLine("-----------");
+
         }
 
         private static void PrintBikeData(int[] values)
@@ -109,11 +124,9 @@ namespace FietsDemo
             Console.WriteLine("-----------");
             Console.WriteLine("Event Count: " + values[5]);
             Console.WriteLine("Instantaneous Cadence: " + values[6] + " rpm");
-            Console.WriteLine("Accumulated Power LSB: " + values[7] + " W");
-            Console.WriteLine("Accumulated Power MSB: " + values[8] + " W");
-            Console.WriteLine("Instantaneous Power LSB: " + values[9] + " W");
+            Console.WriteLine("Accumulated Power: " + (values[7] + (values[8] << 8)) + " W");
             string splitted = Convert.ToString(values[10], 2);
-            Console.WriteLine("Instantaneous Power MSB: " + Convert.ToInt32(splitted.Substring(0,4), 2) + " W");
+            Console.WriteLine("Instantaneous Power: " + (values[9] + Convert.ToInt32(splitted.Substring(0, 4), 2) << 8) + " W");
             Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3,4), 2));
             Console.WriteLine("-----------");
         }
@@ -137,6 +150,22 @@ namespace FietsDemo
             Console.WriteLine("-----------");
             Console.WriteLine(values[1] + " bpm");
             Console.WriteLine("-----------");
+        }
+
+        private static void OnConnect(IAsyncResult ar)
+        {
+            //_client.EndConnect(ar);
+            Console.WriteLine("Verbonden!");
+        }
+       
+        private static void sendData()
+        {
+
+        }
+
+        private static void receiveData()
+        {
+
         }
     }
 }
