@@ -7,7 +7,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FietsDemo
 {
@@ -15,6 +16,7 @@ namespace FietsDemo
     {
         private static TcpClient _client;
         private static NetworkStream _stream;
+        private static String _username;
         public static Task Main(string[] args)
         {
 
@@ -30,16 +32,18 @@ namespace FietsDemo
 
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
-            
+
             //while(!bikeConnection) Thread.Sleep(1000);
             bool hearRateConnection = heart.MakeConnection().Result;
-           
+
             //bool clientConnection = _client.MakeConnection().Result;
+            JObject jObject = new JObject();
 
 
             if (!bikeConnection)
             {
-                if(!hearRateConnection){
+                if (!hearRateConnection)
+                {
                     Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
                     string input = Console.ReadLine();
                     if (input == "y")
@@ -78,10 +82,10 @@ namespace FietsDemo
         {
             string[] data = BitConverter.ToString(e.Data).Split('-');
             int[] values = new int[data.Length];
-            
+
             for (int i = 0; i < data.Length; i++)
             {
-                values[i] = int.Parse(data[i],System.Globalization.NumberStyles.HexNumber);
+                values[i] = int.Parse(data[i], System.Globalization.NumberStyles.HexNumber);
             }
 
             if (data.Length < 13)
@@ -94,23 +98,25 @@ namespace FietsDemo
                 {
                     case "10":
                         PrintGeneralData(values);
+                        sendData(values);
                         break;
                     case "19":
                         PrintBikeData(values);
+                        sendData(values);
                         break;
                 }
             }
 
-            
-            
+
+
         }
-        
+
         private static void PrintGeneralData(int[] values)
         {
             Console.WriteLine("Received General Data");
             Console.WriteLine("-----------");
             Console.WriteLine("Equipment Type: " + values[5]);
-            Console.WriteLine("Elapsed Time: " + (values[6])+ " seconds");
+            Console.WriteLine("Elapsed Time: " + (values[6]) + " seconds");
             Console.WriteLine("Distance Traveled: " + values[7] + " meters");
             Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
             Console.WriteLine("Heart Rate: " + values[10] + " bpm");
@@ -127,7 +133,7 @@ namespace FietsDemo
             Console.WriteLine("Accumulated Power: " + (values[7] + (values[8] << 8)) + " W");
             string splitted = Convert.ToString(values[10], 2);
             Console.WriteLine("Instantaneous Power: " + (values[9] + Convert.ToInt32(splitted.Substring(0, 4), 2) << 8) + " W");
-            Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3,4), 2));
+            Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3, 4), 2));
             Console.WriteLine("-----------");
         }
 
@@ -135,15 +141,15 @@ namespace FietsDemo
         {
             string[] data = BitConverter.ToString(e.Data).Split('-');
             int[] values = new int[data.Length];
-            
+
             for (int i = 0; i < data.Length; i++)
             {
-                values[i] = int.Parse(data[i],System.Globalization.NumberStyles.HexNumber);
+                values[i] = int.Parse(data[i], System.Globalization.NumberStyles.HexNumber);
             }
-            
+
             PrintHeartData(values);
         }
-        
+
         private static void PrintHeartData(int[] values)
         {
             Console.WriteLine("Received Heart Rate Data");
@@ -154,17 +160,28 @@ namespace FietsDemo
 
         private static void OnConnect(IAsyncResult ar)
         {
-            //_client.EndConnect(ar);
+            _client.EndConnect(ar);
             Console.WriteLine("Verbonden!");
+
         }
-       
-        private static void sendData()
+        private static void convertData(int[] values)
+        {
+            JsonData data = new JsonData
+            {
+                Username = _username,
+                Speed = values[9] + (values[8] << 8) * 0.001,
+                Heartrate = values[10]
+            };
+            sendData(data);
+        }
+
+        private static void sendData(JsonData ob)
         {
 
         }
 
         private static void receiveData()
-        {
+        { 
 
         }
     }

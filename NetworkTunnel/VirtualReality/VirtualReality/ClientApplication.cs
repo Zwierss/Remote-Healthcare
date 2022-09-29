@@ -22,6 +22,7 @@ namespace VirtualReality
         
         public ClientApplication()
         {
+
             Console.WriteLine("Client started");
             client = new TcpClient();
             client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
