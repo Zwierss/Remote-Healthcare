@@ -31,7 +31,7 @@ namespace Server
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
             Client newClient = new Client(tcpClient);
             clients.Add(newClient);
-            newClient.ClientLogin();
+            //newClient.ClientLogin();
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
