@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
@@ -9,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Avans.TI.BLE;
+using FietsDemo.JSON;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -25,7 +27,12 @@ namespace FietsDemo
             //runSimulation();
             Console.WriteLine("Client started");
             _client = new TcpClient();
-            _client.BeginConnect("192.168.43.137", 15243, new AsyncCallback(OnConnect), null);
+            _client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
+            Console.WriteLine("Typ uw patiëntnummer");
+            _username = Console.ReadLine();
+            SendPatientId();
+            ReadJsonMessage(_client);
+            //_username = Console.ReadLine();
 
 
             Bike bike = new Bike();
@@ -34,11 +41,10 @@ namespace FietsDemo
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
 
-            //while(!bikeConnection) Thread.Sleep(1000);
+            
             bool hearRateConnection = heart.MakeConnection().Result;
 
             //bool clientConnection = _client.MakeConnection().Result;
-            JObject jObject = new JObject();
 
 
             if (!bikeConnection)
@@ -179,8 +185,8 @@ namespace FietsDemo
             //jsonString.Add("data", dataString
             DataMessage dataMessage = new DataMessage()
             {
-                id = "client/received",
-                Data = new SpecificDataMessage()
+                id = "server/received",
+                data = new SpecificDataMessage()
                 {
                     heartrate = values[10],
                     speed = (values[9] + (values[8] << 8)) * 0.001,
@@ -204,6 +210,19 @@ namespace FietsDemo
                 stream.Flush();
                 Console.WriteLine("sent!");
             }
+        }
+
+        public static void SendPatientId()
+        {
+            LoginMessage login = new LoginMessage()
+            {
+                id = "server/login",
+                data = new SpecificLoginMessage()
+                {
+                    patientId = _username
+                }
+            };
+            SendData(JsonConvert.SerializeObject(login));
         }
 
         public static string ReadJsonMessage(TcpClient client)

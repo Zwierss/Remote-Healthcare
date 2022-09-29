@@ -25,7 +25,7 @@ namespace FietsDemo
             }
 
             // Connecting
-            errorCode = errorCode = await bleBike.OpenDevice("Tacx Flux 01140");
+            errorCode = errorCode = await bleBike.OpenDevice("Tacx Flux 01249");
             // __TODO__ Error check
 
             var services = bleBike.GetServices;

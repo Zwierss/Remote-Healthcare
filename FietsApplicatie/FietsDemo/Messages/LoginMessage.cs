@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace FietsDemo.JSON
 {
-    internal class Class1
+    public class LoginMessage
     {
+        public string id { get; set; }
+        
+        public SpecificLoginMessage data { get; set; }
+    }
+    public class SpecificLoginMessage
+    {
+        public string patientId { get; set; }
     }
 }
