@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Avans.TI.BLE;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -166,23 +167,41 @@ namespace FietsDemo
         }
         private static void convertData(int[] values)
         {
-            JObject jsonString = new JObject();
-            JObject dataString = new JObject();
-            dataString.Add("heartrate", values[10]);
-            dataString.Add("speed", values[9] + (values[8] << 8) * 0.001);
-            dataString.Add("time", "");
-            dataString.Add("timestamp", values[6]);
-            dataString.Add("endOfSession", false);
-            jsonString.Add("id", "client/received");
-            jsonString.Add("data", dataString);
-            sendData(jsonString);
+            //JObject jsonString = new JObject();
+            //JObject dataString = new JObject();
+            //dataString.Add("heartrate", values[10]);
+            //dataString.Add("speed", values[9] + (values[8] << 8) * 0.001);
+            //dataString.Add("time", "");
+            //dataString.Add("timestamp", values[6]);
+            //dataString.Add("endOfSession", false);
+            //jsonString.Add("id", "client/received");
+            //jsonString.Add("data", dataString
+            JsonMessage jsonMessage = new JsonMessage()
+            {
+                id = "client/received",
+                Data = new JsonData()
+                {
+                    heartrate = values[10],
+                    speed = (values[9] + (values[8] << 8)) * 0.001,
+                    time = DateTime.Now,
+                    timestamp = values[6],
+                    endOfSession = false
+                }
+            };
+
+           sendData(JsonConvert.SerializeObject(jsonMessage));
+
 
             //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
         }
 
-        private static void sendData(JObject ob)
+        private static void sendData(string ob)
         {
-         
+            var stream = new StreamWriter(_client.GetStream(), Encoding.ASCII);
+            {
+                stream.Write(ob);
+                stream.Flush();
+            }
         }
 
         private static void receiveData()
