@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.ComTypes;
@@ -21,10 +22,12 @@ namespace FietsDemo
         private static TcpClient _client;
         private static NetworkStream _stream;
         private static string _username;
+        private static bool _stop = false;
         public static Task Main(string[] args)
         {
 
             //runSimulation();
+            
             Console.WriteLine("Client started");
             _client = new TcpClient();
             _client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
@@ -41,10 +44,23 @@ namespace FietsDemo
                
             }).Start();
 
-                //_username = Console.ReadLine();
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    string input = Console.ReadLine();
+                    if(input == "stop")
+                    {
+                        _stop = true;
+                    }
+                }
+
+            }).Start();
+
+            //_username = Console.ReadLine();
 
 
-                Bike bike = new Bike();
+            Bike bike = new Bike();
             HeartRate heart = new HeartRate();
 
             Console.WriteLine("Trying connection with devices");
@@ -90,7 +106,7 @@ namespace FietsDemo
                 Thread.Sleep(250);
                 int[] bikeData = Simulator.simulateBikeData();
                 PrintBikeData(bikeData);
-                ConvertData(values);
+                ConvertToJson(values);
             }
         }
 
@@ -115,7 +131,7 @@ namespace FietsDemo
                 {
                     case "10":
                         PrintGeneralData(values);
-                        ConvertData(values);
+                        ConvertToJson(values);
                         break;
                     case "19":
                         PrintBikeData(values);
@@ -188,7 +204,7 @@ namespace FietsDemo
             
 
         }
-        private static void ConvertData(int[] values)
+        private static void ConvertToJson(int[] values)
         {
             //JObject jsonString = new JObject();
             //JObject dataString = new JObject();
@@ -208,7 +224,7 @@ namespace FietsDemo
                     speed = (values[9] + (values[8] << 8)) * 0.001,
                     time = DateTime.Now,
                     timestamp = values[6],
-                    endOfSession = false
+                    endOfSession = _stop
                 }
             };
 
@@ -225,6 +241,11 @@ namespace FietsDemo
                 stream.Write(ob + "\n");
                 stream.Flush();
                 Console.WriteLine("sent!");
+                if(_stop)
+                {
+                    Console.WriteLine("stopped");
+                    _client.Close();
+                }
             }
         }
 
@@ -247,9 +268,15 @@ namespace FietsDemo
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
             {
                 string message = "";
-                while (stream.Peek() != -1)
+                try
                 {
-                    message += stream.ReadLine();
+                    while (stream.Peek() != -1)
+                    {
+                        message += stream.ReadLine();
+                    }
+                } catch
+                {
+                    Console.WriteLine("Connectie met server beïndigd");
                 }
                 Console.WriteLine(message);
                 return message;
