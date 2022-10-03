@@ -23,6 +23,8 @@ namespace FietsDemo
         private static NetworkStream _stream;
         private static string _username;
         private static bool _stop = false;
+        private static string _host = "localhost";
+        private static int _port = 15243; 
         public static Task Main(string[] args)
         {
 
@@ -30,19 +32,11 @@ namespace FietsDemo
             
             Console.WriteLine("Client started");
             _client = new TcpClient();
-            _client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
+            _client.BeginConnect(_host, _port, new AsyncCallback(OnConnect), null);
             Console.WriteLine("Typ uw patiëntnummer");
-            _username = Console.ReadLine(); SendPatientId();
-            
-            
-            new Thread(() =>
-            {
-                while(true)
-                {
-                    ReadJsonMessage(_client);
-                }
-               
-            }).Start();
+            _username = Console.ReadLine();
+            Console.WriteLine("patientId sent");
+            SendPatientId();
 
             new Thread(() =>
             {
@@ -53,6 +47,15 @@ namespace FietsDemo
                     {
                         _stop = true;
                     }
+                }
+
+            }).Start();
+
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    ReadJsonMessage(_client);
                 }
 
             }).Start();
@@ -76,18 +79,18 @@ namespace FietsDemo
             {
                 if (!hearRateConnection)
                 {
-                    Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
-                    string input = Console.ReadLine();
-                    if (input == "y")
-                    {
+                    //Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
+                    //string input = Console.ReadLine();
+                    //if (input == "y")
+                    //{
                         Console.WriteLine("Starting Simulation");
                         runSimulation();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Closing down application");
-                        return Task.CompletedTask;
-                    }
+                    //}
+                    //else
+                    //{
+                    //    Console.WriteLine("Closing down application");
+                    //    return Task.CompletedTask;
+                    //}
                 }
             }
 
