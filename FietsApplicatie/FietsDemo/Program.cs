@@ -29,13 +29,22 @@ namespace FietsDemo
             _client = new TcpClient();
             _client.BeginConnect("localhost", 15243, new AsyncCallback(OnConnect), null);
             Console.WriteLine("Typ uw patiëntnummer");
-            _username = Console.ReadLine();
-            SendPatientId();
-            ReadJsonMessage(_client);
-            //_username = Console.ReadLine();
+            _username = Console.ReadLine(); SendPatientId();
+            
+            
+            new Thread(() =>
+            {
+                while(true)
+                {
+                    ReadJsonMessage(_client);
+                }
+               
+            }).Start();
+
+                //_username = Console.ReadLine();
 
 
-            Bike bike = new Bike();
+                Bike bike = new Bike();
             HeartRate heart = new HeartRate();
 
             Console.WriteLine("Trying connection with devices");
@@ -168,8 +177,15 @@ namespace FietsDemo
 
         private static void OnConnect(IAsyncResult ar)
         {
-            _client.EndConnect(ar);
-            Console.WriteLine("Verbonden!");
+            try
+            {
+                _client.EndConnect(ar);
+                Console.WriteLine("Verbonden!");
+            } catch
+            {
+                Console.WriteLine("Kan geen verbinding maken met server");
+            }
+            
 
         }
         private static void ConvertData(int[] values)
@@ -222,6 +238,7 @@ namespace FietsDemo
                     patientId = _username
                 }
             };
+            Console.WriteLine(login);
             SendData(JsonConvert.SerializeObject(login));
         }
 
