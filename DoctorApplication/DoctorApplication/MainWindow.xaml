@@ -6,7 +6,20 @@
         xmlns:local="clr-namespace:DoctorApplication"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Name="myGrid" Background="LightSteelBlue" Height="150">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock Name="txt1" Margin="5" FontSize="16" FontFamily="Verdana" Grid.Column="0" Grid.Row="0">Hallo Dokter!</TextBlock>
+        <TextBox Name="usernameInput"  Grid.Row="1" />
+        <TextBox Name="passwordInput"  Grid.Row="2" />
+        <Button Name="loginButton" Grid.Row="3" Click="ToDoctorMainPage">Log in</Button>
 
     </Grid>
 </Window>

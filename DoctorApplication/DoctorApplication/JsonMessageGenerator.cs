@@ -29,5 +29,21 @@ namespace DoctorApplication
             Console.WriteLine(message.ToString());
             return message.ToString();
         }
+
+        public static string GetJsonClientSelectMessage(List<string> patientIds)
+        {
+            JObject message = new JObject();
+            message.Add("id", "server/clients");
+            message.Add("amountOfClients", patientIds.Count);
+            JObject clients = new JObject();
+            for(int i = 0; i < patientIds.Count; i++)
+            {
+                clients.Add("client" + i, patientIds[i]);
+            }
+            message.Add("data", clients);
+
+            Console.WriteLine(message.ToString());
+            return message.ToString();
+        }
     }
 }
