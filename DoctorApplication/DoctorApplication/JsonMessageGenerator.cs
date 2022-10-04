@@ -45,5 +45,23 @@ namespace DoctorApplication
             Console.WriteLine(message.ToString());
             return message.ToString();
         }
+
+        public static string GetJsonStartSessionMessage(string patiendId)
+        {
+            JObject message = new JObject();
+            message.Add("id", "server/startSession");
+            message.Add("client", patiendId);
+
+            return message.ToString();
+        }
+        
+        public static string GetJsonStopSessionMessage(string patiendId)
+        {
+            JObject message = new JObject();
+            message.Add("id", "server/stopSession");
+            message.Add("client", patiendId);
+
+            return message.ToString();
+        }
     }
 }

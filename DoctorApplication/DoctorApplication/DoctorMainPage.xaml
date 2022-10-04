@@ -7,7 +7,13 @@
         mc:Ignorable="d"
         Title="DoctorMainPage" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <TextBlock Text="Welkom!" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        
+        <Button Name="startSessionButton" Grid.Row="1" >Start Session</Button>
+        <Button Name="stopSessionButton" Grid.Row="2" >Stop Session</Button>
     </Grid>
 </Window>

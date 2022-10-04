@@ -19,6 +19,9 @@ namespace DoctorApplication
     /// </summary>
     public partial class DoctorMainPage : Window
     {
+
+        public string command = "";
+
         public DoctorMainPage()
         {
             InitializeComponent();

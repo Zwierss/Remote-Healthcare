@@ -20,8 +20,12 @@ namespace DoctorApplication
         private string username = "";
         private string password = "";
 
-        public delegate void ContinueLogin(bool succeeded);
+        public delegate DoctorMainPage ContinueLogin(bool succeeded);
         public ContinueLogin login;
+
+        public string command = "";
+
+        public DoctorMainPage main;
 
         public Network(string username, string password, ContinueLogin login)
         {
@@ -44,27 +48,31 @@ namespace DoctorApplication
             HandlingServer();
         }
 
-        public void HandlingServer()
+        public async void HandlingServer()
         {
             //bool loggedIn = false;
 
             JObject connectedMessage = JObject.Parse(ReadJsonMessage(tcpClient));
             if (connectedMessage["status"].ToString() == "ok")
             {
-                //WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoginMessage(username, password));
-                WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoginMessage(username, password));
+                WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoginMessage(username, password) + "\n");
             }
 
             JObject loginReply = JObject.Parse(ReadJsonMessage(tcpClient));
             if (loginReply["status"].ToString() == "ok")
             {
                 //loggedIn = true;
-                login(true);
+                this.main = login(true);
                 
                 while (true)
                 {
                     try
                     {
+                        string nextcommand = "";
+                        Task.Run(async () =>
+                        {
+                            nextcommand = await WaitForCommand();
+                        }).Wait();
                         JObject command = JObject.Parse(Console.ReadLine());
                         WriteTextMessage(tcpClient, command.ToString());
                     }
@@ -80,6 +88,16 @@ namespace DoctorApplication
                 login(false);
                 Thread.CurrentThread.Abort();
             }
+        }
+
+        public async Task<string> WaitForCommand()
+        {
+            while(this.main.command == "")
+            {
+                
+            }
+            this.command = this.main.command;
+            return this.command;
         }
 
 

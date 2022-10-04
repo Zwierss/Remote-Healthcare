@@ -47,15 +47,18 @@ namespace DoctorApplication
             
         }
 
-        public void ContinueLogin(bool succeeded)
+        public DoctorMainPage ContinueLogin(bool succeeded)
         {
             if (succeeded)
             {
-                this.Content = new DoctorMainPage().Content;
+                DoctorMainPage page = new DoctorMainPage();
+                this.Content = page.Content;
+                return page;
             }
             else
             {
                 Trace.WriteLine("failed");
+                return new DoctorMainPage();
             }
         }
 
