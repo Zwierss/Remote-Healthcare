@@ -23,7 +23,7 @@ namespace FietsDemo
         private static NetworkStream _stream;
         private static string _username;
         private static bool _stop = false;
-        private static string _host = "localhost";
+        private static string _host = "192.168.43.50";
         private static int _port = 15243; 
         public static Task Main(string[] args)
         {
@@ -271,16 +271,14 @@ namespace FietsDemo
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
             {
                 string message = "";
-                try
-                {
+                
+                
                     while (stream.Peek() != -1)
                     {
                         message += stream.ReadLine();
                     }
-                } catch
-                {
-                    Console.WriteLine("Connectie met server beïndigd");
-                }
+               
+               
                 Console.WriteLine(message);
                 return message;
             }
