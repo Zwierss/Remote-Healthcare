@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
+
 using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
@@ -16,37 +15,33 @@ namespace FietsDemo
         
         public static Task SetupHardware()
         {
-            
-            new Thread(CreateVR).Start();
 
-            RunSimulation();
+            //RunSimulation();
             
-            // Bike bike = new Bike();
-            // HeartRate heart = new HeartRate();
-            //
-            // Console.WriteLine("Trying connection with devices");
-            // bool bikeConnection = bike.MakeConnection().Result;
-            // while(!bikeConnection) Thread.Sleep(1000);
-            // bool hearRateConnection = heart.MakeConnection().Result;
-            //
-            // if (!bikeConnection)
-            // {
-            //     if(!hearRateConnection){
-            //         Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
-            //         string input = Console.ReadLine();
-            //         if (input == "y")
-            //         {
-            //             Console.WriteLine("Starting Simulation");
-            //             runSimulation();
-            //         }
-            //         else
-            //         {
-            //             Console.WriteLine("Closing down application");
-            //             return;
-            //         }
-            //     }
-            // }
+            Bike bike = new Bike();
+            HeartRate heart = new HeartRate();
             
+            Console.WriteLine("Trying connection with devices");
+            bool bikeConnection = bike.MakeConnection().Result;
+            while(!bikeConnection) Thread.Sleep(1000);
+            bool hearRateConnection = heart.MakeConnection().Result;
+            
+            if (!bikeConnection)
+            {
+                if(!hearRateConnection){
+                    Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
+                    string input = Console.ReadLine();
+                    if (input == "y")
+                    {
+                        Console.WriteLine("Starting Simulation");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Closing down application");
+                    }
+                }
+            }
+            new Thread(CreateVR).Start();
             Console.Read();
             return Task.CompletedTask;
         }
@@ -114,11 +109,11 @@ namespace FietsDemo
             Console.WriteLine("Equipment Type: " + values[5]);
             Console.WriteLine("Elapsed Time: " + (values[6])+ " seconds");
             Console.WriteLine("Distance Traveled: " + values[7] + " meters");
-            double speed = values[9] + (values[8] << 8) * 0.001;
+            double speed = (values[8] + values[9] * 255) * 0.001;
             Console.WriteLine("Speed: " + speed + " m/s");
             if (_vr.IsSet)
             {
-                _vr.UpdateBikeSpeed(speed * 2);
+                _vr.UpdateBikeSpeed(speed * 3.6);
             }
 
             Console.WriteLine("Heart Rate: " + values[10] + " bpm");

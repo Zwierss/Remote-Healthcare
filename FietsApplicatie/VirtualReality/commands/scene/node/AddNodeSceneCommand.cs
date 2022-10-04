@@ -16,6 +16,22 @@ public class AddNodeSceneCommand : TunnelCallback
 			Console.WriteLine("Changed bike");
 			parent.BikeId = o["data"]!["uuid"]!.ToString();
 		}
-		
+		else if (o["data"]!["name"]!.ToString() == "Panel")
+		{
+			Console.WriteLine("add panel uuid");
+			parent.PanelId = o["data"]!["uuid"]!.ToString();
+		}
+		// switch (o["data"]!["name"]!.ToString())
+		// {
+		// 	case "floor":
+		// 		parent.TerrainId = o["data"]!["uuid"]!.ToString();
+		// 		break;
+		// 	case "bike":
+		// 		parent.BikeId = o["data"]!["uuid"]!.ToString();
+		// 		break;
+		// 	case "panel":
+		// 		parent.PanelId = o["data"]!["uuid"]!.ToString();
+		// 		break;
+		// }
 	}
 }

@@ -26,6 +26,8 @@ public class VRClient
     public float[] Heights { get; set; }
     public string? BikeId { get; set; }
     public string? CameraId { get; set; }
+    public string? HeadId { get; set; }
+    public string? PanelId { get; set; }
     public bool IsSet { get; set; }
 
     private const string Hostname = "145.48.6.10";
@@ -39,9 +41,7 @@ public class VRClient
     private readonly Bike _bike;
     private readonly Camera _camera;
     private readonly Tree _tree;
-
-    
-    
+    private readonly Panel _panel;
     
     public VRClient()
     {
@@ -54,6 +54,7 @@ public class VRClient
         _bike = new Bike(this);
         _camera = new Camera(this);
         _tree = new Tree(this);
+        _panel = new Panel(this);
         Heights = new float[200];
         IsSet = false;
     }
@@ -159,6 +160,7 @@ public class VRClient
         _route.CreateRoute();
         _bike.PlaceBike();
         _camera.SetCamera();
+        _panel.AddPanel();
         _tree.PlaceTrees();
         IsSet = true;
         //new Thread(_skybox.Update).Start();
@@ -171,6 +173,8 @@ public class VRClient
                 "speed", speed, 1, "route\\speedfollowroute.json"
             )
         ), TunnelId!)!);
+        
+        _panel.UpdateSpeed(speed);
     }
 
     private static byte[] Concat(byte[] b1, byte[] b2, int count)

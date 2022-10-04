@@ -6,14 +6,19 @@ public class FindNodeSceneCommand : TunnelCallback
 {
 	public void OnCommandReceived(JObject o, VRClient parent)
 	{
-		if (o["data"]![0]!["name"]!.ToString() == "Camera")
+		Console.WriteLine(o.ToString());
+		switch (o["data"]![0]!["name"]!.ToString())
 		{
-			parent.CameraId = o["data"]![0]!["uuid"]!.ToString();
-			Console.WriteLine("setting CameraId to " + o["data"]![0]!["uuid"]!);
-		}
-		else if (o["data"]![0]!["name"]!.ToString() == "GroundPlane")
-		{
-			parent.TerrainId = o["data"]![0]!["uuid"]!.ToString();
+			case "Camera":
+				parent.CameraId = o["data"]![0]!["uuid"]!.ToString();
+				Console.WriteLine("setting CameraId to " + o["data"]![0]!["uuid"]!);
+				break;
+			case "GroundPlane":
+				parent.TerrainId = o["data"]![0]!["uuid"]!.ToString();
+				break;
+			case "Head":
+				parent.HeadId = o["data"]![0]!["uuid"]!.ToString();
+				break;
 		}
 	}
 }
