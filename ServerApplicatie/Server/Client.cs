@@ -43,7 +43,8 @@ namespace Server
             while (!loggedIn)
             {
                 JObject loginRequest = JObject.Parse(ReadJsonMessage(tcpClient));
-                if(DataSaver.ClientExists(loginRequest["data"]["patientId"].ToString()))
+                string patientId = loginRequest["data"]["patientId"].ToString();
+                if(DataSaver.ClientExists(patientId))
                 {
                     this.patientId = patientId;
                     WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(false) + "\n");

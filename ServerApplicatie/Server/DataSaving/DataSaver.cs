@@ -20,7 +20,9 @@ namespace Server.DataSaving
             string path = Environment.CurrentDirectory + "\\Clients\\" + client.patientId + "\\" + client.patientId + ".JSON";
             File.Create(path).Close();
 
-            string clientAsJson = JsonConvert.SerializeObject(client);
+            
+            //string clientAsJson = JsonConvert.SerializeObject(client);
+            string clientAsJson = JObject.Parse(client);
             File.WriteAllText(path, clientAsJson);
         }
 
@@ -29,10 +31,11 @@ namespace Server.DataSaving
             string[] clientFiles = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients");
             foreach (string clientPath in clientFiles)
             {
-                var clientInJson = JObject.Parse(File.ReadAllText(clientPath));
-                Client client = new Client();
-                client.patientId = clientInJson["patientId"].ToString();
-                if(client.patientId == patientId)
+                // var clientInJson = JObject.Parse(File.ReadAllText(clientPath));
+                // Client client = new Client();
+                // client.patientId = clientInJson["patientId"].ToString();
+                // client.patientId = clientPath;
+                if(clientPath == patientId)
                 {
                     return true;
                 }
