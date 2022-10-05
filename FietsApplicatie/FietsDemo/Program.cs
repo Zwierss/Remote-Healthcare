@@ -24,12 +24,13 @@ namespace FietsDemo
         private static string _username;
         private static bool _stop = false;
         private static string _host = "localhost";
-        private static int _port = 15243; 
+        private static int _port = 15243;
+        private static bool _connected = false;
         public static Task Main(string[] args)
         {
 
             //runSimulation();
-            
+
             Console.WriteLine("Client started");
             _client = new TcpClient();
             _client.BeginConnect(_host, _port, new AsyncCallback(OnConnect), null);
@@ -43,7 +44,7 @@ namespace FietsDemo
                 while (true)
                 {
                     string input = Console.ReadLine();
-                    if(input == "stop")
+                    if (input == "stop")
                     {
                         _stop = true;
                     }
@@ -70,7 +71,7 @@ namespace FietsDemo
             bool bikeConnection = bike.MakeConnection().Result;
             Thread.Sleep(10000);
 
-            
+
             bool hearRateConnection = heart.MakeConnection().Result;
 
             //bool clientConnection = _client.MakeConnection().Result;
@@ -84,8 +85,8 @@ namespace FietsDemo
                     //string input = Console.ReadLine();
                     //if (input == "y")
                     //{
-                        Console.WriteLine("Starting Simulation");
-                        runSimulation();
+                    Console.WriteLine("Starting Simulation");
+                    runSimulation();
                     //}
                     //else
                     //{
@@ -200,12 +201,14 @@ namespace FietsDemo
             try
             {
                 _client.EndConnect(ar);
+                _connected = true;
                 Console.WriteLine("Verbonden!");
-            } catch
+            }
+            catch
             {
                 Console.WriteLine("Kan geen verbinding maken met server");
             }
-            
+
 
         }
         private static void ConvertToJson(int[] values)
@@ -232,7 +235,7 @@ namespace FietsDemo
                 }
             };
 
-           SendData(JsonConvert.SerializeObject(dataMessage));
+            SendData(JsonConvert.SerializeObject(dataMessage));
 
 
             //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
@@ -245,7 +248,7 @@ namespace FietsDemo
                 stream.Write(ob + "\n");
                 stream.Flush();
                 Console.WriteLine("sent!");
-                if(_stop)
+                if (_stop)
                 {
                     Console.WriteLine("stopped");
                     _client.Close();
@@ -267,22 +270,82 @@ namespace FietsDemo
             SendData(JsonConvert.SerializeObject(login));
         }
 
-        public static string ReadJsonMessage(TcpClient client)
+        public static void ReadJsonMessage(TcpClient client)
         {
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
             {
                 string message = "";
-                
-                
-                    while (stream.Peek() != -1)
-                    {
-                        message += stream.ReadLine();
-                    }
-               
-               
+
+
+                while (stream.Peek() != -1)
+                {
+                    message += stream.ReadLine();
+                }
+
+
                 Console.WriteLine(message);
-                return message;
+                MessageHandler(message);
             }
+        }
+
+        public static void MessageHandler(string message)
+        {
+            dynamic jsonMessage = JsonConvert.DeserializeObject(message);
+            string id = "";
+            try
+            {
+                id = jsonMessage.id;
+            } catch
+            {
+                Console.WriteLine("can't find id in message:" + message);
+            }
+
+
+
+
+            //server connects with client
+            if (id.Equals("client/connected"))
+            {
+                Console.WriteLine("Server heeft testbericht ontvangen");
+            }
+            //server received the patient id and logged in
+            else if (id.Equals("client/login"))
+            {
+                //if ((bool)jsonMessage["newAccount"][true])
+                //{
+                //    Console.WriteLine("Account aangemaakt met patiëntnummer " + _username);
+                //}
+                //else
+                //{
+                //    Console.WriteLine("Ingelogd met patiëntnummer " + _username);
+                //}
+                Console.WriteLine("server heeft nieuw account gemaakt voor + " + _username);
+            }
+
+            //server received the data of a live session
+            //else if ((bool)jsonMessage["id"]["client/received"])
+            //{
+            //    Console.WriteLine("Server heeft data ontvangen");
+            //}
+
+            //else if ((bool)jsonMessage["id"]["server/emergencyStop"])
+            //{
+            //    Console.WriteLine("Server heeft data ontvangen");
+            //}
+
+            //else if ((bool)jsonMessage["id"]["server/startSession"])
+            //{
+
+            //}
+
+            //else if ((bool)jsonMessage["id"]["server/stopSession"])
+            //{
+
+            //}
+            //else
+            //{
+            //    Console.WriteLine("received unknown message:\n" + message);
+            //}
         }
     }
 }
