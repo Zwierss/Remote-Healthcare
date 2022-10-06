@@ -26,7 +26,7 @@ namespace Server
         {
             this.tcpClient = tcpClient;
             string okMessage = JsonMessageGenerator.GetJsonOkMessage("client/connected");
-            WriteJsonMessage(this.tcpClient, okMessage + "\r\n");
+            WriteTextMessage(this.tcpClient, okMessage + "\r\n");
             Thread thread = new Thread(HandleClient);
             thread.Start();
         }
@@ -65,7 +65,7 @@ namespace Server
                     sessionData.Add(jsonMessage);
                     SaveSession(sessionData);
                     sessionData.RemoveRange(0, sessionData.Count);
-                    WriteJsonMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
+                    WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
                 }
                 else
                 {
@@ -80,14 +80,35 @@ namespace Server
             DataSaver.AddPatientFile(tcpClient, sessionData);
         }
 
-        public static void WriteJsonMessage(TcpClient client, string jsonMessage)
+        public static void WriteMessage(TcpClient client, JObject jObject)
         {
+            string jMessage = jObject.ToString();
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
+            byte[] RequestLength = BitConverter.GetBytes(jMessage.Length);
+            byte[] request = Encoding.ASCII.GetBytes(jMessage);
             {
-                stream.Write(jsonMessage);
-                stream.Flush();
+                stream.BaseStream.Write(request, 0, RequestLength.Length);
             }
         }
+
+        public static string ReadMessage(TcpClient client)
+        {
+            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+            {
+                return stream.ReadLine();
+            }
+        }
+
+
+        // public static void WriteTextMessage(TcpClient client, string jsonMessage)
+        // {
+        //     var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
+        //     {
+        //         stream.Write(jsonMessage);
+        //         stream.Flush();
+        //     }
+        // }
+
 
         public static void WriteTextMessage(TcpClient client, string message)
         {
@@ -110,14 +131,6 @@ namespace Server
                 }
                 
                 return message;
-            }
-        }
-
-        public static string ReadTextMessage(TcpClient client)
-        {
-            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
-            {
-                return stream.ReadLine();
             }
         }
     }
