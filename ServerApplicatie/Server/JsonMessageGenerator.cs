@@ -20,7 +20,7 @@ namespace Server
         public static string GetJsonLoggedinMessage(bool newAccount)
         {
             JObject message = new JObject();
-            message.Add("id", "client/login");
+            message.Add("id", "server/login");
             message.Add("newAccount", newAccount);
 
             Console.WriteLine(message.ToString());
