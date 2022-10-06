@@ -23,6 +23,7 @@ namespace FietsDemo
         private static NetworkStream _stream;
         private static string _username;
         private static bool _stop = false;
+        private static bool _start = false;
         private static string _host = "localhost";
         private static int _port = 15243;
         private static bool _connected = false;
@@ -300,54 +301,58 @@ namespace FietsDemo
                 Console.WriteLine("can't find id in message:" + message);
             }
 
-
-
-
-            //server heeft verbinding gemaakt met client 
-            if (id.Equals("client/connected"))
+            switch (id)
             {
-                Console.WriteLine("Server heeft testbericht ontvangen");
-            }
+                //server heeft verbinding gemaakt met client 
+                case "client/connected":
+                    Console.WriteLine("Server heeft testbericht ontvangen");
+                    break;
 
-            //server heeft patientid ontvangen
-            else if (id.Equals("client/login"))
-            {
-                if(jsonMessage.newAccount == true)
-                {
-                    Console.WriteLine("Account aangemaakt met patiëntnummer " + _username);
-                } else
-                {
-                    Console.WriteLine("Ingelogd met patiëntnummer " + _username);
-                }
-            }
+                //server heeft patientid ontvangen
+                case "client/login":
+                    if (jsonMessage.newAccount == true)
+                    {
+                        Console.WriteLine("Account aangemaakt met patiëntnummer " + _username);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ingelogd met patiëntnummer " + _username);
+                    }
+                    break;
 
-            //server heeft live data ontvangen
-            else if (id.Equals("client/received"))
-            {
-                Console.WriteLine("Server heeft data ontvangen");
-            }
+                //server heeft live data ontvangen
+                case "client/received":
+                    Console.WriteLine("Server heeft data ontvangen");
+                    break;
 
-            else if (id.Equals("server/emergencyStop"))
-            {
-                Console.WriteLine("Server heeft data ontvangen");
-            }
+                //dokter drukt noodstop
+                case "server/emergencyStop":
+                    _client.Close();
+                    Console.WriteLine("Dokter drukt op de noodstop");
 
-            //dokter wil een session starten
-            else if (id.Equals("server/startSession"))
-            {
+                    break;
+                
+                //dokter start sessie
+                case "server/startSession":
+                    _start = true;
+                    Console.WriteLine("Dokter start een session");
+                    break;
 
-            }
+                //dokter stopt sessie
+                case "server/endSession":
+                    _stop = true;
+                    Console.WriteLine("Dokter start een session");
+                    break;
 
-            //dokter wil een session beïndigen
-            else if (id.Equals("server/stopSession"))
-            {
+                //dokter stuurt bericht
+                case "server/sent":
+                    Console.WriteLine("Received message:" + jsonMessage.message);
+                    break;
 
-            }
-
-            //error
-            else
-            {
-                Console.WriteLine("received unknown message:\n" + message);
+                //error
+                default:
+                    Console.WriteLine("received unknown message:\n" + message);
+                    break;
             }
         }
     }
