@@ -43,7 +43,7 @@ namespace DoctorApplication
 
             this.GiveCommand = GiveCommand;
 
-            clientListView.ItemsSource = clients;
+            //clientListView.ItemsSource = clients;
 
         }
 
@@ -65,6 +65,16 @@ namespace DoctorApplication
         private void StopSession(object sender, RoutedEventArgs e)
         {
             GiveCommand(JsonMessageGenerator.GetJsonStopSessionMessage("Kars"));
+        }
+        
+        private void SendMessage(object sender, RoutedEventArgs e)
+        {
+            GiveCommand(JsonMessageGenerator.GetJsonSendMessage("Kars", messageTextBox.Text));
+        }
+        
+        private void EmergencyStop(object sender, RoutedEventArgs e)
+        {
+            GiveCommand(JsonMessageGenerator.GetJsonEmergencyStopMessage("Kars"));
         }
     }
 }

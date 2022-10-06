@@ -63,5 +63,24 @@ namespace DoctorApplication
 
             return message.ToString();
         }
+        
+        public static string GetJsonSendMessage(string patiendId, string message)
+        {
+            JObject messageToSend = new JObject();
+            messageToSend.Add("id", "server/sent");
+            messageToSend.Add("client", patiendId);
+            messageToSend.Add("message", message);
+
+            return messageToSend.ToString();
+        }
+        
+        public static string GetJsonEmergencyStopMessage(string patiendId)
+        {
+            JObject message = new JObject();
+            message.Add("id", "server/emergencyStop");
+            message.Add("client", patiendId);
+
+            return message.ToString();
+        }
     }
 }

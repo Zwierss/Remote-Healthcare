@@ -7,18 +7,32 @@
         mc:Ignorable="d"
         Title="DoctorMainPage" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Welkom!" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Name="patient1Id" FontSize="30" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
+        <TextBlock Name="patient1Data" Grid.Row="1" Grid.Column="0"/>
+        <Button Name="startSessionButton" Click="StartSession" Grid.Row="2" Grid.Column="0">Start Session</Button>
         <ListView x:Name="clientListView" Grid.Row="0" SelectionMode="Multiple"/>
 
         <Button Name="selectClientButton" Grid.Row="1" Click="SelectClients">Selecteer client</Button>
-        <Button Name="startSessionButton" Grid.Row="2" Click="StartSession">Start Session</Button>
+        
         <Button Name="stopSessionButton" Grid.Row="3" Click="StopSession">Stop Session</Button>
+        <TextBox Name="messageTextBox" Grid.Row="4" >Enter message: </TextBox>
+        <Button Name="sendMessageButton" Grid.Row="5" Click="SendMessage">Send Message</Button>
+        <Button Name="emergencyStopButton" Grid.Row="6" Click="EmergencyStop">Emergency Stop</Button>
+
     </Grid>
 </Window>
