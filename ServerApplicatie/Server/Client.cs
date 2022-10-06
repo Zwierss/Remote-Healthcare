@@ -98,18 +98,7 @@ namespace Server
                 return stream.ReadLine();
             }
         }
-
-
-        // public static void WriteTextMessage(TcpClient client, string jsonMessage)
-        // {
-        //     var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
-        //     {
-        //         stream.Write(jsonMessage);
-        //         stream.Flush();
-        //     }
-        // }
-
-
+        
         public static void WriteTextMessage(TcpClient client, string message)
         {
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
