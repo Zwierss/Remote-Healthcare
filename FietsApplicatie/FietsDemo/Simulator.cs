@@ -80,7 +80,7 @@ public class Simulator
             return values;
         }
 
-        public static int[] simulateBikeData()
+        public static int[] SimulateBikeData()
         {
             string[] data = _randomCodes[random.Next(8)].Split('-');
             int[] values = new int[data.Length];
@@ -192,4 +192,22 @@ public class Simulator
         {
             return Time++;
         }
+
+    public static void Reset()
+    {
+        Sync = 164;
+        MsgLenth = 9;
+        MsgId = 78;
+        Channel = 5;
+        DataPageNumber = 16;
+        EquipmentType = 152;
+        Time = 0;
+        DistanceTraveled = 0;
+        Speed = -1;
+        SpeedLsb = 0;
+        SpeedMsb = 0;
+        HeartRate = 40;
+        Field = 32;
+        Checksum = 0;
+    }
 }

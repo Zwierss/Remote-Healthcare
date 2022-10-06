@@ -28,4 +28,8 @@ public class HeartRate
 
         return true;
     }
+    public void Reset()
+    {
+        _ble.Dispose();
+    }
 }
