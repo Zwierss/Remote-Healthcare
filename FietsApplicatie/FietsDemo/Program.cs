@@ -85,13 +85,14 @@ namespace FietsDemo
 
             Bike bike = new Bike();
             HeartRate heart = new HeartRate();
-
+            
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
-            //Thread.Sleep(10000);
+            Thread.Sleep(10000);
 
 
             bool hearRateConnection = heart.MakeConnection().Result;
+            Thread.Sleep(10000);
 
             //bool clientConnection = _client.MakeConnection().Result;
 
@@ -108,7 +109,7 @@ namespace FietsDemo
                     while (true)
                     {
                         runSimulation();
-                        Simulator.reset();
+                        Simulator.Reset();
                     }
                     
                     //}
@@ -119,6 +120,14 @@ namespace FietsDemo
                     //}
                 }
             }
+            //while (true)
+            //{
+            //    if (!_start)
+            //    {
+            //        bike.Reset();
+            //        heart.Reset();
+            //    }
+            //}
             return Task.CompletedTask;
         }
 
@@ -131,7 +140,7 @@ namespace FietsDemo
                 int[] values = Simulator.SimulateGeneralData();
                 PrintGeneralData(values);
                 Thread.Sleep(250);
-                int[] bikeData = Simulator.simulateBikeData();
+                int[] bikeData = Simulator.SimulateBikeData();
                 PrintBikeData(bikeData);
                 ConvertToJson(values);
             }
@@ -174,28 +183,36 @@ namespace FietsDemo
 
         private static void PrintGeneralData(int[] values)
         {
-            Console.WriteLine("Received General Data");
-            Console.WriteLine("-----------");
-            Console.WriteLine("Equipment Type: " + values[5]);
-            Console.WriteLine("Elapsed Time: " + (values[6]) + " seconds");
-            Console.WriteLine("Distance Traveled: " + values[7] + " meters");
-            Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
-            Console.WriteLine("Heart Rate: " + values[10] + " bpm");
-            Console.WriteLine("-----------");
+            if(_start)
+            {
+                Console.WriteLine("Received General Data");
+                Console.WriteLine("-----------");
+                Console.WriteLine("Equipment Type: " + values[5]);
+                Console.WriteLine("Elapsed Time: " + (values[6]) + " seconds");
+                Console.WriteLine("Distance Traveled: " + values[7] + " meters");
+                Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
+                Console.WriteLine("Heart Rate: " + values[10] + " bpm");
+                Console.WriteLine("-----------");
+            }
+           
 
         }
 
         private static void PrintBikeData(int[] values)
         {
-            Console.WriteLine("Received Bike Data");
-            Console.WriteLine("-----------");
-            Console.WriteLine("Event Count: " + values[5]);
-            Console.WriteLine("Instantaneous Cadence: " + values[6] + " rpm");
-            Console.WriteLine("Accumulated Power: " + (values[7] + (values[8] << 8)) + " W");
-            string splitted = Convert.ToString(values[10], 2);
-            Console.WriteLine("Instantaneous Power: " + (values[9] + Convert.ToInt32(splitted.Substring(0, 4), 2) << 8) + " W");
-            Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3, 4), 2));
-            Console.WriteLine("-----------");
+            if(_start)
+            {
+                Console.WriteLine("Received Bike Data");    
+                Console.WriteLine("-----------");
+                Console.WriteLine("Event Count: " + values[5]);
+                Console.WriteLine("Instantaneous Cadence: " + values[6] + " rpm");
+                Console.WriteLine("Accumulated Power: " + (values[7] + (values[8] << 8)) + " W");
+                string splitted = Convert.ToString(values[10], 2);
+                Console.WriteLine("Instantaneous Power: " + (values[9] + Convert.ToInt32(splitted.Substring(0, 4), 2) << 8) + " W");
+                Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3, 4), 2));
+                Console.WriteLine("-----------");
+            }
+            
         }
 
         public static void BleHeartRate_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
@@ -213,10 +230,13 @@ namespace FietsDemo
 
         private static void PrintHeartData(int[] values)
         {
-            Console.WriteLine("Received Heart Rate Data");
-            Console.WriteLine("-----------");
-            Console.WriteLine(values[1] + " bpm");
-            Console.WriteLine("-----------");
+            if(_start) { 
+                Console.WriteLine("Received Heart Rate Data");
+                Console.WriteLine("-----------");
+                Console.WriteLine(values[1] + " bpm");
+                Console.WriteLine("-----------");
+            }
+           
         }
 
         private static void OnConnect(IAsyncResult ar)

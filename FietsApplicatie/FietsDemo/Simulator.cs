@@ -80,7 +80,7 @@ public class Simulator
             return values;
         }
 
-        public static int[] simulateBikeData()
+        public static int[] SimulateBikeData()
         {
             string[] data = _randomCodes[random.Next(8)].Split('-');
             int[] values = new int[data.Length];
@@ -193,7 +193,7 @@ public class Simulator
             return Time++;
         }
 
-    public static void reset()
+    public static void Reset()
     {
         Sync = 164;
         MsgLenth = 9;
