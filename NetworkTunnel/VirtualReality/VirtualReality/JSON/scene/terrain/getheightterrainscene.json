@@ -1,11 +1,11 @@
 {
   "id": "scene/terrain/getheight",
   "data": {
-    "position": [ 10.2, 4.4 ],
     "positions": [
       [ 10.2, 4.4 ],
       [ 11.2, 4.4 ],
       [ 12.2, 4.4 ]
     ]
+    
   }
 }

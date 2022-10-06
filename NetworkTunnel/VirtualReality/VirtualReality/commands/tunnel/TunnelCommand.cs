@@ -1,8 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
+using VirtualReality.commands.scene;
+using VirtualReality.commands.scene.node;
+using VirtualReality.commands.scene.panel;
+using VirtualReality.commands.scene.terrain;
 
 namespace VirtualReality;
 
-public class TunnelCommand : Command
+public class TunnelCommand : ICommand
 {
 
     private  Dictionary<string, TunnelCallback> _commands;
@@ -15,7 +19,13 @@ public class TunnelCommand : Command
 
     public void OnCommandReceived(JObject ob, Client client)
     {
-        Console.WriteLine("received: " + ob);
+        foreach (string key in _commands.Keys)
+        {
+            if (key == ob["data"]["data"]["id"].ToObject<string>())
+            {
+                _commands[key].OnCommandReceived((JObject)ob["data"]["data"], client);
+            }
+        }
     }
 
     private void InitCommands()

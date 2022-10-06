@@ -1,42 +1,42 @@
 ﻿using System.Globalization;
 using Newtonsoft.Json.Linq;
 
-namespace VirtualReality;
+namespace VirtualReality.commands;
 
-public class SessionListCommand : Command
+public class SessionListCommand : ICommand
 {
+    private const string Format = "MM/dd/yyyy HH:mm:ss";
 
-    public static string _FORMAT = "MM/dd/yyyy HH:mm:ss";
-    
     public void OnCommandReceived(JObject ob, Client client)
     {
         JObject? currentObject = null;
         DateTime? parsedDate = null;
 
-        foreach (JObject? o in ob["data"]!)
+        foreach (var jToken in ob["data"]!)
         {
+            var o = (JObject?)jToken;
             Console.WriteLine(Environment.UserName);
             Console.WriteLine(Environment.MachineName);
 
             // try
             // {
-                if (o["clientinfo"]["host"].ToObject<string>().ToLower() == Environment.MachineName.ToLower() &&
-                    o["clientinfo"]["user"].ToObject<string>().ToLower() == Environment.UserName.ToLower())
+                if (string.Equals(o["clientinfo"]!["host"].ToObject<string>(), Environment.MachineName, StringComparison.CurrentCultureIgnoreCase) &&
+                    string.Equals(o["clientinfo"]!["user"]!.ToObject<string>()!, Environment.UserName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     
                     if (currentObject == null)
                     {
                         currentObject = o;
-                        Console.WriteLine(o["lastPing"].ToObject<string>());
-                        string dateInString = o["lastPing"].ToObject<string>();
-                        parsedDate = DateTime.ParseExact(dateInString, _FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None);
+                        Console.WriteLine(o["lastPing"]!.ToObject<string>());
+                        string dateInString = o["lastPing"]!.ToObject<string>()!;
+                        parsedDate = DateTime.ParseExact(dateInString!, Format, CultureInfo.InvariantCulture, DateTimeStyles.None);
                     }
                     else
                     {
-                        if (parsedDate < DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None))
+                        if (parsedDate < DateTime.ParseExact(o["lastPing"]!.ToObject<string>()!, Format, CultureInfo.InvariantCulture, DateTimeStyles.None))
                         {
                             currentObject = o;
-                            parsedDate = DateTime.ParseExact(o["lastPing"].ToObject<string>(), _FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None);
+                            parsedDate = DateTime.ParseExact(o["lastPing"]!.ToObject<string>()!, Format, CultureInfo.InvariantCulture, DateTimeStyles.None);
                         }
                     }
                 }
@@ -47,7 +47,7 @@ public class SessionListCommand : Command
         
         if (currentObject != null)
         {
-            client.CreateTunnel(currentObject["id"].ToObject<string>());
+            client.CreateTunnel(currentObject["id"]!.ToObject<string>()!);
         }
         else
         {
