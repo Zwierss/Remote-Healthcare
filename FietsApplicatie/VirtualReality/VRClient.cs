@@ -170,11 +170,11 @@ public class VRClient
 
     public void UpdateBikeSpeed(double speed)
     {
-        SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject(
-            "node", BikeId, 1, PacketSender.SendReplacedObject(
+        SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,JObject>(
+            "node", BikeId, 1, PacketSender.SendReplacedObject<double,string>(
                 "speed", speed, 1, "route\\speedfollowroute.json"
-            )
-        ), TunnelId!)!);
+            )!
+        )!, TunnelId!)!);
 
         _currentSpeed = speed;
     }
