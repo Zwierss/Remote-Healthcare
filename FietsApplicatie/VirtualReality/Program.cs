@@ -1,12 +1,9 @@
-using System;
-
-namespace FietsDemo;
+﻿namespace VirtualReality;
 
 public static class Program
 {
     public static void Main(string[] args)
     {
-        Controller.SetupHardware();
+        
     }
 }
-

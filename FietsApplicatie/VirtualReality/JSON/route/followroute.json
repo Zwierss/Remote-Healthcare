@@ -1,0 +1,14 @@
+{
+  "id": "route/follow",
+  "data": {
+    "route": "routeid",
+    "node":  "nodeid" ,
+    "speed": 1.0,
+    "offset": 1.0,
+    "rotate": "XZ",
+    "smoothing": 1.0,
+    "followHeight": true,
+    "rotateOffset": [ 0, 0, 0 ],
+    "positionOffset": [ 0, 0, 0 ]
+  }
+}
