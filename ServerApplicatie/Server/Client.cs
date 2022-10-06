@@ -21,6 +21,8 @@ namespace Server
 
         List<JObject> sessionData = new List<JObject>();
 
+        public string receivedJsonMessage = "";
+
         public class Patient
         {
             public string patientId { get; set; }
@@ -59,18 +61,31 @@ namespace Server
                         while (true)
                         {
                             JObject jsonSessionData = JObject.Parse(ReadJsonMessage(tcpClient));
-
-                            if (jsonSessionData["id"].ToString() == "server/clients")
+                            Console.WriteLine(jsonSessionData.ToString());
+                            if (jsonSessionData["id"].ToString() == "doctor/clients")
                             {
                                 List<Patient> patients = new List<Patient>();
-                                JToken clients = new JObject();
-                                clients = jsonSessionData["data"];
+                                JToken clients = jsonSessionData["data"];
                                 
                                 foreach(var client in clients)
                                 {
                                     patients.Add(new Patient() { patientId = client.ToString()});
                                 }
                             }
+                            else if(jsonSessionData["id"].ToString() == "doctor/startSession")
+                            {
+                                string patientId = jsonSessionData["client"].ToString();
+
+                                for(int i = 0; i < Program.clients.Count; i++)
+                                {
+                                    if (patientId == Program.clients[i].patientId)
+                                    {
+                                        Program.clients[i].receivedJsonMessage = JsonMessageGenerator.GetJsonStartSessionMessage("server/" + patientId);
+                                    }
+                                }
+                            }
+
+
                             /*
                             Console.WriteLine(jsonSessionData);
                             JObject jsonMessage = JObject.Parse(jsonSessionData);
@@ -106,6 +121,13 @@ namespace Server
                     }
                     while (true)
                     {
+                        while(receivedJsonMessage == "")
+                        {
+                            
+                        }
+                        
+
+                        /*
                         string jsonSessionData = ReadJsonMessage(tcpClient);
                         Console.WriteLine(jsonSessionData);
                         JObject jsonMessage = JObject.Parse(jsonSessionData);
@@ -120,6 +142,7 @@ namespace Server
                         {
                             sessionData.Add(jsonMessage);
                         }
+                        */
                     }
                 }
                 

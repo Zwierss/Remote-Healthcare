@@ -22,7 +22,7 @@ namespace DoctorApplication
         public static string GetJsonLoginMessage(string username, string password)
         {
             JObject message = new JObject();
-            message.Add("id", "server/login");
+            message.Add("id", "doctor/login");
             message.Add("username", username);
             message.Add("password", password);
 

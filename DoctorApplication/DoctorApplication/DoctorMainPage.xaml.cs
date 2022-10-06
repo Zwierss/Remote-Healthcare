@@ -43,7 +43,7 @@ namespace DoctorApplication
 
             this.GiveCommand = GiveCommand;
 
-            //clientListView.ItemsSource = clients;
+            clientListView.ItemsSource = clients;
 
         }
 
