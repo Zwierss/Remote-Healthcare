@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtualReality.commands;
 using VirtualReality.components;
+using System.IO;
 
 namespace VirtualReality;
 
@@ -20,37 +21,21 @@ public class Client
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
 
-    public string? TunnelId { get; set; }
-    public string? TerrainId { get; set; }
-    public string? RouteId { get; set; }
-    public float[] Heights { get; set; }
-    public string? BikeId { get; set; }
-    public string? CameraId { get; set; }
+    public string? _tunnelID { get; set; }
 
-    private const string Hostname = "145.48.6.10";
-    private const int Port = 6666;
+    private static string _HOSTNAME = "145.48.6.10";
+    private static int _PORT = 6666;
 
     private bool _tunnelCreated;
 
-    private readonly Skybox _skybox;
-    private readonly HeightMap _map;
-    private readonly Route _route;
-    private readonly Bike _bike;
-    private readonly Camera _camera;
-    private readonly Tree _tree;
+    private Skybox _skybox;
 
     public Client()
     {
         _commands = new Dictionary<string, ICommand>();
         InitCommands();
         _tunnelCreated = false;
-        _skybox = new Skybox(this);
-        _map = new HeightMap(this);
-        _route = new Route(this);
-        _bike = new Bike(this);
-        _camera = new Camera(this);
-        _tree = new Tree(this);
-        Heights = new float[200];
+        _skybox = new(this);
     }
 
     public async Task StartConnection()
@@ -62,9 +47,10 @@ public class Client
             _client = new TcpClient();
             await _client.ConnectAsync(Hostname, Port);
             _stream = _client.GetStream();
-            SendData(PacketSender.GetJson("sessionlist.json"));
+            SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/sessionlist.json"))));
+
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }
@@ -73,9 +59,8 @@ public class Client
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
-    public void SendData(JObject o)
+    public async void SendData(string message)
     {
-        string message = o.ToString();
         Console.WriteLine("Sending message " + message);
         byte[] requestLength = BitConverter.GetBytes(message.Length);
         byte[] request = Encoding.ASCII.GetBytes(message);
@@ -92,17 +77,33 @@ public class Client
         _stream.WriteAsync(d, 0, d.Length).Wait();
     }
 
+    public void SendData(JObject o)
+    {
+        SendData(o.ToString());
+    }
+
     public void SetTunnel(string id)
     {
         Console.WriteLine("Setting Tunnel ID");
-        TunnelId = id;
+        _tunnelID = id;
         _tunnelCreated = true;
+    }
+
+    public void Sendtime(double time)
+    {
+
+        var jObject = JObject.Parse(File.ReadAllText("C:\\Users\\karsv\\OneDrive\\Documenten\\GitHub\\Remote-Healthcare\\NetworkTunnel\\VirtualReality\\VirtualReality\\JSON\\scene\\skybox\\set.time.json"));
+        jObject["data"]["dest"] = _tunnelID;
+        jObject["data"]["data"]["data"]["time"] = time;
+
+        var json = JsonConvert.SerializeObject(jObject);
+        SendData(json);
     }
 
     public void CreateTunnel(string id)
     {
         Console.WriteLine("Setting Tunnel");
-        SendData(PacketSender.SendReplacedObject<string,string>("session", id, 1, "createtunnel.json")!);
+        SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
 
         //SendData($@"{{""id"": ""tunnel/create"", ""data"":{{""session"":""{id}"", ""key"":""""}}}}");
         //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/createtunnel.json"))));
@@ -110,6 +111,7 @@ public class Client
 
     private void OnRead(IAsyncResult ar)
     {
+        Console.WriteLine("Method Checked");
         try
         {
             int rc = _stream.EndRead(ar);
@@ -121,6 +123,7 @@ public class Client
             return;
         }
         
+        Console.WriteLine("Didnt get returned");
         while (_totalBuffer.Length >= 4)
         {
             int packetSize = BitConverter.ToInt32(_totalBuffer, 0);
@@ -146,30 +149,34 @@ public class Client
                 break;
         }
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+        Console.WriteLine("Begin Read " + _tunnelID);
+        Sendtime(19);
+        //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/scene/skybox/change.time.json"))));
+        //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/scene/skybox/set.time.json"))));
 
-        if (!_tunnelCreated) return;
-        
-        _tunnelCreated = false;
-        _map.RenderHeightMap();
-        _route.CreateRoute();
-        _bike.PlaceBike();
-        _camera.SetCamera();
-        _tree.PlaceTrees();
-        //new Thread(_skybox.Update).Start();
+        if (_tunnelCreated)
+        {
+            if (!_skybox._set)
+            {
+                new Thread(new ThreadStart(_skybox.update)).Start();
+            }
+        }
     }
 
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];
-        Buffer.BlockCopy(b1, 0, r, 0, b1.Length);
-        Buffer.BlockCopy(b2, 0, r, b1.Length, count);
+        System.Buffer.BlockCopy(b1, 0, r, 0, b1.Length);
+        System.Buffer.BlockCopy(b2, 0, r, b1.Length, count);
         return r;
     }
 
     private void InitCommands()
     {
-        _commands.Add("session/list", new SessionListCommand());
-        _commands.Add("tunnel/create", new CreateTunnelCommand());
-        _commands.Add("tunnel/send", new TunnelCommand());
+        _commands.Add("session/list", new SessionList());
+        _commands.Add("tunnel/create", new CreateTunnel());
+        _commands.Add("get", new ResetScene());
+        _commands.Add("time/change", new ChangeTime());
+        _commands.Add("tunnel/send", new TunnelSend());
     }
 }
