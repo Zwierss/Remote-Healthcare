@@ -8,17 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e6903719-203e-41c7-9a46-c1a21a17a3f9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.FietsDemo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FietsDemo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FietsDemo/HeartRate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FietsDemo/HeartRate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FietsDemo/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FietsDemo/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/bin/Debug/FietsDemo.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/bin/Debug/FietsDemo.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/bin/Debug/FietsDemo.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/bin/Debug/FietsDemo.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../FietsDemo/FietsDemo/obj/Debug/FietsDemo.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ServerApplicatie/Server/Client.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../ServerApplicatie/Server/Client.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ServerApplicatie/Server/DataSaving/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../ServerApplicatie/Server/DataSaving/DataSaver.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,6 +112,7 @@
       <workItem from="1663234302848" duration="4479000" />
       <workItem from="1663246410387" duration="4159000" />
       <workItem from="1663316718316" duration="1079000" />
+      <workItem from="1665045659285" duration="20000" />
     </task>
     <task id="LOCAL-00001" summary="added first systems">
       <created>1662471679836</created>

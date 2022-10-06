@@ -20,12 +20,12 @@ namespace Server.DataSaving
             string path = Environment.CurrentDirectory + "\\Clients\\" + client.patientId + "\\" + client.patientId + ".JSON";
             File.Create(path).Close();
 
-            ClientData clientData = new ClientData()
-            {
-                patentId = client.patientId
-            };
-            string clientAsJson = JsonConvert.SerializeObject(clientData);
-     
+            // ClientData clientData = new ClientData()
+            // {
+            //     patentId = client.patientId
+            // };
+            
+            string clientAsJson = JsonConvert.SerializeObject(client);
             File.WriteAllText(path, clientAsJson);
         }
 

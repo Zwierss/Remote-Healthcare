@@ -38,7 +38,6 @@ namespace Server
 
         public void HandleClient()
         {
-            
             bool loggedIn = false;
             while (!loggedIn)
             {
