@@ -55,7 +55,7 @@ namespace FietsDemo
                 int[] values = Simulator.SimulateGeneralData();
                 PrintGeneralData(values);
                 Thread.Sleep(500);
-                int[] bikeData = Simulator.simulateBikeData();
+                int[] bikeData = Simulator.SimulateBikeData();
                 PrintBikeData(bikeData);
             }
         }

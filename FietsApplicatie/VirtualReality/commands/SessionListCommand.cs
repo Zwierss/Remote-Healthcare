@@ -18,31 +18,24 @@ public class SessionListCommand : ICommand
             Console.WriteLine(Environment.UserName);
             Console.WriteLine(Environment.MachineName);
 
-            // try
-            // {
-                if (string.Equals(o["clientinfo"]!["host"].ToObject<string>(), Environment.MachineName, StringComparison.CurrentCultureIgnoreCase) &&
-                    string.Equals(o["clientinfo"]!["user"]!.ToObject<string>()!, Environment.UserName, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    
-                    if (currentObject == null)
-                    {
-                        currentObject = o;
-                        Console.WriteLine(o["lastPing"]!.ToObject<string>());
-                        string dateInString = o["lastPing"]!.ToObject<string>()!;
-                        parsedDate = DateTime.ParseExact(dateInString!, Format, CultureInfo.InvariantCulture, DateTimeStyles.None);
-                    }
-                    else
-                    {
-                        if (parsedDate < DateTime.ParseExact(o["lastPing"]!.ToObject<string>()!, Format, CultureInfo.InvariantCulture, DateTimeStyles.None))
-                        {
-                            currentObject = o;
-                            parsedDate = DateTime.ParseExact(o["lastPing"]!.ToObject<string>()!, Format, CultureInfo.InvariantCulture, DateTimeStyles.None);
-                        }
-                    }
-                }
-            // }
-            // catch
-            // { Console.WriteLine("Werkt niet"); }
+            if (!string.Equals(o["clientinfo"]!["host"].ToObject<string>(), Environment.MachineName,
+                    StringComparison.CurrentCultureIgnoreCase) ||
+                !string.Equals(o["clientinfo"]!["user"]!.ToObject<string>()!, Environment.UserName,
+                    StringComparison.CurrentCultureIgnoreCase)) continue;
+            if (currentObject == null)
+            {
+                currentObject = o;
+                Console.WriteLine(o["lastPing"]!.ToObject<string>());
+                string dateInString = o["lastPing"]!.ToObject<string>()!;
+                parsedDate = DateTime.ParseExact(dateInString!, Format, CultureInfo.InvariantCulture, DateTimeStyles.None);
+            }
+            else
+            {
+                if (!(parsedDate < DateTime.ParseExact(o["lastPing"]!.ToObject<string>()!, Format,
+                        CultureInfo.InvariantCulture, DateTimeStyles.None))) continue;
+                currentObject = o;
+                parsedDate = DateTime.ParseExact(o["lastPing"]!.ToObject<string>()!, Format, CultureInfo.InvariantCulture, DateTimeStyles.None);
+            }
         }
         
         if (currentObject != null)

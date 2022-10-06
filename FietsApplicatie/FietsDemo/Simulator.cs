@@ -5,34 +5,34 @@ using System.Threading;
 
 namespace FietsDemo;
 
-public class Simulator
+public static class Simulator
 {
-    static string output = "";
+        public static string Output = "";
 
-        static int TotalSpeeds = 0;
-        static int GeneratedSpeeds = 0;
+        private static int _totalSpeeds = 0;
+        private static int _generatedSpeeds = 0;
 
-        static int Sync = 164;
-        static int MsgLenth = 9;
-        static int MsgId = 78;
-        static int Channel = 5;
-        static int DataPageNumber = 16;
-        static int EquipmentType = 152;
-        static int Time = 0;
-        static double DistanceTraveled = 0;
-        static int Speed = -1;
-        static int SpeedLsb = 0;
-        static int SpeedMsb = 0;
-        static int HeartRate = 40;
-        static int Field = 32;
-        static int Checksum = 0;
+        private const int Sync = 164;
+        private const int MsgLength = 9;
+        private const int MsgId = 78;
+        private const int Channel = 5;
+        private const int DataPageNumber = 16;
+        private const int EquipmentType = 152;
+        private const int SpeedLsb = 0;
+        private const int SpeedMsb = 0;
+        private const int Field = 32;
+        private const int Checksum = 0;
+        
+        private static int _time = 0;
+        private static double _distanceTraveled = 0;
+        private static int _speed = -1;
+        private static int _heartRate = 40;
+        private static bool _heartrateRising = true;
+        private static bool _speedRising = true;
 
-        static bool HeartrateRising = true;
-        static bool SpeedRising = true;
+        private static readonly Random Random = new Random();
 
-        static Random random = new Random();
-
-        private static string[] _randomCodes = new string[]
+        private static readonly string[] RandomCodes = new string[]
         {
             "A4-09-4E-05-19-0D-00-D7-20-00-60-20-45",
             "A4-09-4E-05-19-0E-00-D7-20-00-60-20-46",
@@ -47,27 +47,25 @@ public class Simulator
 
         static List<double> DataItems = new List<double>()
         {
-            Sync, MsgLenth, MsgId, Channel, DataPageNumber, EquipmentType, Time, DistanceTraveled, SpeedLsb, SpeedMsb, HeartRate, Field, Checksum
+            Sync, MsgLength, MsgId, Channel, DataPageNumber, EquipmentType, _time, _distanceTraveled, SpeedLsb, SpeedMsb, _heartRate, Field, Checksum
         };
 
         public static int[] SimulateGeneralData()
         {
             //Speed++;
-            Tuple<short, short> Speeds = SetSpeed();
-            DataItems[8] = Speeds.Item1;
-            DataItems[9] = Speeds.Item2;
-            HeartRate = SetHeartRate(HeartRate);
-            DataItems[10] = HeartRate;
+            Tuple<short, short> speeds = SetSpeed() ?? throw new ArgumentNullException("SetSpeed()");
+            DataItems[8] = speeds.Item1;
+            DataItems[9] = speeds.Item2;
+            _heartRate = SetHeartRate(_heartRate);
+            DataItems[10] = _heartRate;
             DataItems[7] = CalculateDistanceTraveled();
             IncreaseTime();
-            DataItems[6] = Time;
+            DataItems[6] = _time;
             DataItems[12] = CalculateChecksum(DataItems);
 
-            string data = "";
             for(int i = 0; i < 13; i++)
             {
                 string dataString = Convert.ToString((short)DataItems[i], 16 )+ "-";
-                data += $"{(dataString.ToString().Length == 1 ? "0" : "")}" + dataString;
             }
 
             int[] values = new int[DataItems.Count];
@@ -80,9 +78,9 @@ public class Simulator
             return values;
         }
 
-        public static int[] simulateBikeData()
+        public static int[] SimulateBikeData()
         {
-            string[] data = _randomCodes[random.Next(8)].Split('-');
+            string[] data = RandomCodes[Random.Next(8)].Split('-');
             int[] values = new int[data.Length];
             for (int i = 0; i < data.Length; i++)
             {
@@ -92,104 +90,88 @@ public class Simulator
             return values;
         }
 
-        public static Tuple<short, short> SetSpeed()
+        private static Tuple<short, short> SetSpeed()
         {
-            if (SpeedRising)
+            if (_speedRising)
             {
-                Speed += 1;
-                if (Speed >= 10)
+                _speed += 1;
+                if (_speed >= 10)
                 {
-                    SpeedRising = false;
+                    _speedRising = false;
                 }
             }
             else
             {
-                Speed -= 1;
-                if (Speed <= 0)
+                _speed -= 1;
+                if (_speed <= 0)
                 {
-                    SpeedRising = true;
+                    _speedRising = true;
                 }
             }
 
-            byte Msb = (byte)(Speed & 0xFF);
-            byte Lsb = (byte) ((Speed >> 8) & 0xFF);
+            byte Msb = (byte)(_speed & 0xFF);
+            byte Lsb = (byte) ((_speed >> 8) & 0xFF);
 
             while (Lsb > Math.Pow(2, 8))
             {
                 Lsb -= (byte) Math.Pow(2, 8);
             }
 
-            TotalSpeeds += Speed;
-            GeneratedSpeeds++;
+            _totalSpeeds += _speed;
+            _generatedSpeeds++;
             return new Tuple<short, short>(Lsb, Msb);
         }
-        
-        public static int SetHeartRate(int HeartRate)
-        {
-            //Random random = new Random();
-            //HeartRate = random.Next(50, 120);
-            /*
-            while (HeartRate > Math.Pow(2, 8))
-            {
-                HeartRate -= (byte)Math.Pow(2, 8);
-            }
-            */
 
-            if (HeartrateRising)
+        private static int SetHeartRate(int heartRate)
+        {
+            if (_heartrateRising)
             {
-                HeartRate += 10;
-                if(HeartRate >= 150)
+                heartRate += 10;
+                if(heartRate >= 150)
                 {
-                    HeartrateRising = false;
+                    _heartrateRising = false;
                 }
             }
             else
             {
-                HeartRate -= 10;
-                if(HeartRate <= 50)
+                heartRate -= 10;
+                if(heartRate <= 50)
                 {
-                    HeartrateRising = true;
+                    _heartrateRising = true;
                 }
             }
 
-            return HeartRate;
+            return heartRate;
         }
 
-        public static double CalculateDistanceTraveled()
+        private static double CalculateDistanceTraveled()
         {
-            DistanceTraveled += Speed * 0.25;
-            while (DistanceTraveled > Math.Pow(2, 8))
+            _distanceTraveled += _speed * 0.25;
+            while (_distanceTraveled > Math.Pow(2, 8))
             {
-                DistanceTraveled -= Math.Pow(2, 8);
+                _distanceTraveled -= Math.Pow(2, 8);
             }
-            return DistanceTraveled;
+            return _distanceTraveled;
         }
 
-        public static int CalculateAverageSpeed()
+        private static int CalculateChecksum(List<double> dataItems)
         {
-            int AverageSpeed = TotalSpeeds / GeneratedSpeeds;
-
-            return AverageSpeed;
-        }
-
-        public static int CalculateChecksum(List<double> DataItems)
-        {
-            int Checksum = 0;
-            foreach(double item in DataItems)
+            int checksum = 0;
+            foreach(double item in dataItems)
             {
-                Checksum += (int) item;
+                checksum += (int) item;
             }
-            while (Checksum > Math.Pow(2, 8))
+            while (checksum > Math.Pow(2, 8))
             {
-                Checksum -= (int)Math.Pow(2, 8);
+                checksum -= (int)Math.Pow(2, 8);
             }
             
 
-            return Checksum;
+            return checksum;
         }
 
-        public static int IncreaseTime()
+        private static void IncreaseTime()
         {
-            return Time++;
+            _time++;
         }
 }
