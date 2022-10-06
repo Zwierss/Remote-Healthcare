@@ -15,32 +15,33 @@ namespace FietsDemo
         
         public static Task SetupHardware()
         {
-
-            //RunSimulation();
+            _vr = new VRClient();
+            new Thread(RunSimulation).Start();
             
-            Bike bike = new Bike();
-            HeartRate heart = new HeartRate();
+            // Bike bike = new Bike();
+            // HeartRate heart = new HeartRate();
+            //
+            // Console.WriteLine("Trying connection with devices");
+            // bool bikeConnection = bike.MakeConnection().Result;
+            // while(!bikeConnection) Thread.Sleep(1000);
+            // bool hearRateConnection = heart.MakeConnection().Result;
+            //
+            // if (!bikeConnection)
+            // {
+            //     if(!hearRateConnection){
+            //         Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
+            //         string input = Console.ReadLine();
+            //         if (input == "y")
+            //         {
+            //             Console.WriteLine("Starting Simulation");
+            //         }
+            //         else
+            //         {
+            //             Console.WriteLine("Closing down application");
+            //         }
+            //     }
+            // }
             
-            Console.WriteLine("Trying connection with devices");
-            bool bikeConnection = bike.MakeConnection().Result;
-            while(!bikeConnection) Thread.Sleep(1000);
-            bool hearRateConnection = heart.MakeConnection().Result;
-            
-            if (!bikeConnection)
-            {
-                if(!hearRateConnection){
-                    Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
-                    string input = Console.ReadLine();
-                    if (input == "y")
-                    {
-                        Console.WriteLine("Starting Simulation");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Closing down application");
-                    }
-                }
-            }
             new Thread(CreateVR).Start();
             Console.Read();
             return Task.CompletedTask;
@@ -61,7 +62,6 @@ namespace FietsDemo
 
         private static void CreateVR()
         {
-            _vr = new VRClient();
             Thread.Sleep(1000);
             
 #pragma warning disable CS4014
@@ -114,6 +114,7 @@ namespace FietsDemo
             if (_vr.IsSet)
             {
                 _vr.UpdateBikeSpeed(speed * 3.6);
+                _vr.UpdatePanel(values[7]);
             }
 
             Console.WriteLine("Heart Rate: " + values[10] + " bpm");
@@ -140,6 +141,10 @@ namespace FietsDemo
             Console.WriteLine("Received Heart Rate Data");
             Console.WriteLine("-----------");
             Console.WriteLine(values[1] + " bpm");
+            if (_vr.IsSet)
+            {
+                _vr.UpdatePanel(values[1]);   
+            }
             Console.WriteLine("-----------");
         }
     }

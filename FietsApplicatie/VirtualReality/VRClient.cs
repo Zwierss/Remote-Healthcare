@@ -28,12 +28,13 @@ public class VRClient
     public string? CameraId { get; set; }
     public string? HeadId { get; set; }
     public string? PanelId { get; set; }
-    public bool IsSet { get; set; }
+    public bool IsSet { get; set; } = false;
 
     private const string Hostname = "145.48.6.10";
     private const int Port = 6666;
 
     private bool _tunnelCreated;
+    private double _currentSpeed;
 
     private readonly Skybox _skybox;
     private readonly HeightMap _map;
@@ -57,6 +58,7 @@ public class VRClient
         _panel = new Panel(this);
         Heights = new float[200];
         IsSet = false;
+        _currentSpeed = 0;
     }
 
     public async Task StartConnection()
@@ -163,7 +165,7 @@ public class VRClient
         _panel.AddPanel();
         _tree.PlaceTrees();
         IsSet = true;
-        //new Thread(_skybox.Update).Start();
+        new Thread(_skybox.Update).Start();
     }
 
     public void UpdateBikeSpeed(double speed)
@@ -173,8 +175,13 @@ public class VRClient
                 "speed", speed, 1, "route\\speedfollowroute.json"
             )
         ), TunnelId!)!);
-        
-        _panel.UpdateSpeed(speed);
+
+        _currentSpeed = speed;
+    }
+
+    public void UpdatePanel(double heartRate)
+    {
+        _panel.UpdatePanel(_currentSpeed, heartRate);
     }
 
     private static byte[] Concat(byte[] b1, byte[] b2, int count)

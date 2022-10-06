@@ -1,3 +1,5 @@
+using Newtonsoft.Json.Linq;
+
 namespace VirtualReality.components;
 
 public class Panel
@@ -38,19 +40,22 @@ public class Panel
         });
         
         Thread.Sleep(1000);
-        
-        UpdateSpeed(0.0);
     }
 
-    public void UpdateSpeed(double speed)
+    public void UpdatePanel(double speed, double heartRate)
     {
-        _parent.SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject(
-            "id", _parent.PanelId, 1, PacketSender.SendReplacedObject(
-                "text" ,speed + " km/h", 1, "scene\\panel\\drawtextpanelscene.json"
-            )
-        ),_parent.TunnelId!)!);
-        _parent.SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject(
-            "id", _parent.PanelId, 1, "scene\\panel\\swappanelscene.json"
-        ), _parent.TunnelId!)!);
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, string>(
+            "id", _parent.PanelId!, 1, "scene\\panel\\clearpanelscene.json"
+        )!,_parent.TunnelId!)!);
+        
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,JObject>(
+            "id", _parent.PanelId!, 1, PacketSender.SendReplacedObject<string,string>(
+                "text" ,speed + " km/h\n" + heartRate + " bpm", 1, "scene\\panel\\drawtextpanelscene.json"
+            )!
+        )!,_parent.TunnelId!)!);
+        
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>(
+            "id", _parent.PanelId!, 1, "scene\\panel\\swappanelscene.json"
+        )!, _parent.TunnelId!)!);
     }
 }
