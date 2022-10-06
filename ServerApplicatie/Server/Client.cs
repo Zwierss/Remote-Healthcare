@@ -21,6 +21,10 @@ namespace Server
 
         List<JObject> sessionData = new List<JObject>();
 
+        public class Patient
+        {
+            public string patientId { get; set; }
+        }
 
         public Client(TcpClient tcpClient)
         {
@@ -54,7 +58,20 @@ namespace Server
 
                         while (true)
                         {
-                            string jsonSessionData = ReadJsonMessage(tcpClient);
+                            JObject jsonSessionData = JObject.Parse(ReadJsonMessage(tcpClient));
+
+                            if (jsonSessionData["id"].ToString() == "server/clients")
+                            {
+                                List<Patient> patients = new List<Patient>();
+                                JToken clients = new JObject();
+                                clients = jsonSessionData["data"];
+                                
+                                foreach(var client in clients)
+                                {
+                                    patients.Add(new Patient() { patientId = client.ToString()});
+                                }
+                            }
+                            /*
                             Console.WriteLine(jsonSessionData);
                             JObject jsonMessage = JObject.Parse(jsonSessionData);
                             if ((bool)jsonMessage["data"]["endOfSession"])
@@ -63,11 +80,13 @@ namespace Server
                                 SaveSession(sessionData);
                                 sessionData.RemoveRange(0, sessionData.Count);
                                 WriteJsonMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("server/received"));
+
                             }
                             else
                             {
                                 sessionData.Add(jsonMessage);
                             }
+                            */
                         }
 
                     }
