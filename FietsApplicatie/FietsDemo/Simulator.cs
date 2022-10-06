@@ -192,4 +192,9 @@ public class Simulator
         {
             return Time++;
         }
+
+        public static void reset()
+        {
+
+        }
 }

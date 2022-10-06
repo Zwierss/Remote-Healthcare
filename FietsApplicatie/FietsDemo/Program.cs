@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
@@ -24,6 +25,7 @@ namespace FietsDemo
         private static string _username;
         private static bool _stop = false;
         private static bool _start = false;
+        private static bool _emergency = false;
         private static string _host = "localhost";
         private static int _port = 15243;
         private static bool _connected = false;
@@ -35,6 +37,16 @@ namespace FietsDemo
             Console.WriteLine("Client started");
             _client = new TcpClient();
             _client.BeginConnect(_host, _port, new AsyncCallback(OnConnect), null);
+
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    ReadJsonMessage(_client);
+                }
+
+            }).Start();
+
             Console.WriteLine("Typ uw patiëntnummer");
             _username = Console.ReadLine();
             Console.WriteLine("patientId sent");
@@ -44,10 +56,16 @@ namespace FietsDemo
             {
                 while (true)
                 {
-                    string input = Console.ReadLine();
-                    if (input == "stop")
+                    switch (Console.ReadLine())
                     {
-                        _stop = true;
+                        case "stop":
+                            _stop = true;
+                            break;
+
+                        case "start":
+                            _stop = false;
+                            _start = true;
+                            break;
                     }
                 }
 
@@ -70,7 +88,7 @@ namespace FietsDemo
 
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
-            Thread.Sleep(10000);
+            //Thread.Sleep(10000);
 
 
             bool hearRateConnection = heart.MakeConnection().Result;
@@ -87,7 +105,11 @@ namespace FietsDemo
                     //if (input == "y")
                     //{
                     Console.WriteLine("Starting Simulation");
-                    runSimulation();
+                    while (true)
+                    {
+                        runSimulation();
+                    }
+                    
                     //}
                     //else
                     //{
@@ -96,15 +118,13 @@ namespace FietsDemo
                     //}
                 }
             }
-
-            Console.Read();
             return Task.CompletedTask;
         }
 
         public static void runSimulation()
         {
-            bool running = true;
-            while (running)
+            //bool running = true;
+            while (_start)
             {
                 Thread.Sleep(250);
                 int[] values = Simulator.SimulateGeneralData();
@@ -114,6 +134,7 @@ namespace FietsDemo
                 PrintBikeData(bikeData);
                 ConvertToJson(values);
             }
+
         }
 
 
@@ -223,21 +244,23 @@ namespace FietsDemo
             //dataString.Add("endOfSession", false);
             //jsonString.Add("id", "client/received");
             //jsonString.Add("data", dataString
-            DataMessage dataMessage = new DataMessage()
+            if (_start)
             {
-                id = "server/received",
-                data = new SpecificDataMessage()
+                DataMessage dataMessage = new DataMessage()
                 {
-                    heartrate = values[10],
-                    speed = (values[9] + (values[8] << 8)) * 0.001,
-                    time = DateTime.Now,
-                    timestamp = values[6],
-                    endOfSession = _stop
-                }
-            };
+                    id = "server/received",
+                    data = new SpecificDataMessage()
+                    {
+                        heartrate = values[10],
+                        speed = (values[9] + (values[8] << 8)) * 0.001,
+                        time = DateTime.Now,
+                        timestamp = values[6],
+                        endOfSession = _stop || _emergency
+                    }
+                };
 
-            SendData(JsonConvert.SerializeObject(dataMessage));
-
+                SendData(JsonConvert.SerializeObject(dataMessage));
+            }
 
             //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
         }
@@ -249,10 +272,14 @@ namespace FietsDemo
                 stream.Write(ob + "\n");
                 stream.Flush();
                 Console.WriteLine("sent!");
-                if (_stop)
+                if (_emergency)
                 {
                     Console.WriteLine("stopped");
                     _client.Close();
+                }
+                if (_stop)
+                {
+                    _start = false;
                 }
             }
         }
@@ -273,19 +300,22 @@ namespace FietsDemo
 
         public static void ReadJsonMessage(TcpClient client)
         {
-            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+            if (_connected)
             {
-                string message = "";
-
-
-                while (stream.Peek() != -1)
+                var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
                 {
-                    message += stream.ReadLine();
+                    string message = "";
+
+
+                    while (stream.Peek() != -1)
+                    {
+                        message += stream.ReadLine();
+                    }
+
+
+                    Console.WriteLine(message);
+                    MessageHandler(message);
                 }
-
-
-                Console.WriteLine(message);
-                MessageHandler(message);
             }
         }
 
@@ -296,19 +326,21 @@ namespace FietsDemo
             try
             {
                 id = jsonMessage.id;
-            } catch
+            }
+            catch
             {
                 Console.WriteLine("can't find id in message:" + message);
             }
-
             switch (id)
             {
-                //server heeft verbinding gemaakt met client 
+
+
+                //server connected with client
                 case "client/connected":
                     Console.WriteLine("Server heeft testbericht ontvangen");
                     break;
 
-                //server heeft patientid ontvangen
+                //server received patientid
                 case "client/login":
                     if (jsonMessage.newAccount == true)
                     {
@@ -320,31 +352,30 @@ namespace FietsDemo
                     }
                     break;
 
-                //server heeft live data ontvangen
+                //server received live data
                 case "client/received":
                     Console.WriteLine("Server heeft data ontvangen");
                     break;
 
-                //dokter drukt noodstop
+                //doctor pressed emergency stop
                 case "server/emergencyStop":
-                    _client.Close();
                     Console.WriteLine("Dokter drukt op de noodstop");
 
                     break;
-                
-                //dokter start sessie
+
+                //doctor starts a session
                 case "server/startSession":
                     _start = true;
                     Console.WriteLine("Dokter start een session");
                     break;
 
-                //dokter stopt sessie
+                //doctor stops the session
                 case "server/endSession":
                     _stop = true;
                     Console.WriteLine("Dokter start een session");
                     break;
 
-                //dokter stuurt bericht
+                //doctor sends a message
                 case "server/sent":
                     Console.WriteLine("Received message:" + jsonMessage.message);
                     break;
@@ -355,5 +386,6 @@ namespace FietsDemo
                     break;
             }
         }
+
     }
 }
