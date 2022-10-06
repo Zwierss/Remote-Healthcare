@@ -17,8 +17,8 @@
         <TextBlock Text="Welkom!" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <ListView x:Name="clientListView" Grid.Row="0" SelectionMode="Multiple"/>
 
-        <Button Name="selectClientButton" Grid.Row="1" Click="SelectClient">Selecteer client</Button>
+        <Button Name="selectClientButton" Grid.Row="1" Click="SelectClients">Selecteer client</Button>
         <Button Name="startSessionButton" Grid.Row="2" Click="StartSession">Start Session</Button>
-        <Button Name="stopSessionButton" Grid.Row="3" >Stop Session</Button>
+        <Button Name="stopSessionButton" Grid.Row="3" Click="StopSession">Stop Session</Button>
     </Grid>
 </Window>

@@ -50,8 +50,6 @@ namespace DoctorApplication
 
         public async void HandlingServer()
         {
-            //bool loggedIn = false;
-
             JObject connectedMessage = JObject.Parse(ReadJsonMessage(tcpClient));
             if (connectedMessage["status"].ToString() == "ok")
             {
@@ -70,27 +68,8 @@ namespace DoctorApplication
                     }
                     WriteTextMessage(tcpClient, command + "\n");
                     Trace.WriteLine("Command: " + command);
+                    command = "";
                 }
-                /*
-                while (true)
-                {
-                    try
-                    {
-                        string nextcommand = "";
-                        Task.Run(async () =>
-                        {
-                            nextcommand = await WaitForCommand();
-                        }).Wait();
-                        JObject command = JObject.Parse(Console.ReadLine());
-                        WriteTextMessage(tcpClient, command.ToString());
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.StackTrace);
-                    }
-
-                }
-                */
             }
             else
             {

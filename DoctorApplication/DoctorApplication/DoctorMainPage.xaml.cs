@@ -47,7 +47,7 @@ namespace DoctorApplication
 
         }
 
-        private void SelectClient(object sender, RoutedEventArgs e)
+        private void SelectClients(object sender, RoutedEventArgs e)
         {
             List<string> selectedClients = new List<string>();
             foreach(string client in clientListView.SelectedItems)
@@ -59,7 +59,12 @@ namespace DoctorApplication
 
         private void StartSession(object sender, RoutedEventArgs e)
         {
-            GiveCommand("StartSession");
+            GiveCommand(JsonMessageGenerator.GetJsonStartSessionMessage("Kars"));
+        }
+        
+        private void StopSession(object sender, RoutedEventArgs e)
+        {
+            GiveCommand(JsonMessageGenerator.GetJsonStopSessionMessage("Kars"));
         }
     }
 }
