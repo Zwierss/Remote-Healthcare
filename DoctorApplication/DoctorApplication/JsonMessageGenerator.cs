@@ -33,7 +33,7 @@ namespace DoctorApplication
         public static string GetJsonClientSelectMessage(List<string> patientIds)
         {
             JObject message = new JObject();
-            message.Add("id", "server/clients");
+            message.Add("id", "doctor/clients");
             message.Add("amountOfClients", patientIds.Count);
             JObject clients = new JObject();
             for(int i = 0; i < patientIds.Count; i++)
@@ -49,7 +49,7 @@ namespace DoctorApplication
         public static string GetJsonStartSessionMessage(string patiendId)
         {
             JObject message = new JObject();
-            message.Add("id", "server/startSession");
+            message.Add("id", "doctor/startSession");
             message.Add("client", patiendId);
 
             return message.ToString();
@@ -58,7 +58,7 @@ namespace DoctorApplication
         public static string GetJsonStopSessionMessage(string patiendId)
         {
             JObject message = new JObject();
-            message.Add("id", "server/stopSession");
+            message.Add("id", "doctor/stopSession");
             message.Add("client", patiendId);
 
             return message.ToString();
@@ -67,7 +67,7 @@ namespace DoctorApplication
         public static string GetJsonSendMessage(string patiendId, string message)
         {
             JObject messageToSend = new JObject();
-            messageToSend.Add("id", "server/sent");
+            messageToSend.Add("id", "doctor/sent");
             messageToSend.Add("client", patiendId);
             messageToSend.Add("message", message);
 
@@ -77,7 +77,7 @@ namespace DoctorApplication
         public static string GetJsonEmergencyStopMessage(string patiendId)
         {
             JObject message = new JObject();
-            message.Add("id", "server/emergencyStop");
+            message.Add("id", "doctor/emergencyStop");
             message.Add("client", patiendId);
 
             return message.ToString();

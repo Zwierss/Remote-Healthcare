@@ -311,7 +311,7 @@ namespace FietsDemo
         {
             LoginMessage login = new LoginMessage()
             {
-                id = "server/login",
+                id = "client/login",
                 data = new SpecificLoginMessage()
                 {
                     patientId = _username
@@ -361,12 +361,12 @@ namespace FietsDemo
 
 
                 //server connected with client
-                case "client/connected":
+                case "server/connected":
                     Console.WriteLine("Server heeft testbericht ontvangen");
                     break;
 
                 //server received patientid
-                case "client/login":
+                case "server/login":
                     if (jsonMessage.newAccount == true)
                     {
                         Console.WriteLine("Account aangemaakt met patiëntnummer " + _username);
@@ -378,7 +378,7 @@ namespace FietsDemo
                     break;
 
                 //server received live data
-                case "client/received":
+                case "server/received":
                     Console.WriteLine("Server heeft data ontvangen");
                     break;
 

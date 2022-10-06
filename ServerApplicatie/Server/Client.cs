@@ -10,12 +10,12 @@ using System.Threading;
 
 namespace Server
 {
-    internal class Client
+    public class Client
     {
-        private TcpClient tcpClient;
-        private NetworkStream stream;
-        private byte[] buffer = new byte[1024];
-        private string totalBuffer = "";
+        public TcpClient tcpClient;
+        public NetworkStream stream;
+        public byte[] buffer = new byte[1024];
+        public string totalBuffer = "";
 
         public string patientId { get; set; }
 
@@ -125,7 +125,7 @@ namespace Server
                         {
                             
                         }
-                        
+                        WriteJsonMessage(tcpClient, receivedJsonMessage + "\n");
 
                         /*
                         string jsonSessionData = ReadJsonMessage(tcpClient);

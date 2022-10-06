@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using Server.DataSaving;
+using System.Net;
+using System.Text;
 
 namespace Server
 {
-    class Program
+    public class Network
     {
-        //private static TcpListener listener;
-        //public static List<Client> clients = new List<Client>();
+        private TcpListener listener;
+        public List<Client> clients = new List<Client>();
 
-
-        static void Main(string[] args)
+        public void RunServer()
         {
-            Network network = new Network();
+            Console.WriteLine("Hello Server!");
 
-            Thread thread = new Thread(network.RunServer);
-            thread.Start();
+            listener = new TcpListener(IPAddress.Any, 15243);
+            listener.Start();
+            listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
+
+            Console.ReadLine();
         }
 
-        /*
-        private static void OnConnect(IAsyncResult ar)
+        public void OnConnect(IAsyncResult ar)
         {
             var tcpClient = listener.EndAcceptTcpClient(ar);
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
@@ -33,11 +32,10 @@ namespace Server
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
-        internal void Disconnect(Client client)
+        public void Disconnect(Client client)
         {
             clients.Remove(client);
             Console.WriteLine("Client disconnected");
         }
-        */
     }
 }
