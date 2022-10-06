@@ -303,49 +303,52 @@ namespace FietsDemo
 
 
 
-            //server connects with client
+            //server heeft verbinding gemaakt met client 
             if (id.Equals("client/connected"))
             {
                 Console.WriteLine("Server heeft testbericht ontvangen");
             }
-            //server received the patient id and logged in
+
+            //server heeft patientid ontvangen
             else if (id.Equals("client/login"))
             {
-                //if ((bool)jsonMessage["newAccount"][true])
-                //{
-                //    Console.WriteLine("Account aangemaakt met patiëntnummer " + _username);
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Ingelogd met patiëntnummer " + _username);
-                //}
-                Console.WriteLine("server heeft nieuw account gemaakt voor + " + _username);
+                if(jsonMessage.newAccount == true)
+                {
+                    Console.WriteLine("Account aangemaakt met patiëntnummer " + _username);
+                } else
+                {
+                    Console.WriteLine("Ingelogd met patiëntnummer " + _username);
+                }
             }
 
-            //server received the data of a live session
-            //else if ((bool)jsonMessage["id"]["client/received"])
-            //{
-            //    Console.WriteLine("Server heeft data ontvangen");
-            //}
+            //server heeft live data ontvangen
+            else if (id.Equals("client/received"))
+            {
+                Console.WriteLine("Server heeft data ontvangen");
+            }
 
-            //else if ((bool)jsonMessage["id"]["server/emergencyStop"])
-            //{
-            //    Console.WriteLine("Server heeft data ontvangen");
-            //}
+            else if (id.Equals("server/emergencyStop"))
+            {
+                Console.WriteLine("Server heeft data ontvangen");
+            }
 
-            //else if ((bool)jsonMessage["id"]["server/startSession"])
-            //{
+            //dokter wil een session starten
+            else if (id.Equals("server/startSession"))
+            {
 
-            //}
+            }
 
-            //else if ((bool)jsonMessage["id"]["server/stopSession"])
-            //{
+            //dokter wil een session beïndigen
+            else if (id.Equals("server/stopSession"))
+            {
 
-            //}
-            //else
-            //{
-            //    Console.WriteLine("received unknown message:\n" + message);
-            //}
+            }
+
+            //error
+            else
+            {
+                Console.WriteLine("received unknown message:\n" + message);
+            }
         }
     }
 }
