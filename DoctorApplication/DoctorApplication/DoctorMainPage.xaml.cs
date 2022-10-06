@@ -20,11 +20,46 @@ namespace DoctorApplication
     public partial class DoctorMainPage : Window
     {
 
+        public class Client
+        {
+            public string patientId { get; set; }
+            public bool isSelected { get; set; }
+
+        }
+
         public string command = "";
 
-        public DoctorMainPage()
+        public delegate void CommandDelegate(string command);
+        public CommandDelegate GiveCommand;
+
+        public List<string> clients = new List<string>()
+        {
+            "Kars", "Martijn", "Bram", "Xander", "Tommy", "Momin"
+        };
+
+        public DoctorMainPage(CommandDelegate GiveCommand)
         {
             InitializeComponent();
+
+            this.GiveCommand = GiveCommand;
+
+            clientListView.ItemsSource = clients;
+
+        }
+
+        private void SelectClient(object sender, RoutedEventArgs e)
+        {
+            List<string> selectedClients = new List<string>();
+            foreach(string client in clientListView.SelectedItems)
+            {
+                selectedClients.Add(client);
+            }
+            GiveCommand(JsonMessageGenerator.GetJsonClientSelectMessage(selectedClients));
+        }
+
+        private void StartSession(object sender, RoutedEventArgs e)
+        {
+            GiveCommand("StartSession");
         }
     }
 }

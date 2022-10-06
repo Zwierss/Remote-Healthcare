@@ -20,12 +20,12 @@ namespace DoctorApplication
         private string username = "";
         private string password = "";
 
-        public delegate DoctorMainPage ContinueLogin(bool succeeded);
+        public delegate void ContinueLogin();
         public ContinueLogin login;
 
         public string command = "";
 
-        public DoctorMainPage main;
+        //public DoctorMainPage main;
 
         public Network(string username, string password, ContinueLogin login)
         {
@@ -61,9 +61,17 @@ namespace DoctorApplication
             JObject loginReply = JObject.Parse(ReadJsonMessage(tcpClient));
             if (loginReply["status"].ToString() == "ok")
             {
-                //loggedIn = true;
-                this.main = login(true);
-                
+                login();
+                while (true)
+                {
+                    while(command == "")
+                    {
+
+                    }
+                    WriteTextMessage(tcpClient, command + "\n");
+                    Trace.WriteLine("Command: " + command);
+                }
+                /*
                 while (true)
                 {
                     try
@@ -82,24 +90,19 @@ namespace DoctorApplication
                     }
 
                 }
+                */
             }
             else
             {
-                login(false);
+                login();
                 Thread.CurrentThread.Abort();
             }
         }
 
-        public async Task<string> WaitForCommand()
+        public void returnCommand(string command)
         {
-            while(this.main.command == "")
-            {
-                
-            }
-            this.command = this.main.command;
-            return this.command;
+            this.command = command;
         }
-
 
         public static string ReadJsonMessage(TcpClient client)
         {

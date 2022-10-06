@@ -1,20 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DoctorApplication
 {
@@ -24,6 +14,9 @@ namespace DoctorApplication
     public partial class MainWindow : Window
     {
         public bool loginClicked = false;
+        public bool toDoctorMainPage = false;
+
+        Network network;
 
         public MainWindow()
         {
@@ -47,28 +40,38 @@ namespace DoctorApplication
             
         }
 
-        public DoctorMainPage ContinueLogin(bool succeeded)
+        public void TurnOnBool()
         {
-            if (succeeded)
-            {
-                DoctorMainPage page = new DoctorMainPage();
-                this.Content = page.Content;
-                return page;
-            }
-            else
-            {
-                Trace.WriteLine("failed");
-                return new DoctorMainPage();
-            }
+            toDoctorMainPage = true;
         }
 
-        public void ToDoctorMainPage(object sender, RoutedEventArgs e)
+        public async void WaitForLogin()
         {
 
-            Network network = new Network(usernameInput.Text, passwordInput.Text, ContinueLogin);
+        }
+
+        public async Task ContinueLogin()
+        {
+            DoctorMainPage page = new DoctorMainPage(network.returnCommand);
+            while (!toDoctorMainPage)
+            {
+                Trace.WriteLine("waiting for bool");
+            }
+            Trace.WriteLine("about to change page");
+            this.Content = page.Content;
+            
+        }
+
+        public async void DoctorLogin(object sender, RoutedEventArgs e)
+        {
+            network = new Network(usernameInput.Text, passwordInput.Text, TurnOnBool);
 
             Thread thread = new Thread(network.StartConnection);
             thread.Start();
+
+            Task waitingForLoginCompleted = ContinueLogin();
+
+            await waitingForLoginCompleted;
         }
 
 
