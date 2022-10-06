@@ -108,6 +108,7 @@ namespace FietsDemo
                     while (true)
                     {
                         runSimulation();
+                        Simulator.reset();
                     }
                     
                     //}
@@ -265,6 +266,7 @@ namespace FietsDemo
             //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
         }
 
+        //Sends messages to server
         private static void SendData(string ob)
         {
             var stream = new StreamWriter(_client.GetStream(), Encoding.ASCII);
@@ -284,6 +286,7 @@ namespace FietsDemo
             }
         }
 
+        //Converts patientid into json string
         public static void SendPatientId()
         {
             LoginMessage login = new LoginMessage()
@@ -298,6 +301,7 @@ namespace FietsDemo
             SendData(JsonConvert.SerializeObject(login));
         }
 
+        //Listens to incoming messages from server and converts to string
         public static void ReadJsonMessage(TcpClient client)
         {
             if (_connected)
@@ -319,6 +323,7 @@ namespace FietsDemo
             }
         }
 
+        //Receives messages and takes action
         public static void MessageHandler(string message)
         {
             dynamic jsonMessage = JsonConvert.DeserializeObject(message);
