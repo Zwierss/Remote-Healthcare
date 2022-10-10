@@ -29,6 +29,11 @@ namespace FietsDemo
         private static string _host = "localhost";
         private static int _port = 15243;
         private static bool _connected = false;
+        private static int _heartRate = 0;
+        private static int _elapsedTime = 0;
+        private static int _previousElapsedTime = 0;
+        private static double _distanceTraveled = 0;
+        private static int _startElapsedTime = 0;
         public static Task Main(string[] args)
         {
 
@@ -167,8 +172,14 @@ namespace FietsDemo
                 switch (data[4])
                 {
                     case "10":
-                        PrintGeneralData(values);
-                        ConvertToJson(values);
+                        if (values[6] == _elapsedTime - _startElapsedTime)
+                        {
+                            _distanceTraveled += (values[9] + (values[8] << 8) * 0.001) / 4;
+                            _elapsedTime++;
+                            values[6] = _elapsedTime - _startElapsedTime;
+                            PrintGeneralData(values);
+                            ConvertToJson(values);
+                        }
                         break;
                     case "19":
                         PrintBikeData(values);
@@ -191,7 +202,7 @@ namespace FietsDemo
                 Console.WriteLine("Elapsed Time: " + (values[6]) + " seconds");
                 Console.WriteLine("Distance Traveled: " + values[7] + " meters");
                 Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
-                Console.WriteLine("Heart Rate: " + values[10] + " bpm");
+                Console.WriteLine("Heart Rate: " + _heartRate + " bpm");
                 Console.WriteLine("-----------");
             }
            
@@ -231,10 +242,12 @@ namespace FietsDemo
         private static void PrintHeartData(int[] values)
         {
             if(_start) { 
+                _heartRate = values[1];
                 Console.WriteLine("Received Heart Rate Data");
                 Console.WriteLine("-----------");
                 Console.WriteLine(values[1] + " bpm");
                 Console.WriteLine("-----------");
+                
             }
            
         }
@@ -302,6 +315,9 @@ namespace FietsDemo
                 if (_stop)
                 {
                     _start = false;
+                    _startElapsedTime = _elapsedTime;
+                    _elapsedTime = 0;
+                    _distanceTraveled = 0;
                 }
             }
         }
