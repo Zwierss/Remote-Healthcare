@@ -69,7 +69,7 @@ namespace FietsDemo
 
             //Start connection with heart rate 
             bool hearRateConnection = heart.MakeConnection().Result;
-            //Thread.Sleep(10000);
+            Thread.Sleep(10000);
 
 
 
