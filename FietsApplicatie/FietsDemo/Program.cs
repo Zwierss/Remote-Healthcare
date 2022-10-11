@@ -40,127 +40,74 @@ namespace FietsDemo
 
         public static Task Main(string[] args)
         {
-
-            //runSimulation();
-
+            //Start connection with server
             Console.WriteLine("Client started");
             _client = new TcpClient();
             _client.BeginConnect(_host, _port, new AsyncCallback(OnConnect), null);
 
-            new Thread(() =>
-            {
-                while (true)
-                {
-                    ReadJsonMessage(_client);
-                }
+            //Read messages from server
+            ReadJsonMessage(_client);
 
-            }).Start();
-
+            //Login as client
             Console.WriteLine("Typ uw patiëntnummer");
             _username = Console.ReadLine();
+
+            //Send login to information to server
             Console.WriteLine("patientId sent");
             SendPatientId();
 
-            new Thread(() =>
-            {
-                while (true)
-                {
-                    switch (Console.ReadLine())
-                    {
-                        case "stop":
-                            Console.WriteLine("Stopped!");
-                            _stop = true;
-                            break;
+            //Start and stop a session with client console (for testing)
+            ReadConsoleCommands();
 
-                        case "start":
-                            Console.WriteLine("started!");
-                            _stop = false;
-                            _start = true;
-                            _first = true;
-                            break;
-                    }
-                }
-
-            }).Start();
-
-            new Thread(() =>
-            {
-                while (true)
-                {
-                    ReadJsonMessage(_client);
-                }
-
-            }).Start();
-
-            //_username = Console.ReadLine();
-
-
+            //Start connection with bike
             Bike bike = new Bike();
             HeartRate heart = new HeartRate();
-            
+
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
-            //bool bikeConnection = false;
             Thread.Sleep(10000);
 
-
+            //Start connection with heart rate 
             bool hearRateConnection = heart.MakeConnection().Result;
             //Thread.Sleep(10000);
 
-            //bool clientConnection = _client.MakeConnection().Result;
 
 
+            //Start simulation if there's no connection with bike/heart rate sensor
             if (!bikeConnection)
             {
                 if (!hearRateConnection)
                 {
-                    //Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
-                    //string input = Console.ReadLine();
-                    //if (input == "y")
-                    //{
                     Console.WriteLine("Starting Simulation");
                     while (true)
                     {
                         runSimulation();
                         Simulator.Reset();
+
                     }
-                    
-                    //}
-                    //else
-                    //{
-                    //    Console.WriteLine("Closing down application");
-                    //    return Task.CompletedTask;
-                    //}
                 }
+                
             }
-            //while (true)
-            //{
-            //    if (!_start)
-            //    {
-            //        bike.Reset();
-            //        heart.Reset();
-            //    }
-            //}
             return Task.CompletedTask;
         }
 
+        //Run simulation
         public static void runSimulation()
         {
-            //bool running = true;
             while (_start)
             {
                 Thread.Sleep(250);
                 int[] values = Simulator.SimulateGeneralData();
                 PrintGeneralData(values);
                 Thread.Sleep(250);
-                int[] bikeData = Simulator.SimulateBikeData();
-                PrintBikeData(bikeData);
+                //int[] bikeData = Simulator.SimulateBikeData();
+                //PrintBikeData(bikeData);
                 ConvertToJson(values);
             }
 
         }
 
-
+        //Get bike data
         public static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             string[] data = BitConverter.ToString(e.Data).Split('-');
@@ -186,12 +133,7 @@ namespace FietsDemo
                             _startElapsedTime = values[6];
                             _previousElapsedTime = values[6];
                             _distanceTraveled = 0;
-                            Console.WriteLine(_startElapsedTime);
                         }
-                        Console.WriteLine("elapsed time: " + values[6]);
-                        Console.WriteLine("previous elapsed time: " + _previousElapsedTime);
-                        Console.WriteLine("start elapsed time: " + _startElapsedTime);
-                        Console.WriteLine("correct elapsed time: " + (_previousElapsedTime - _startElapsedTime));
 
                         if(_stop || _emergency)
                         {
@@ -207,13 +149,13 @@ namespace FietsDemo
                         }
                         break;
                     case "19":
-                        PrintBikeData(values);
-                        //convertData(values);
+                        //PrintBikeData(values);
                         break;
                 }
             }
         }
 
+        //Print general data
         private static void PrintGeneralData(int[] values)
         {
             if(_start)
@@ -231,6 +173,7 @@ namespace FietsDemo
 
         }
 
+        //Print bike data
         private static void PrintBikeData(int[] values)
         {
             if(_start)
@@ -248,6 +191,7 @@ namespace FietsDemo
             
         }
 
+        //Get heart rate data
         public static void BleHeartRate_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             string[] data = BitConverter.ToString(e.Data).Split('-');
@@ -260,7 +204,8 @@ namespace FietsDemo
 
             PrintHeartData(values);
         }
-
+        
+        //Prints heart rate data
         private static void PrintHeartData(int[] values)
         {
             if(_start) { 
@@ -274,6 +219,7 @@ namespace FietsDemo
            
         }
 
+        //Try to connect with server
         private static void OnConnect(IAsyncResult ar)
         {
             try
@@ -289,6 +235,8 @@ namespace FietsDemo
 
 
         }
+
+        //Create json object with bike values
         private static void ConvertToJson(int[] values)
         {
             //JObject jsonString = new JObject();
@@ -362,25 +310,58 @@ namespace FietsDemo
         //Listens to incoming messages from server and converts to string
         public static void ReadJsonMessage(TcpClient client)
         {
-            if (_connected)
+            new Thread(() =>
             {
-                var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+                while (true)
                 {
-                    string message = "";
-
-
-                    while (stream.Peek() != -1)
+                    if (_connected)
                     {
-                        message += stream.ReadLine();
+                        var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+                        {
+                            string message = "";
+
+
+                            while (stream.Peek() != -1)
+                            {
+                                message += stream.ReadLine();
+                            }
+
+
+                            Console.WriteLine(message);
+                            MessageHandler(message);
+                        }
                     }
-
-
-                    Console.WriteLine(message);
-                    MessageHandler(message);
                 }
-            }
+
+            }).Start();
+           
         }
 
+        //Reads commands (stop/start session) from console for testing
+        public static void ReadConsoleCommands()
+        {
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    switch (Console.ReadLine())
+                    {
+                        case "stop":
+                            Console.WriteLine("Stopped!");
+                            _stop = true;
+                            break;
+
+                        case "start":
+                            Console.WriteLine("started!");
+                            _stop = false;
+                            _start = true;
+                            _first = true;
+                            break;
+                    }
+                }
+
+            }).Start();
+        }
         //Receives messages and takes action
         public static void MessageHandler(string message)
         {
@@ -422,13 +403,16 @@ namespace FietsDemo
 
                 //doctor pressed emergency stop
                 case "doctor/emergencyStop":
+                    _emergency = true;
                     Console.WriteLine("Dokter drukt op de noodstop");
 
                     break;
 
                 //doctor starts a session
                 case "doctor/startSession":
+                    _stop = false;
                     _start = true;
+                    _first = true;
                     Console.WriteLine("Dokter start een session");
                     break;
 
