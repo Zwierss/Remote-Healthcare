@@ -346,6 +346,7 @@ namespace FietsDemo
         //Receives messages and takes action
         public static void MessageHandler(string message)
         {
+            Console.WriteLine("message: " + message);
             dynamic jsonMessage = JsonConvert.DeserializeObject(message);
             string id = "";
             try

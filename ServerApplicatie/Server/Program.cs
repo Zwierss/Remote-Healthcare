@@ -11,7 +11,7 @@ namespace Server
     class Program
     {
         //private static TcpListener listener;
-        //public static List<Client> clients = new List<Client>();
+        public static List<Client> clients = new List<Client>();
 
 
         static void Main(string[] args)

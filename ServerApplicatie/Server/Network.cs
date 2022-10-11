@@ -29,6 +29,7 @@ namespace Server
             Client newClient = new Client(tcpClient);
             newClient.patientId = "Kars";
             clients.Add(newClient);
+            Program.clients.Add(newClient);
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 

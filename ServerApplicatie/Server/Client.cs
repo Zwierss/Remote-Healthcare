@@ -61,7 +61,6 @@ namespace Server
                         while (true)
                         {
                             JObject jsonSessionData = JObject.Parse(ReadJsonMessage(tcpClient));
-                            Console.WriteLine(jsonSessionData.ToString());
                             if (jsonSessionData["id"].ToString() == "doctor/clients")
                             {
                                 List<Patient> patients = new List<Patient>();
@@ -80,7 +79,7 @@ namespace Server
                                 {
                                     if (patientId == Program.clients[i].patientId)
                                     {
-                                        Program.clients[i].receivedJsonMessage = JsonMessageGenerator.GetJsonStartSessionMessage("server/" + patientId);
+                                        Program.clients[i].receivedJsonMessage = JsonMessageGenerator.GetJsonStartSessionMessage(patientId);
                                     }
                                 }
                             }
@@ -126,7 +125,7 @@ namespace Server
                             
                         }
                         WriteJsonMessage(tcpClient, receivedJsonMessage + "\n");
-
+                        receivedJsonMessage = "";
                         /*
                         string jsonSessionData = ReadJsonMessage(tcpClient);
                         Console.WriteLine(jsonSessionData);
@@ -159,6 +158,7 @@ namespace Server
 
         public static void WriteJsonMessage(TcpClient client, string jsonMessage)
         {
+            Console.WriteLine("Write: " + jsonMessage);
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
             {
                 stream.Write(jsonMessage);
@@ -168,6 +168,7 @@ namespace Server
 
         public static void WriteTextMessage(TcpClient client, string message)
         {
+            Console.WriteLine("Write: " + message);
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
             {
                 stream.Write(message);
@@ -185,7 +186,9 @@ namespace Server
                 {
                     message += stream.ReadLine();
                 }
-                
+
+                Console.WriteLine("Read: " + message);
+
                 return message;
             }
         }
