@@ -34,6 +34,7 @@ namespace FietsDemo
         private static int _heartRate = 0;
         private static int _elapsedTime = 0;
         private static double _distanceTraveled = 0;
+        private static double _startDistanceTraveled = 0;
         private static int _startElapsedTime = 0;
         private static int _previousElapsedTime;
 
@@ -184,6 +185,7 @@ namespace FietsDemo
                             _first = false;
                             _startElapsedTime = values[6];
                             _previousElapsedTime = values[6];
+                            _distanceTraveled = 0;
                             Console.WriteLine(_startElapsedTime);
                         }
                         Console.WriteLine("elapsed time: " + values[6]);
@@ -196,10 +198,10 @@ namespace FietsDemo
                             ConvertToJson(values);
                         } else if (values[6] > _previousElapsedTime)
                         {
-                            _distanceTraveled += (values[9] + (values[8] << 8) * 0.001) / 4;
+                            _distanceTraveled += (values[9] + (values[8] << 8) * 0.001) / 2;
+                            values[7] = (int)Math.Round(_distanceTraveled);
                             _previousElapsedTime += 2;
                             values[6] = _previousElapsedTime - _startElapsedTime;
-
                             PrintGeneralData(values);
                             ConvertToJson(values);
                         }
