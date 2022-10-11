@@ -20,18 +20,21 @@ public class Bike
     {
         Thread.Sleep(1000);
         
-        int errorCode = await _ble.OpenDevice("Tacx Flux 01140");
+        int errorCode = await _ble.OpenDevice("Tacx Flux 00438");
         if (errorCode == 1) return false;
         
         errorCode = await _ble.SetService("6e40fec1-b5a3-f393-e0a9-e50e24dcca9e");
         if (errorCode == 1) return false;
-
-        _ble.SubscriptionValueChanged += Controller.BleBike_SubscriptionValueChanged;
+        _ble.SubscriptionValueChanged += Program.BleBike_SubscriptionValueChanged;
         errorCode = await _ble.SubscribeToCharacteristic("6e40fec2-b5a3-f393-e0a9-e50e24dcca9e");
         if (errorCode == 1) return false;
         
         Console.WriteLine("Connected");
         
         return true;
+    }
+    public void Reset()
+    {
+        _ble.Dispose();
     }
 }
