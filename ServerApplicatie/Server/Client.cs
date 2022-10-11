@@ -41,12 +41,14 @@ namespace Server
                 {
                     this.patientId = patientId;
                     WriteMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedInMessage(false));
+                    loggedIn = !loggedIn;
                 }
                 else
                 {
                     this.patientId = patientId;
                     DataSaver.AddNewClient(this);
                     WriteMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedInMessage(true));
+                    loggedIn = !loggedIn;
                 }
             }
             while (true)
