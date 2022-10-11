@@ -25,9 +25,7 @@ namespace Server
         public Client(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
-            // string okMessage = JsonMessageGenerator.GetJsonOkMessage("client/connected");
-            // WriteTextMessage(this.tcpClient, okMessage + "\r\n");
-            WriteMessage(this.tcpClient, JsonMessageGenerator.GetJsonOkayMessage("client/connected"));
+            WriteMessage(this.tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/connected"));
             Thread thread = new Thread(HandleClient);
             thread.Start();
         }
@@ -37,36 +35,30 @@ namespace Server
             bool loggedIn = false;
             while (!loggedIn)
             {
-                // JObject loginRequest = JObject.Parse(ReadJsonMessage(tcpClient));
                 JObject loginRequest = ReadMessage(tcpClient);
                 string patientId = loginRequest["data"]["patientId"].ToString();
                 if(DataSaver.ClientExists(patientId))
                 {
                     this.patientId = patientId;
-                    // WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(false) + "\n");
-                    WriteMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessageJ(false));
+                    WriteMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedInMessage(false));
                 }
                 else
                 {
                     this.patientId = patientId;
                     DataSaver.AddNewClient(this);
-                    // WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(true) + "\n");
-                    WriteMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessageJ(true));
+                    WriteMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedInMessage(true));
                 }
             }
             while (true)
             {
-                // string jsonSessionData = ReadJsonMessage(tcpClient);
                 JObject jsonMessage = ReadMessage(tcpClient);
                 Console.WriteLine(jsonMessage.ToString());
-                // JObject jsonMessage = jsonSessionData;
                 if ((bool) jsonMessage["data"]["endOfSession"])
                 {
                     sessionData.Add(jsonMessage);
                     SaveSession(sessionData);
                     sessionData.RemoveRange(0, sessionData.Count);
-                    // WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
-                    WriteMessage(tcpClient, JsonMessageGenerator.GetJsonOkayMessage("client/received"));
+                    WriteMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
                 }
                 else
                 {
@@ -77,8 +69,7 @@ namespace Server
 
         public void SaveSession(List<JObject> sessionData)
         {
-            // WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
-            WriteMessage(tcpClient,JsonMessageGenerator.GetJsonOkayMessage("client/received"));
+            WriteMessage(tcpClient,JsonMessageGenerator.GetJsonOkMessage("client/received"));
             DataSaver.AddPatientFile(tcpClient, sessionData);
         }
 
@@ -105,30 +96,6 @@ namespace Server
                 }
                 
                 return JObject.Parse(message);
-            }
-        }
-        
-        public static void WriteTextMessage(TcpClient client, string message)
-        {
-            var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
-            {
-                stream.Write(message);
-                stream.Flush();
-            }
-        }
-
-        public static string ReadJsonMessage(TcpClient client)
-        {
-            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
-            {
-                string message = "";
-                string line = "";
-                while (stream.Peek() != -1)
-                {
-                    message += stream.ReadLine();
-                }
-                
-                return message;
             }
         }
     }

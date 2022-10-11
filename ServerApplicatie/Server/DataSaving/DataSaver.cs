@@ -35,13 +35,7 @@ namespace Server.DataSaving
             string[] clientDirectories = Directory.GetDirectories(Environment.CurrentDirectory + "\\Clients");
             foreach (string clientPath in clientDirectories)
             {
-                // var clientInJson = JObject.Parse(File.ReadAllText(clientPath));
-                // Client client = new Client();
-                // client.patientId = clientInJson["patientId"].ToString();
-                // client.patientId = clientPath;
-
                 string path = Environment.CurrentDirectory + "\\Clients\\" + patientId;
-                
                 if(clientPath == path)
                 {
                     return true;
@@ -52,16 +46,14 @@ namespace Server.DataSaving
 
         public static void AddPatientFile(TcpClient client, List<JObject> sessionData)
         {
-            // JObject jObject = JObject.Parse(Client.ReadJsonMessage(client));
             JObject jObject = Client.ReadMessage(client);
             String patientId = jObject["data"]["patientId"].ToString();
 
             int amountOfFiles = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients\\" + patientId).Length;
-            
             string path = Environment.CurrentDirectory + "\\Clients\\" + patientId + "\\[" + patientId + "] session#" + amountOfFiles +
                           ".JSON";
+            
             File.Create(path).Close();
-
             File.WriteAllText(path, sessionData.ToString());
         }
     }

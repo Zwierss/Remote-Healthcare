@@ -19,9 +19,6 @@ namespace Server
             listener = new TcpListener(IPAddress.Any, 15243);
             listener.Start();
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
-
-            //DataSaver.AddNewClient(Environment.CurrentDirectory + "\\Client");
-
             Console.ReadLine();
         }
 
@@ -31,7 +28,6 @@ namespace Server
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
             Client newClient = new Client(tcpClient);
             clients.Add(newClient);
-            //newClient.ClientLogin();
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
