@@ -25,15 +25,18 @@ namespace FietsDemo
         private static string _username;
         private static bool _stop = false;
         private static bool _start = false;
+        private static bool _first = true;
         private static bool _emergency = false;
         private static string _host = "localhost";
+        //192.168.43.50
         private static int _port = 15243;
         private static bool _connected = false;
         private static int _heartRate = 0;
         private static int _elapsedTime = 0;
-        private static int _previousElapsedTime = 0;
         private static double _distanceTraveled = 0;
         private static int _startElapsedTime = 0;
+        private static int _previousElapsedTime;
+
         public static Task Main(string[] args)
         {
 
@@ -70,6 +73,7 @@ namespace FietsDemo
                         case "start":
                             _stop = false;
                             _start = true;
+                            _first = true;
                             break;
                     }
                 }
@@ -92,12 +96,13 @@ namespace FietsDemo
             HeartRate heart = new HeartRate();
             
             Console.WriteLine("Trying connection with devices");
-            bool bikeConnection = bike.MakeConnection().Result;
-            Thread.Sleep(10000);
+            //bool bikeConnection = bike.MakeConnection().Result;
+            bool bikeConnection = false;
+            //Thread.Sleep(10000);
 
 
             bool hearRateConnection = heart.MakeConnection().Result;
-            Thread.Sleep(10000);
+            //Thread.Sleep(10000);
 
             //bool clientConnection = _client.MakeConnection().Result;
 
@@ -172,11 +177,22 @@ namespace FietsDemo
                 switch (data[4])
                 {
                     case "10":
-                        if (values[6] == _elapsedTime - _startElapsedTime)
+                        if(_first)
+                        {
+                            _first = false;
+                            _startElapsedTime = values[6];
+                            _previousElapsedTime = values[6];
+                            Console.WriteLine(_startElapsedTime);
+                        }
+                        Console.WriteLine((_previousElapsedTime) + " " + values[6] + " " + (values[9] + (values[8] << 8)) + " " + (_previousElapsedTime - _startElapsedTime));
+
+                        if (_previousElapsedTime != values[6])
                         {
                             _distanceTraveled += (values[9] + (values[8] << 8) * 0.001) / 4;
-                            _elapsedTime++;
-                            values[6] = _elapsedTime - _startElapsedTime;
+                            _previousElapsedTime+=2;
+                            values[6] = _previousElapsedTime - _startElapsedTime;
+
+
                             PrintGeneralData(values);
                             ConvertToJson(values);
                         }
