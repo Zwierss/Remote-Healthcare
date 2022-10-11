@@ -67,10 +67,12 @@ namespace FietsDemo
                     switch (Console.ReadLine())
                     {
                         case "stop":
+                            Console.WriteLine("Stopped!");
                             _stop = true;
                             break;
 
                         case "start":
+                            Console.WriteLine("started!");
                             _stop = false;
                             _start = true;
                             _first = true;
@@ -96,9 +98,9 @@ namespace FietsDemo
             HeartRate heart = new HeartRate();
             
             Console.WriteLine("Trying connection with devices");
-            //bool bikeConnection = bike.MakeConnection().Result;
-            bool bikeConnection = false;
-            //Thread.Sleep(10000);
+            bool bikeConnection = bike.MakeConnection().Result;
+            //bool bikeConnection = false;
+            Thread.Sleep(10000);
 
 
             bool hearRateConnection = heart.MakeConnection().Result;
@@ -177,21 +179,26 @@ namespace FietsDemo
                 switch (data[4])
                 {
                     case "10":
-                        if(_first)
+                        if (_first)
                         {
                             _first = false;
                             _startElapsedTime = values[6];
                             _previousElapsedTime = values[6];
                             Console.WriteLine(_startElapsedTime);
                         }
-                        Console.WriteLine((_previousElapsedTime) + " " + values[6] + " " + (values[9] + (values[8] << 8)) + " " + (_previousElapsedTime - _startElapsedTime));
+                        Console.WriteLine("elapsed time: " + values[6]);
+                        Console.WriteLine("previous elapsed time: " + _previousElapsedTime);
+                        Console.WriteLine("start elapsed time: " + _startElapsedTime);
+                        Console.WriteLine("correct elapsed time: " + (_previousElapsedTime - _startElapsedTime));
 
-                        if (_previousElapsedTime != values[6])
+                        if(_stop || _emergency)
+                        {
+                            ConvertToJson(values);
+                        } else if (values[6] > _previousElapsedTime)
                         {
                             _distanceTraveled += (values[9] + (values[8] << 8) * 0.001) / 4;
-                            _previousElapsedTime+=2;
+                            _previousElapsedTime += 2;
                             values[6] = _previousElapsedTime - _startElapsedTime;
-
 
                             PrintGeneralData(values);
                             ConvertToJson(values);
@@ -203,9 +210,6 @@ namespace FietsDemo
                         break;
                 }
             }
-
-
-
         }
 
         private static void PrintGeneralData(int[] values)
@@ -296,6 +300,7 @@ namespace FietsDemo
             //jsonString.Add("data", dataString
             if (_start)
             {
+
                 DataMessage dataMessage = new DataMessage()
                 {
                     id = "server/received",
@@ -308,7 +313,6 @@ namespace FietsDemo
                         endOfSession = _stop || _emergency
                     }
                 };
-
                 SendData(JsonConvert.SerializeObject(dataMessage));
             }
 
@@ -323,18 +327,18 @@ namespace FietsDemo
                 stream.Write(ob + "\n");
                 stream.Flush();
                 Console.WriteLine("sent!");
-                if (_emergency)
-                {
-                    Console.WriteLine("stopped");
-                    _client.Close();
-                }
-                if (_stop)
-                {
-                    _start = false;
-                    _startElapsedTime = _elapsedTime;
-                    _elapsedTime = 0;
-                    _distanceTraveled = 0;
-                }
+            }
+            if (_emergency)
+            {
+                Console.WriteLine("stopped");
+                _client.Close();
+            }
+            if (_stop)
+            {
+                _start = false;
+                _startElapsedTime = _elapsedTime;
+                _elapsedTime = 0;
+                _distanceTraveled = 0;
             }
         }
 
