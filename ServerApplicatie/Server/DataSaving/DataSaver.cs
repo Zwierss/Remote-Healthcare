@@ -26,14 +26,23 @@ namespace Server.DataSaving
 
         public static bool ClientExists(string patientId)
         {
-            string[] clientFiles = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients");
-            foreach (string clientPath in clientFiles)
+
+            if (Directory.GetDirectories(Environment.CurrentDirectory + "\\Clients") == null)
+            {
+                Directory.CreateDirectory(Environment.CurrentDirectory + "\\Clients\\PatientZero");
+            }
+            
+            string[] clientDirectories = Directory.GetDirectories(Environment.CurrentDirectory + "\\Clients");
+            foreach (string clientPath in clientDirectories)
             {
                 // var clientInJson = JObject.Parse(File.ReadAllText(clientPath));
                 // Client client = new Client();
                 // client.patientId = clientInJson["patientId"].ToString();
                 // client.patientId = clientPath;
-                if(clientPath == patientId)
+
+                string path = Environment.CurrentDirectory + "\\Clients\\" + patientId;
+                
+                if(clientPath == path)
                 {
                     return true;
                 }
