@@ -60,26 +60,39 @@ namespace Server
 
                         while (true)
                         {
-                            JObject jsonSessionData = JObject.Parse(ReadJsonMessage(tcpClient));
-                            if (jsonSessionData["id"].ToString() == "doctor/clients")
+                            JObject dokterMessage = JObject.Parse(ReadJsonMessage(tcpClient));
+                            if (dokterMessage["id"].ToString() == "doctor/clients")
                             {
                                 List<Patient> patients = new List<Patient>();
-                                JToken clients = jsonSessionData["data"];
+                                JToken clients = dokterMessage["data"];
                                 
                                 foreach(var client in clients)
                                 {
                                     patients.Add(new Patient() { patientId = client.ToString()});
                                 }
                             }
-                            else if(jsonSessionData["id"].ToString() == "doctor/startSession")
+                            else if(dokterMessage["id"].ToString() == "doctor/startSession")
                             {
-                                string patientId = jsonSessionData["client"].ToString();
+                                string patientId = dokterMessage["client"].ToString();
 
                                 for(int i = 0; i < Program.clients.Count; i++)
                                 {
                                     if (patientId == Program.clients[i].patientId)
                                     {
                                         Program.clients[i].receivedJsonMessage = JsonMessageGenerator.GetJsonStartSessionMessage(patientId);
+                                    }
+                                }
+                            }
+                            else if (dokterMessage["id"].ToString() == "doctor/stopSession")
+                            {
+                                string patientId = dokterMessage["client"].ToString();
+
+                                for (int i = 0; i < Program.clients.Count; i++)
+                                {
+                                    if (patientId == Program.clients[i].patientId)
+                                    {
+                                        Program.clients[i].receivedJsonMessage = "";
+                                        //Program.clients[i].receivedJsonMessage = JsonMessageGenerator.GetJsonStartSessionMessage(patientId);
                                     }
                                 }
                             }
@@ -125,28 +138,25 @@ namespace Server
                             
                         }
                         WriteJsonMessage(tcpClient, receivedJsonMessage + "\n");
+                        if (JObject.Parse(receivedJsonMessage)["id"].ToString() == "server/startSession")
+                        {
+                            string startSessionMessage = receivedJsonMessage;
+                            List<JObject> sessionMessages = new List<JObject>();
+                            while(receivedJsonMessage == startSessionMessage)
+                            {
+                                JObject sessionMessage = JObject.Parse(ReadJsonMessage(tcpClient));
+                                sessionMessages.Add(sessionMessage);
+                                
+                                if ((bool) sessionMessage["data"]["endOfSession"] == true)
+                                {
+                                    receivedJsonMessage = "";
+                                }
+                            }
+                        }
                         receivedJsonMessage = "";
-                        /*
-                        string jsonSessionData = ReadJsonMessage(tcpClient);
-                        Console.WriteLine(jsonSessionData);
-                        JObject jsonMessage = JObject.Parse(jsonSessionData);
-                        if ((bool)jsonMessage["data"]["endOfSession"])
-                        {
-                            sessionData.Add(jsonMessage);
-                            SaveSession(sessionData);
-                            sessionData.RemoveRange(0, sessionData.Count);
-                            WriteJsonMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("server/received"));
-                        }
-                        else
-                        {
-                            sessionData.Add(jsonMessage);
-                        }
-                        */
                     }
                 }
-                
             }
-            
         }
 
         public void SaveSession(List<JObject> sessionData)
