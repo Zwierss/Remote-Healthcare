@@ -25,47 +25,48 @@ namespace Server
         public Client(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
-            string okMessage = JsonMessageGenerator.GetJsonOkMessage("client/connected");
-            WriteTextMessage(this.tcpClient, okMessage + "\r\n");
+            // string okMessage = JsonMessageGenerator.GetJsonOkMessage("client/connected");
+            // WriteTextMessage(this.tcpClient, okMessage + "\r\n");
+            WriteMessage(this.tcpClient, JsonMessageGenerator.GetJsonOkayMessage("client/connected"));
             Thread thread = new Thread(HandleClient);
             thread.Start();
         }
         
-        public Client()
-        {
-            this.tcpClient = null;
-        }
-
         public void HandleClient()
         {
             bool loggedIn = false;
             while (!loggedIn)
             {
-                JObject loginRequest = JObject.Parse(ReadJsonMessage(tcpClient));
+                // JObject loginRequest = JObject.Parse(ReadJsonMessage(tcpClient));
+                JObject loginRequest = ReadMessage(tcpClient);
                 string patientId = loginRequest["data"]["patientId"].ToString();
                 if(DataSaver.ClientExists(patientId))
                 {
                     this.patientId = patientId;
-                    WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(false) + "\n");
+                    // WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(false) + "\n");
+                    WriteMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessageJ(false));
                 }
                 else
                 {
                     this.patientId = patientId;
                     DataSaver.AddNewClient(this);
-                    WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(true) + "\n");
+                    // WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(true) + "\n");
+                    WriteMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessageJ(true));
                 }
             }
             while (true)
             {
-                string jsonSessionData = ReadJsonMessage(tcpClient);
-                Console.WriteLine(jsonSessionData);
-                JObject jsonMessage = JObject.Parse(jsonSessionData);
+                // string jsonSessionData = ReadJsonMessage(tcpClient);
+                JObject jsonMessage = ReadMessage(tcpClient);
+                Console.WriteLine(jsonMessage.ToString());
+                // JObject jsonMessage = jsonSessionData;
                 if ((bool) jsonMessage["data"]["endOfSession"])
                 {
                     sessionData.Add(jsonMessage);
                     SaveSession(sessionData);
                     sessionData.RemoveRange(0, sessionData.Count);
-                    WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
+                    // WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
+                    WriteMessage(tcpClient, JsonMessageGenerator.GetJsonOkayMessage("client/received"));
                 }
                 else
                 {
@@ -76,7 +77,8 @@ namespace Server
 
         public void SaveSession(List<JObject> sessionData)
         {
-            WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
+            // WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("client/received"));
+            WriteMessage(tcpClient,JsonMessageGenerator.GetJsonOkayMessage("client/received"));
             DataSaver.AddPatientFile(tcpClient, sessionData);
         }
 
@@ -91,11 +93,18 @@ namespace Server
             }
         }
 
-        public static string ReadMessage(TcpClient client)
+        public static JObject ReadMessage(TcpClient client)
         {
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
             {
-                return stream.ReadLine();
+                string message = "";
+                string line = "";
+                while (stream.Peek() != -1)
+                {
+                    message += stream.ReadLine();
+                }
+                
+                return JObject.Parse(message);
             }
         }
         

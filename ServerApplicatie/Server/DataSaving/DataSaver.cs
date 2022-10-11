@@ -38,13 +38,13 @@ namespace Server.DataSaving
                     return true;
                 }
             }
-
             return false;
         }
 
         public static void AddPatientFile(TcpClient client, List<JObject> sessionData)
         {
-            JObject jObject = JObject.Parse(Client.ReadJsonMessage(client));
+            // JObject jObject = JObject.Parse(Client.ReadJsonMessage(client));
+            JObject jObject = Client.ReadMessage(client);
             String patientId = jObject["data"]["patientId"].ToString();
 
             int amountOfFiles = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients\\" + patientId).Length;
