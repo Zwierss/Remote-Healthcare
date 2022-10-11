@@ -305,7 +305,7 @@ namespace FietsDemo
 
                 DataMessage dataMessage = new DataMessage()
                 {
-                    id = "server/received",
+                    id = "client/received",
                     data = new SpecificDataMessage()
                     {
                         heartrate = values[10],
@@ -349,7 +349,7 @@ namespace FietsDemo
         {
             LoginMessage login = new LoginMessage()
             {
-                id = "server/login",
+                id = "client/login",
                 data = new SpecificLoginMessage()
                 {
                     patientId = _username
@@ -399,12 +399,12 @@ namespace FietsDemo
 
 
                 //server connected with client
-                case "client/connected":
+                case "server/connected":
                     Console.WriteLine("Server heeft testbericht ontvangen");
                     break;
 
                 //server received patientid
-                case "client/login":
+                case "server/login":
                     if (jsonMessage.newAccount == true)
                     {
                         Console.WriteLine("Account aangemaakt met patiëntnummer " + _username);
@@ -416,30 +416,30 @@ namespace FietsDemo
                     break;
 
                 //server received live data
-                case "client/received":
+                case "server/received":
                     Console.WriteLine("Server heeft data ontvangen");
                     break;
 
                 //doctor pressed emergency stop
-                case "server/emergencyStop":
+                case "doctor/emergencyStop":
                     Console.WriteLine("Dokter drukt op de noodstop");
 
                     break;
 
                 //doctor starts a session
-                case "server/startSession":
+                case "doctor/startSession":
                     _start = true;
                     Console.WriteLine("Dokter start een session");
                     break;
 
                 //doctor stops the session
-                case "server/endSession":
+                case "doctor/endSession":
                     _stop = true;
                     Console.WriteLine("Dokter start een session");
                     break;
 
                 //doctor sends a message
-                case "server/sent":
+                case "doctor/sent":
                     Console.WriteLine("Received message:" + jsonMessage.message);
                     break;
 
