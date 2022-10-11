@@ -52,7 +52,7 @@ namespace FietsDemo
             Console.WriteLine("Typ uw patiëntnummer");
             _username = Console.ReadLine();
 
-            //Send login to information to server
+            //Send login information to server
             Console.WriteLine("patientId sent");
             SendPatientId();
 
@@ -68,15 +68,16 @@ namespace FietsDemo
             Thread.Sleep(10000);
 
             //Start connection with heart rate 
-            bool hearRateConnection = heart.MakeConnection().Result;
+            bool heartRateConnection = heart.MakeConnection().Result;
             Thread.Sleep(10000);
 
-
+            //Send connection information (with bike & heart rate) to server
+            SendConnectionData(bikeConnection, heartRateConnection);
 
             //Start simulation if there's no connection with bike/heart rate sensor
             if (!bikeConnection)
             {
-                if (!hearRateConnection)
+                if (!heartRateConnection)
                 {
                     Console.WriteLine("Starting Simulation");
                     while (true)
@@ -107,7 +108,7 @@ namespace FietsDemo
 
         }
 
-        //Get bike data
+        //Get bike data, use it during a session
         public static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             string[] data = BitConverter.ToString(e.Data).Split('-');
@@ -120,7 +121,7 @@ namespace FietsDemo
 
             if (data.Length < 13)
             {
-                PrintHeartData(values);
+                //PrintHeartData(values);
             }
             else
             {
@@ -254,7 +255,7 @@ namespace FietsDemo
                 DataMessage dataMessage = new DataMessage()
                 {
                     id = "client/received",
-                    data = new SpecificDataMessage()
+                    data = new DataMessageData()
                     {
                         heartrate = values[10],
                         speed = (values[9] + (values[8] << 8)) * 0.001,
@@ -292,19 +293,35 @@ namespace FietsDemo
             }
         }
 
-        //Converts patientid into json string
+        //Convert patientid into json string
         public static void SendPatientId()
         {
             LoginMessage login = new LoginMessage()
             {
                 id = "client/login",
-                data = new SpecificLoginMessage()
+                data = new LoginMessageData()
                 {
                     patientId = _username
                 }
             };
             Console.WriteLine(login);
             SendData(JsonConvert.SerializeObject(login));
+        }
+
+        //Convert connection data into json string
+        public static void SendConnectionData(bool bikeConnection, bool heartrateConnection)
+        {
+            ConnectionMessage connection = new ConnectionMessage()
+            {
+                id = "client/connection",
+                data = new ConnectionMessageData()
+                {
+                    bike = bikeConnection,
+                    heartrate = heartrateConnection
+                }
+            };
+            Console.WriteLine(connection);
+            SendData(JsonConvert.SerializeObject(connection));
         }
 
         //Listens to incoming messages from server and converts to string

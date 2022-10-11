@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ public class HeartRate
         await _ble.SetService("HeartRate");
         _ble.SubscriptionValueChanged += Program.BleBike_SubscriptionValueChanged;
         await _ble.SubscribeToCharacteristic("HeartRateMeasurement");
-
+        Console.WriteLine("Connected with heart rate sensor");
         return true;
     }
     public void Reset()
