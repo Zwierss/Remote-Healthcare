@@ -1,20 +1,26 @@
 using System.Net.Sockets;
 using FietsDemo;
 using VirtualReality;
+using static VirtualReality.PacketSender;
 
 namespace ClientApplication;
 
 public class Client : IClientCallback
 {
-    private VRClient _vr;
+    private readonly VRClient _vr;
+    private readonly TcpClient _client;
     
 
     public Client()
     {
         _vr = new VRClient();
-        HardwareConnector.SetupHardware(this);
     }
 
+    public async Task SetupConnection()
+    {
+        HardwareConnector.SetupHardware(this);
+        await _vr.StartConnection();
+    }
 
     public void OnNewBikeData(IReadOnlyList<int> values)
     {

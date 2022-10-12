@@ -48,8 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bike.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="HardwareConnector.cs" />
     <Compile Include="HeartRate.cs" />
+    <Compile Include="IClientCallback.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulator.cs" />
