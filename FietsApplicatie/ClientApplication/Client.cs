@@ -14,7 +14,7 @@ namespace ClientApplication;
 
 public class Client : IClientCallback
 {
-    private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("FietsDemo", StringComparison.Ordinal)) + "ClientApplication\\packets\\";
+    private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("ClientApplication", StringComparison.Ordinal)) + "ClientApplication\\packets\\";
     
     private readonly VRClient _vr;
     private TcpClient? _client;
@@ -46,16 +46,11 @@ public class Client : IClientCallback
 
     public async Task SetupConnection()
     {
-        while (!Connected)
-        {
-            await SetupHardware(this, _bikeSerial);
-        }
-        
         try
         {
             _client = new TcpClient();
             await _client.ConnectAsync(_hostname, _port);
-            await _vr.StartConnection();
+            //await _vr.StartConnection();
             _stream = _client.GetStream();
         }
         catch(Exception e)
@@ -63,7 +58,12 @@ public class Client : IClientCallback
             Console.WriteLine(e.Message);
         }
         
-        SendData(SendReplacedObject<string, string>("uuid", Username, 1, Path + "init.json")!);
+        // while (!Connected)
+        // {
+        //     await SetupHardware(this, _bikeSerial);
+        // }
+        
+        SendData(SendReplacedObject<string, string>("uuid", Username, 1, "server\\init.json")!);
 
         if (ConnectedToServer)
         {
@@ -103,6 +103,7 @@ public class Client : IClientCallback
 
         //_stream.Write(messageLength, 0, messageLength.Length);
         _stream!.Write(encryptedMessage, 0, encryptedMessage.Length);
+        Console.WriteLine("done");
     }
 
     private void InitCommands()

@@ -7,7 +7,7 @@ public class Bike
 
     private readonly VRClient _parent;
     
-    private static readonly string BikePath = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("FietsDemo", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
+    private static readonly string BikePath = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("ClientApplication", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
     public Bike(VRClient parent)
     {
         _parent = parent;

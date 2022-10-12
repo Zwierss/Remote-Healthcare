@@ -16,19 +16,19 @@ namespace FietsDemo
 
         public static async Task SetupHardware(IClientCallback client, string bikeSerial)
         {
-            //new Thread(RunSimulation).Start();
+            new Thread(RunSimulation).Start();
             _client = client;
 
-            _bike = new Bike();
-            _bike.Serial = bikeSerial;
-            HeartRate heart = new HeartRate();
-            
-            Console.WriteLine("Trying connection with devices");
-            bool bikeConnection = _bike.MakeConnection().Result;
-            if(!bikeConnection) return;
-            
-            bool hearRateConnection = heart.MakeConnection().Result;
-            if(!hearRateConnection) return;
+            // _bike = new Bike();
+            // _bike.Serial = bikeSerial;
+            // HeartRate heart = new HeartRate();
+            //
+            // Console.WriteLine("Trying connection with devices");
+            // bool bikeConnection = _bike.MakeConnection().Result;
+            // if(!bikeConnection) return;
+            //
+            // bool hearRateConnection = heart.MakeConnection().Result;
+            // if(!hearRateConnection) return;
 
             Connected = true;
             Console.Read();
