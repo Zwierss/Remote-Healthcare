@@ -6,6 +6,6 @@ public class EndSession : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {
-        
+        parent.SessionIsActive = false;
     }
 }

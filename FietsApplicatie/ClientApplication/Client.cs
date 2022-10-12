@@ -8,40 +8,54 @@ using VirtualReality;
 using static VirtualReality.PacketSender;
 using static ClientApplication.Cryptograhper;
 using static VirtualReality.VRClient;
+using static FietsDemo.HardwareConnector;
 
 namespace ClientApplication;
 
 public class Client : IClientCallback
 {
+    private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("FietsDemo", StringComparison.Ordinal)) + "ClientApplication\\packets\\";
+    
     private readonly VRClient _vr;
     private TcpClient? _client;
     private NetworkStream? _stream;
-    private Dictionary<string, ICommand> _commands;
+    private readonly Dictionary<string, ICommand> _commands;
 
     public string Username { get; set; }
+    public bool SessionIsActive { get; set; }
+    public bool ConnectedToServer { get; set; }
 
-    private const string Hostname = "";
-    private const int Port = 0;
+    private readonly string _bikeSerial;
+    private readonly string _hostname;
+    private readonly int _port;
 
     public event EventHandler<byte[]>? OnMessage; 
-    public Client()
+    
+    public Client(string username, string bikeSerial, string hostname, int port)
     {
         _vr = new VRClient();
-        OnMessage += (_ ,data) => HandleMessage(GetDecryptedMessage(data));
         _commands = new Dictionary<string, ICommand>();
         InitCommands();
-        Username = "";
+        Username = username;
+        _bikeSerial = bikeSerial;
+        _hostname = hostname;
+        _port = port;
+        SessionIsActive = false;
+        ConnectedToServer = false;
     }
 
     public async Task SetupConnection()
     {
-        HardwareConnector.SetupHardware(this);
-        await _vr.StartConnection();
-
+        while (!Connected)
+        {
+            await SetupHardware(this, _bikeSerial);
+        }
+        
         try
         {
             _client = new TcpClient();
-            await _client.ConnectAsync(Hostname, Port);
+            await _client.ConnectAsync(_hostname, _port);
+            await _vr.StartConnection();
             _stream = _client.GetStream();
         }
         catch(Exception e)
@@ -49,17 +63,25 @@ public class Client : IClientCallback
             Console.WriteLine(e.Message);
         }
         
+        SendData(SendReplacedObject<string, string>("uuid", Username, 1, Path + "init.json")!);
+
+        if (ConnectedToServer)
+        {
+            OnMessage += (_ ,data) => HandleMessage(GetDecryptedMessage(data));
+        }
     }
 
     public void OnNewBikeData(IReadOnlyList<int> values)
     {
         double speed = ((values[8] + values[9] * 255) * 0.001) * 3.6;
         _vr.UpdateBikeSpeed(speed);
+        if (!SessionIsActive) return;
     }
 
     public void OnNewHeartrateData(IReadOnlyList<int> values)
     {
         _vr.UpdatePanel(values[1]);
+        if (!SessionIsActive) return;
     }
 
     private void HandleMessage(JObject packet)
@@ -74,15 +96,13 @@ public class Client : IClientCallback
         }
     }
 
-    private Task SendData(JObject message)
+    private void SendData(JObject message)
     {
         //byte[] messageLength = BitConverter.GetBytes(message.ToString().Length);
         byte[] encryptedMessage = GetEncryptedMessage(message);
 
         //_stream.Write(messageLength, 0, messageLength.Length);
         _stream!.Write(encryptedMessage, 0, encryptedMessage.Length);
-        
-        return Task.CompletedTask;
     }
 
     private void InitCommands()

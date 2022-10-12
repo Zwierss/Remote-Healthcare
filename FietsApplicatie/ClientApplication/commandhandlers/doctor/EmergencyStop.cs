@@ -6,6 +6,6 @@ public class EmergencyStop : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {
-        throw new NotImplementedException();
+        parent.SessionIsActive = false;
     }
 }

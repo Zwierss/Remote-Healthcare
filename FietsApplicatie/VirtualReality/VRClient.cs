@@ -166,7 +166,7 @@ public class VRClient
         _panel.AddPanel();
         _tree.PlaceTrees();
         IsSet = true;
-        new Thread(_skybox.Update).Start();
+        //new Thread(_skybox.Update).Start();
     }
 
     public void UpdateBikeSpeed(double speed)

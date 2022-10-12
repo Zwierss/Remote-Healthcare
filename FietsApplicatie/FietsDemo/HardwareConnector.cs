@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Threading;
+using System.Threading.Tasks;
 using Avans.TI.BLE;
 
 namespace FietsDemo
@@ -10,37 +11,32 @@ namespace FietsDemo
     {
 
         private static IClientCallback _client;
+        private static Bike _bike;
+        public static bool Connected { get; set; } = false;
 
-        public static void SetupHardware(IClientCallback client)
+        public static async Task SetupHardware(IClientCallback client, string bikeSerial)
         {
-            new Thread(RunSimulation).Start();
+            //new Thread(RunSimulation).Start();
             _client = client;
+
+            _bike = new Bike();
+            _bike.Serial = bikeSerial;
+            HeartRate heart = new HeartRate();
             
-            // Bike bike = new Bike();
-            // HeartRate heart = new HeartRate();
-            //
-            // Console.WriteLine("Trying connection with devices");
-            // bool bikeConnection = bike.MakeConnection().Result;
-            // while(!bikeConnection) Thread.Sleep(1000);
-            // bool hearRateConnection = heart.MakeConnection().Result;
-            //
-            // if (!bikeConnection)
-            // {
-            //     if(!hearRateConnection){
-            //         Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
-            //         string input = Console.ReadLine();
-            //         if (input == "y")
-            //         {
-            //             Console.WriteLine("Starting Simulation");
-            //         }
-            //         else
-            //         {
-            //             Console.WriteLine("Closing down application");
-            //         }
-            //     }
-            // }
+            Console.WriteLine("Trying connection with devices");
+            bool bikeConnection = _bike.MakeConnection().Result;
+            if(!bikeConnection) return;
             
+            bool hearRateConnection = heart.MakeConnection().Result;
+            if(!hearRateConnection) return;
+
+            Connected = true;
             Console.Read();
+        }
+
+        private static void SetBikeSerial(string serial)
+        {
+            _bike.Serial = serial;
         }
 
         private static void RunSimulation()
@@ -51,8 +47,8 @@ namespace FietsDemo
                 int[] values = Simulator.SimulateGeneralData();
                 PrintGeneralData(values);
                 Thread.Sleep(500);
-                int[] bikeData = Simulator.SimulateBikeData();
-                PrintBikeData(bikeData);
+                int[] heartData = Simulator.SimulateHeartRate();
+                PrintHeartData(heartData);
             }
         }
 
@@ -94,7 +90,6 @@ namespace FietsDemo
             Console.WriteLine("Distance Traveled: " + values[7] + " meters");
             double speed = (values[8] + values[9] * 255) * 0.001;
             Console.WriteLine("Speed: " + speed + " m/s");
-            
 
             Console.WriteLine("Heart Rate: " + values[10] + " bpm");
             Console.WriteLine("-----------");

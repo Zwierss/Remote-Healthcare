@@ -6,6 +6,6 @@ public class StartSession : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {
-        
+        parent.SessionIsActive = true;
     }
 }

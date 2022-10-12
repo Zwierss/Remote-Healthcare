@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.AccessControl;
 using System.Threading;
 
@@ -76,6 +77,12 @@ public static class Simulator
             }
 
             return values;
+        }
+
+        public static int[] SimulateHeartRate()
+        {
+            int rate = new Random().Next(50) + 75;
+            return new[]{0, rate };
         }
 
         public static int[] SimulateBikeData()
