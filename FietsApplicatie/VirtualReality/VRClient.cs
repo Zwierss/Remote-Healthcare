@@ -6,6 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtualReality.commands;
+using VirtualReality.commands.tunnel;
 using VirtualReality.components;
 
 namespace VirtualReality;

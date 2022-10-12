@@ -18,7 +18,7 @@ public class SessionListCommand : ICommand
             Console.WriteLine(Environment.UserName);
             Console.WriteLine(Environment.MachineName);
 
-            if (!string.Equals(o["clientinfo"]!["host"].ToObject<string>(), Environment.MachineName,
+            if (!string.Equals(o!["clientinfo"]!["host"]!.ToObject<string>(), Environment.MachineName,
                     StringComparison.CurrentCultureIgnoreCase) ||
                 !string.Equals(o["clientinfo"]!["user"]!.ToObject<string>()!, Environment.UserName,
                     StringComparison.CurrentCultureIgnoreCase)) continue;
