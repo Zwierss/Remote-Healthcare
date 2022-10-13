@@ -10,9 +10,9 @@ namespace FietsDemo.JSON
     {
         public string id { get; set; }
         
-        public SpecificLoginMessage data { get; set; }
+        public LoginData data { get; set; }
     }
-    public class SpecificLoginMessage
+    public class LoginData
     {
         public string patientId { get; set; }
     }

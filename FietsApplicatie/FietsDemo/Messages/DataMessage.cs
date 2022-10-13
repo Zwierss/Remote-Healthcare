@@ -10,9 +10,9 @@ namespace FietsDemo
     public class DataMessage
     {
         public string id { get; set; }
-        public SpecificDataMessage data { get; set; }  
+        public DataMessageData data { get; set; }  
     }
-    public class SpecificDataMessage
+    public class DataMessageData
     {
         public int heartrate { get; set; }
         public double speed{ get; set; }
