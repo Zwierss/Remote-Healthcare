@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +46,11 @@ namespace DoctorApplication
 
             clientListView.ItemsSource = clients;
 
+        }
+
+        public void ShowSessionData(JObject sessionData)
+        {
+            client1DataBox.Text = sessionData.ToString();
         }
 
         private void SelectClients(object sender, RoutedEventArgs e)

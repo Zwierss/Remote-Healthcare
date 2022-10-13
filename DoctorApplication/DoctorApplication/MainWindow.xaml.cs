@@ -18,6 +18,8 @@ namespace DoctorApplication
 
         Network network;
 
+        DoctorMainPage page;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,7 +54,9 @@ namespace DoctorApplication
 
         public async Task ContinueLogin()
         {
-            DoctorMainPage page = new DoctorMainPage(network.returnCommand);
+            page = new DoctorMainPage(network.returnCommand);
+            network.showSessionData = page.ShowSessionData;
+            
             while (!toDoctorMainPage)
             {
                 Trace.WriteLine("waiting for bool");

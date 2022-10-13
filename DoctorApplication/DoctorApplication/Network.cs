@@ -23,6 +23,9 @@ namespace DoctorApplication
         public delegate void ContinueLogin();
         public ContinueLogin login;
 
+        public delegate void HandleSessionData(JObject sessionData);
+        public HandleSessionData showSessionData;
+
         public string command = "";
 
         //public DoctorMainPage main;
@@ -67,6 +70,15 @@ namespace DoctorApplication
 
                     }
                     WriteTextMessage(tcpClient, command + "\n");
+                    JObject jCommand = JObject.Parse(command);
+
+                    while (jCommand["id"].ToString() == "doctor/startSession")
+                    {
+                        JObject sessionData = JObject.Parse(ReadJsonMessage(tcpClient));
+                        Console.WriteLine("sessionData: " + sessionData.ToString());
+                        this.showSessionData(sessionData);
+                    }
+
                     Trace.WriteLine("Command: " + command);
                     command = "";
                 }

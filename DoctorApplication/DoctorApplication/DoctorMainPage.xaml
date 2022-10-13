@@ -34,5 +34,8 @@
         <Button Name="sendMessageButton" Grid.Row="5" Click="SendMessage">Send Message</Button>
         <Button Name="emergencyStopButton" Grid.Row="6" Click="EmergencyStop">Emergency Stop</Button>
 
+        <TextBox Name="client1DataBox" Grid.Row="1" Grid.Column="1" />
+        <TextBox Name="client2DataBox" Grid.Row="1" Grid.Column="2" />
+
     </Grid>
 </Window>
