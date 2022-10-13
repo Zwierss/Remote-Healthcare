@@ -30,7 +30,7 @@ namespace DoctorApplication
 
         public string command = "";
 
-        public delegate void CommandDelegate(string command);
+        public delegate void CommandDelegate(JObject jCommand);
         public CommandDelegate GiveCommand;
 
         public Network currentNetwork;
@@ -70,29 +70,29 @@ namespace DoctorApplication
             {
                 selectedClients.Add(client);
             }
-            GiveCommand(JsonMessageGenerator.GetJsonClientSelectMessage(selectedClients));
+            GiveCommand(JObject.Parse(JsonMessageGenerator.GetJsonClientSelectMessage(selectedClients)));
         }
 
         private void StartSession(object sender, RoutedEventArgs e)
         {
-            GiveCommand(JsonMessageGenerator.GetJsonStartSessionMessage("Kars"));
+            GiveCommand(JObject.Parse(JsonMessageGenerator.GetJsonStartSessionMessage("Kars")));
 
             
         }
         
         private void StopSession(object sender, RoutedEventArgs e)
         {
-            GiveCommand(JsonMessageGenerator.GetJsonStopSessionMessage("Kars"));
+            GiveCommand(JObject.Parse(JsonMessageGenerator.GetJsonStopSessionMessage("Kars")));
         }
         
         private void SendMessage(object sender, RoutedEventArgs e)
         {
-            GiveCommand(JsonMessageGenerator.GetJsonSendMessage("Kars", messageTextBox.Text));
+            GiveCommand(JObject.Parse(JsonMessageGenerator.GetJsonSendMessage("Kars", messageTextBox.Text)));
         }
         
         private void EmergencyStop(object sender, RoutedEventArgs e)
         {
-            GiveCommand(JsonMessageGenerator.GetJsonEmergencyStopMessage("Kars"));
+            GiveCommand(JObject.Parse(JsonMessageGenerator.GetJsonEmergencyStopMessage("Kars")));
         }
     }
 }

@@ -26,7 +26,8 @@ namespace DoctorApplication
         public delegate void HandleSessionData();
         public HandleSessionData showSessionData;
 
-        public string command = "";
+        //public string command = "";
+        public JObject jCommand = new JObject();
 
         public JObject sessionData = new JObject();
 
@@ -68,25 +69,25 @@ namespace DoctorApplication
                 login();
                 while (true)
                 {
-                    while(command == "")
+                    while(this.jCommand.ToString() == new JObject().ToString())
                     {
 
                     }
-                    WriteTextMessage(tcpClient, command + "\n");
-                    JObject jCommand = JObject.Parse(command);
+                    WriteTextMessage(tcpClient, this.jCommand + "\n");
+                    //JObject jCommand = JObject.Parse(command);
 
                     while (jCommand["id"].ToString() == "doctor/startSession")
                     {
-                        
+                        Trace.WriteLine("doctor startsession");
+                        WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("doctor/received") + "\n");
                         string text = ReadJsonMessage(tcpClient);
                         Trace.WriteLine("Text: " + text);
                         JObject sessionData = JObject.Parse(text);
-                        WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("doctor/received") + "\n");
                         main.sessionData = sessionData.ToString();
                         this.showSessionData();
                     }
 
-                    command = "";
+                    //jCommand = new JObject();
                 }
             }
             else
@@ -96,9 +97,9 @@ namespace DoctorApplication
             }
         }
 
-        public void returnCommand(string command)
+        public void returnCommand(JObject jCommand)
         {
-            this.command = command;
+            this.jCommand = jCommand;
         }
 
         public static string ReadJsonMessage(TcpClient client)
