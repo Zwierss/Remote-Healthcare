@@ -21,6 +21,9 @@ public class Client : IClientCallback
     private NetworkStream? _stream;
     private readonly Dictionary<string, ICommand> _commands;
 
+    private byte[] _totalBuffer = Array.Empty<byte>();
+    private readonly byte[] _buffer = new byte[1024];
+
     public string Username { get; set; }
     public bool SessionIsActive { get; set; }
     public bool ConnectedToServer { get; set; }
@@ -29,8 +32,6 @@ public class Client : IClientCallback
     private readonly string _hostname;
     private readonly int _port;
 
-    public event EventHandler<byte[]>? OnMessage; 
-    
     public Client(string username, string bikeSerial, string hostname, int port)
     {
         _vr = new VRClient();
@@ -65,10 +66,7 @@ public class Client : IClientCallback
         
         SendData(SendReplacedObject<string, string>("uuid", Username, 1, "server\\init.json")!);
 
-        if (ConnectedToServer)
-        {
-            OnMessage += (_ ,data) => HandleMessage(GetDecryptedMessage(data));
-        }
+        _stream!.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
     public void OnNewBikeData(IReadOnlyList<int> values)
@@ -84,26 +82,38 @@ public class Client : IClientCallback
         if (!SessionIsActive) return;
     }
 
-    private void HandleMessage(JObject packet)
+    private void OnRead(IAsyncResult ar)
     {
         try
         {
-            _commands[packet["id"]!.ToObject<string>()!].OnCommandReceived(packet,this);
+            int rc = _stream!.EndRead(ar);
+            _totalBuffer = Concat(_totalBuffer, _buffer, rc);
         }
-        catch (Exception e)
+        catch(IOException)
         {
-            Console.WriteLine("No such thing found as packet.id\n" + e.Message);
+            Console.WriteLine("Can no longer read from this server");
+            return;
         }
+
+        while (_totalBuffer.Length >= 4)
+        {
+            JObject data = GetDecryptedMessage(_totalBuffer);
+            Console.WriteLine(data);
+            _totalBuffer = Array.Empty<byte>();
+
+            if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
+                _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
+
+            break;
+        }
+
+        _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
     private void SendData(JObject message)
     {
-        //byte[] messageLength = BitConverter.GetBytes(message.ToString().Length);
         byte[] encryptedMessage = GetEncryptedMessage(message);
-
-        //_stream.Write(messageLength, 0, messageLength.Length);
         _stream!.Write(encryptedMessage, 0, encryptedMessage.Length);
-        Console.WriteLine("done");
     }
 
     private void InitCommands()

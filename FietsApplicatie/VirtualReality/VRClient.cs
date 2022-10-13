@@ -185,7 +185,7 @@ public class VRClient
         _panel.UpdatePanel(_currentSpeed, heartRate);
     }
 
-    private static byte[] Concat(byte[] b1, byte[] b2, int count)
+    public static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];
         Buffer.BlockCopy(b1, 0, r, 0, b1.Length);

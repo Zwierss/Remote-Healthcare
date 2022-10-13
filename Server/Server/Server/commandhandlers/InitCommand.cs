@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace Server;
+namespace Server.commandhandlers;
 
-public class TestCommand : ICommand
+public class NewClientCommand : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {
