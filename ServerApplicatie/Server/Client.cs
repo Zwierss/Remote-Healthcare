@@ -57,6 +57,7 @@ namespace Server
                 {
                     if (loginRequest["username"].ToString() == "dokter" && loginRequest["password"].ToString() == "wachtwoord")
                     {
+                        this.patientId = "Dokter";
                         string loginConfirm = JsonMessageGenerator.GetJsonOkMessage("server/login");
                         
                         WriteJsonMessage(tcpClient, loginConfirm + "\n");
@@ -69,12 +70,12 @@ namespace Server
                 {
                     if (DataSaver.ClientExists(loginRequest["data"]["patientId"].ToString()))
                     {
-                        this.patientId = patientId;
+                        this.patientId = loginRequest["data"]["patientId"].ToString();
                         WriteJsonMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(false) + "\n");
                     }
                     else
                     {
-                        this.patientId = patientId;
+                        this.patientId = loginRequest["data"]["patientId"].ToString();
                         DataSaver.AddNewClient(this);
                         WriteJsonMessage(tcpClient, JsonMessageGenerator.GetJsonLoggedinMessage(true) + "\n");
                     }
@@ -88,7 +89,7 @@ namespace Server
         {
             while (true)
             {
-                while (!receivedJsonMessage.HasValues)
+                while (receivedJsonMessage.ToString() == new JObject().ToString())
                 {
 
                 }
@@ -107,10 +108,16 @@ namespace Server
                         patientSessionData.Add(receivedSessionData);
                         for(int i = 0; i < Program.clients.Count; i++)
                         {
+                            if (Program.clients[i].patientId == "Dokter")
+                            {
+                                Program.clients[i].sessionData = patientSessionData;
+                            }
+                            /*
                             if(patientId == Program.clients[i].patientId)
                             {
                                 Program.clients[i].sessionData = patientSessionData;
                             }
+                            */
                         }
                     }
 
@@ -138,7 +145,13 @@ namespace Server
                     }
                     */
                 }
-                receivedJsonMessage = new JObject();
+                else if (receivedJsonMessage["id"].ToString() == "server/stopSession")
+                {
+                    string patientId = receivedJsonMessage["client"].ToString();
+                    WriteJsonMessage(tcpClient, JsonMessageGenerator.GetJsonStopSessionMessage(patientId) + "\n");
+                    receivedJsonMessage = new JObject();
+                }
+                //receivedJsonMessage = new JObject();
             }
         }
 

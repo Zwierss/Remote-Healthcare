@@ -16,11 +16,13 @@ namespace Server.DataSaving
             Console.WriteLine(Environment.CurrentDirectory);
             string directoryPath = Environment.CurrentDirectory + "\\Clients\\" + client.patientId;
             Directory.CreateDirectory(directoryPath);
-            string path = Environment.CurrentDirectory + "\\Clients\\" + client.patientId + client.patientId + ".JSON";
+            string path = Environment.CurrentDirectory + "\\Clients\\" + client.patientId + "\\" + client.patientId + ".JSON";
             File.Create(path).Close();
 
-            string clientAsJson = JsonConvert.SerializeObject(client);
-            File.WriteAllText(path, clientAsJson);
+            //string clientAsJson = JsonConvert.SerializeObject(client);
+            JObject json = new JObject();
+            
+            File.WriteAllText(path, json.ToString());
         }
 
         public static bool ClientExists(string patientId)

@@ -74,17 +74,23 @@ namespace DoctorApplication
 
                     }
                     WriteTextMessage(tcpClient, this.jCommand + "\n");
-                    //JObject jCommand = JObject.Parse(command);
 
-                    while (jCommand["id"].ToString() == "doctor/startSession")
+                    if (jCommand["id"].ToString() == "doctor/stopSession")
                     {
-                        Trace.WriteLine("doctor startsession");
-                        WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("doctor/received") + "\n");
-                        string text = ReadJsonMessage(tcpClient);
-                        Trace.WriteLine("Text: " + text);
-                        JObject sessionData = JObject.Parse(text);
-                        main.sessionData = sessionData.ToString();
-                        this.showSessionData();
+                        jCommand = new JObject();
+                    }
+                    else
+                    {
+                        while (jCommand["id"].ToString() == "doctor/startSession")
+                        {
+                            Trace.WriteLine("doctor startsession");
+                            WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("doctor/received") + "\n");
+                            string text = ReadJsonMessage(tcpClient);
+                            Trace.WriteLine("Text: " + text);
+                            JObject sessionData = JObject.Parse(text);
+                            main.sessionData = sessionData.ToString();
+                            this.showSessionData();
+                        }
                     }
 
                     //jCommand = new JObject();

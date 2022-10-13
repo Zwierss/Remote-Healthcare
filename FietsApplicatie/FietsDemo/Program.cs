@@ -396,7 +396,7 @@ namespace FietsDemo
                     break;
 
                 //doctor stops the session
-                case "server/endSession":
+                case "server/stopSession":
                     _stop = true;
                     Console.WriteLine("Dokter start een session");
                     break;
