@@ -65,14 +65,14 @@ namespace FietsDemo
 
             Console.WriteLine("Trying connection with devices");
             bool bikeConnection = bike.MakeConnection().Result;
-            Thread.Sleep(10000);
+            Thread.Sleep(1000);
 
             //Start connection with heart rate 
             bool heartRateConnection = heart.MakeConnection().Result;
-            Thread.Sleep(10000);
+            Thread.Sleep(1000);
 
             //Send connection information (with bike & heart rate) to server
-            SendConnectionData(bikeConnection, heartRateConnection);
+            //SendConnectionData(bikeConnection, heartRateConnection);
 
             //Start simulation if there's no connection with bike/heart rate sensor
             if (!bikeConnection)
@@ -89,6 +89,31 @@ namespace FietsDemo
                 }
                 
             }
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    switch (Console.ReadLine())
+                    {
+                        case "stop":
+                            Console.WriteLine("Stopped!");
+                            _stop = true;
+                            break;
+
+                        case "start":
+                            Console.WriteLine("started!");
+                            _stop = false;
+                            _start = true;
+                            _first = true;
+                            break;
+                        case "r":
+                            bike.SetResistance(Convert.ToByte(Console.ReadLine()));
+                            break;
+                            
+                    }
+                }
+
+            }).Start();
             return Task.CompletedTask;
         }
 
@@ -102,7 +127,7 @@ namespace FietsDemo
                 PrintGeneralData(values);
                 Thread.Sleep(250);
                 //int[] bikeData = Simulator.SimulateBikeData();
-                //PrintBikeData(bikeData);
+                //PrintBikeData(values);
                 ConvertToJson(values);
             }
 
@@ -141,7 +166,7 @@ namespace FietsDemo
                             ConvertToJson(values);
                         } else if (values[6] > _previousElapsedTime)
                         {
-                            _distanceTraveled += (values[9] + (values[8] << 8) * 0.001) / 2;
+                            _distanceTraveled += (values[8] + (values[9] << 8) * 0.001) / 2;
                             values[7] = (int)Math.Round(_distanceTraveled);
                             _previousElapsedTime += 2;
                             values[6] = _previousElapsedTime - _startElapsedTime;
@@ -159,6 +184,7 @@ namespace FietsDemo
         //Print general data
         private static void PrintGeneralData(int[] values)
         {
+            Console.WriteLine("print");
             if(_start)
             {
                 Console.WriteLine("Received General Data");
@@ -166,7 +192,7 @@ namespace FietsDemo
                 Console.WriteLine("Equipment Type: " + values[5]);
                 Console.WriteLine("Elapsed Time: " + (values[6]) + " seconds");
                 Console.WriteLine("Distance Traveled: " + values[7] + " meters");
-                Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
+                Console.WriteLine("Speed: " + ((values[8] + (values[9] << 8)) * 0.001) + " m/s");
                 Console.WriteLine("Heart Rate: " + _heartRate + " bpm");
                 Console.WriteLine("-----------");
             }
@@ -258,7 +284,7 @@ namespace FietsDemo
                     data = new DataMessageData()
                     {
                         heartrate = values[10],
-                        speed = (values[9] + (values[8] << 8)) * 0.001,
+                        speed = (values[8] + (values[9] << 8)) * 0.001,
                         time = DateTime.Now,
                         timestamp = values[6],
                         endOfSession = _stop || _emergency
@@ -357,27 +383,30 @@ namespace FietsDemo
         //Reads commands (stop/start session) from console for testing
         public static void ReadConsoleCommands()
         {
-            new Thread(() =>
-            {
-                while (true)
-                {
-                    switch (Console.ReadLine())
-                    {
-                        case "stop":
-                            Console.WriteLine("Stopped!");
-                            _stop = true;
-                            break;
+            //new thread(() =>
+            //{
+            //    while (true)
+            //    {
+            //        switch (console.readline())
+            //        {
+            //            case "stop":
+            //                console.writeline("stopped!");
+            //                _stop = true;
+            //                break;
 
-                        case "start":
-                            Console.WriteLine("started!");
-                            _stop = false;
-                            _start = true;
-                            _first = true;
-                            break;
-                    }
-                }
+            //            case "start":
+            //                console.writeline("started!");
+            //                _stop = false;
+            //                _start = true;
+            //                _first = true;
+            //                break;
+            //            case "1":
+            //                break;
+            //        }
+            //    }
 
-            }).Start();
+            //}).start();
+
         }
         //Receives messages and takes action
         public static void MessageHandler(string message)

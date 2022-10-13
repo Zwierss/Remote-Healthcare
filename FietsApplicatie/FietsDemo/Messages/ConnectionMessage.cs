@@ -13,7 +13,7 @@ namespace FietsDemo
     }
     public class ConnectionMessageData
     {
-        public bool bike { get; set; } 
+        public bool bike { get; set; }
         public bool heartrate { get; set; }
     }
 
