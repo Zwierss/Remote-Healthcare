@@ -15,7 +15,7 @@ namespace DoctorApplication
             message.Add("id", id);
             message.Add("status", "ok");
 
-            Console.WriteLine(message.ToString());
+            //Console.WriteLine(message.ToString());
             return message.ToString();
         }
 

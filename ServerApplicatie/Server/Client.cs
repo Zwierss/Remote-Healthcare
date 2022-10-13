@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Server.DataSaving;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
@@ -99,7 +100,9 @@ namespace Server
                     List<JObject> patientSessionData = new List<JObject>();
                     while (receivedJsonMessage["id"].ToString() == "server/startSession")
                     {
-                        JObject receivedSessionData = JObject.Parse(ReadJsonMessage(tcpClient));
+                        string messageToRead = ReadJsonMessage(tcpClient);
+                        Console.WriteLine("Message to read" + messageToRead);
+                        JObject receivedSessionData = JObject.Parse(messageToRead);
 
                         patientSessionData.Add(receivedSessionData);
                         for(int i = 0; i < Program.clients.Count; i++)
@@ -171,10 +174,16 @@ namespace Server
 
                     while (receivedJsonMessage["id"].ToString() == "server/startSession")
                     {
+                        
                         if(this.sessionData.Count > 0)
                         {
-                            WriteJsonMessage(tcpClient, this.sessionData[this.sessionData.Count - 1].ToString());
-
+                            Console.WriteLine("Session data: " + this.sessionData[this.sessionData.Count - 1]);
+                            WriteJsonMessage(tcpClient, this.sessionData[this.sessionData.Count - 1].ToString() + "\n");
+                            if(JObject.Parse(ReadJsonMessage(tcpClient))["id"].ToString() == "doctor/received")
+                            {
+                                Trace.WriteLine("if statement");
+                            }
+                            
                         }
                     }
 

@@ -54,7 +54,7 @@ namespace DoctorApplication
 
         public async Task ContinueLogin()
         {
-            page = new DoctorMainPage(network.returnCommand);
+            page = new DoctorMainPage(network);
             network.showSessionData = page.ShowSessionData;
             
             while (!toDoctorMainPage)

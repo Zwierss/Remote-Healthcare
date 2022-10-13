@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DoctorApplication
 {
-    class Network
+    public class Network
     {
         private static TcpClient tcpClient;
 
@@ -23,12 +23,15 @@ namespace DoctorApplication
         public delegate void ContinueLogin();
         public ContinueLogin login;
 
-        public delegate void HandleSessionData(JObject sessionData);
+        public delegate void HandleSessionData();
         public HandleSessionData showSessionData;
 
         public string command = "";
 
-        //public DoctorMainPage main;
+        public JObject sessionData = new JObject();
+
+        public DoctorMainPage main;
+
 
         public Network(string username, string password, ContinueLogin login)
         {
@@ -74,12 +77,15 @@ namespace DoctorApplication
 
                     while (jCommand["id"].ToString() == "doctor/startSession")
                     {
-                        JObject sessionData = JObject.Parse(ReadJsonMessage(tcpClient));
-                        Console.WriteLine("sessionData: " + sessionData.ToString());
-                        this.showSessionData(sessionData);
+                        
+                        string text = ReadJsonMessage(tcpClient);
+                        Trace.WriteLine("Text: " + text);
+                        JObject sessionData = JObject.Parse(text);
+                        WriteTextMessage(tcpClient, JsonMessageGenerator.GetJsonOkMessage("doctor/received") + "\n");
+                        main.sessionData = sessionData.ToString();
+                        this.showSessionData();
                     }
 
-                    Trace.WriteLine("Command: " + command);
                     command = "";
                 }
             }

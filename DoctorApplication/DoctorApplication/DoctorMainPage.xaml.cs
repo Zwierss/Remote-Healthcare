@@ -33,24 +33,34 @@ namespace DoctorApplication
         public delegate void CommandDelegate(string command);
         public CommandDelegate GiveCommand;
 
+        public Network currentNetwork;
+
+        public string sessionData = "";
+
         public List<string> clients = new List<string>()
         {
             "Kars", "Martijn", "Bram", "Xander", "Tommy", "Momin"
         };
 
-        public DoctorMainPage(CommandDelegate GiveCommand)
+        public DoctorMainPage(Network network)
         {
             InitializeComponent();
 
-            this.GiveCommand = GiveCommand;
+            this.currentNetwork = network;
+            this.GiveCommand = network.returnCommand;
 
             clientListView.ItemsSource = clients;
+            network.main = this;
 
         }
 
-        public void ShowSessionData(JObject sessionData)
+        public void ShowSessionData()
         {
-            client1DataBox.Text = sessionData.ToString();
+            this.Dispatcher.Invoke(() =>
+            {
+                client1DataBox.Text = this.sessionData;
+
+            });
         }
 
         private void SelectClients(object sender, RoutedEventArgs e)
@@ -66,6 +76,8 @@ namespace DoctorApplication
         private void StartSession(object sender, RoutedEventArgs e)
         {
             GiveCommand(JsonMessageGenerator.GetJsonStartSessionMessage("Kars"));
+
+            
         }
         
         private void StopSession(object sender, RoutedEventArgs e)
