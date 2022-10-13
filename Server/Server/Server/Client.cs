@@ -8,9 +8,10 @@ namespace Server;
 public class Client
 {
 
-    private TcpClient _tcp;
-    private NetworkStream _stream;
+    private readonly TcpClient _tcp;
+    private readonly NetworkStream _stream;
     private readonly Dictionary<string, ICommand> _commands;
+    public bool? IsDoctor { get; set; }
 
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
@@ -57,10 +58,10 @@ public class Client
 
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
-NewClientCommand
+
     private void InitCommands()
     {
-        _commands.Add("server/client-enter", new InitCommand());
+        _commands.Add("server/client-enter", new NewClientCommand());
     }
     
     private static byte[] Concat(byte[] b1, byte[] b2, int count)

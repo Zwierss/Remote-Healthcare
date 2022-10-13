@@ -1,6 +1,7 @@
 {
   "id" : "server/client-enter",
   "data" : {
-    "uuid" : "1121"
+    "uuid" : "1121",
+    "doctor" : false
   }
 }
