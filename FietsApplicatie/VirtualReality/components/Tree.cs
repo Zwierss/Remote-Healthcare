@@ -17,16 +17,11 @@ public class Tree
     public void PlaceTrees()
     {
         List<float[]> r = new();
-        int quantity = 200;
-
-        for (int i = 0; i < quantity; i++)
-        {
-            float x = new Random().Next(200) - 100;
-            Thread.Sleep(10);
-            float z = new Random().Next(200) - 100;
-            r.Add(new[]{x,z});
-            Thread.Sleep(10);
-        }
+        
+        float x = 40;
+        float z = 40;
+        r.Add(new[]{x,z});
+        
 
         float[][] coordinates = r.ToArray();
         
