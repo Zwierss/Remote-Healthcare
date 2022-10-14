@@ -17,11 +17,16 @@ public class Tree
     public void PlaceTrees()
     {
         List<float[]> r = new();
+        r.Add(new float[] { -62, -10 });
+        r.Add(new float[] { -62, 10 });
+        r.Add(new float[] { -30, -60 });
+        r.Add(new float[] { -30, -75 });
+        r.Add(new float[] { -30, -80 });
+        r.Add(new float[] { -32, -72 });
         
-        float x = 40;
-        float z = 40;
-        r.Add(new[]{x,z});
+        r.Add(new float[] { -35, -70 });
         
+
 
         float[][] coordinates = r.ToArray();
         
