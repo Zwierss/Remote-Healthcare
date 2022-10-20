@@ -39,12 +39,14 @@ namespace Server
 
         public JObject receivedJsonData = new JObject();
 
+        public string patientId;
+
         public class Patient
         {
             public string patientId { get; set; }
         }
 
-        private readonly List<JObject> _sessionData = new();
+        private List<JObject> _sessionData = new();
         
         public Client(TcpClient tcpClient)
         {
@@ -52,7 +54,7 @@ namespace Server
 
             string okMessage = JsonMessageGenerator.GetJsonOkMessage("client/connected");
             WriteJsonMessage(this._tcpClient, okMessage + "\r\n");
-            Thread thread = new Thread(HandleClient);
+            Thread thread = new Thread(HandleConnection);
             thread.Start();
         }
         
@@ -125,7 +127,7 @@ namespace Server
                         {
                             if (Program.clients[i].patientId == "Dokter")
                             {
-                                Program.clients[i].sessionData = patientSessionData;
+                                Program.clients[i]._sessionData = patientSessionData;
                             }
                             /*
                             if(patientId == Program.clients[i].patientId)
@@ -207,15 +209,15 @@ namespace Server
                         JObject message = JObject.Parse(ReadJsonMessage(tcpClient));
                         if (message["id"].ToString() == "doctor/received")
                         {
-                            Trace.WriteLine("if statement: " + this.sessionData.Count);
-                            while(this.sessionData.Count == 0)
+                            Trace.WriteLine("if statement: " + this._sessionData.Count);
+                            while(this._sessionData.Count == 0)
                             {
 
                             }
-                            if (this.sessionData.Count > 0)
+                            if (this._sessionData.Count > 0)
                             {
-                                Trace.WriteLine("Session data: " + this.sessionData[this.sessionData.Count - 1]);
-                                WriteJsonMessage(tcpClient, this.sessionData[this.sessionData.Count - 1].ToString() + "\n");
+                                Trace.WriteLine("Session data: " + this._sessionData[this._sessionData.Count - 1]);
+                                WriteJsonMessage(tcpClient, this._sessionData[this._sessionData.Count - 1].ToString() + "\n");
                             }
                         }
                         else
@@ -269,8 +271,8 @@ namespace Server
         {
             Console.WriteLine("Write: " + jsonMessage);
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
-            byte[] RequestLength = BitConverter.GetBytes(jMessage.Length);
-            byte[] request = Encoding.ASCII.GetBytes(jMessage);
+            byte[] RequestLength = BitConverter.GetBytes(jsonMessage.Length);
+            byte[] request = Encoding.ASCII.GetBytes(jsonMessage);
             {
                 stream.Write(jsonMessage);
                 stream.Flush();
