@@ -48,12 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bike.cs" />
-<<<<<<< HEAD
-    <Compile Include="Messages\LoginMessage.cs" />
-    <Compile Include="Messages\DataMessage.cs" />
-=======
     <Compile Include="HardwareConnector.cs" />
->>>>>>> client-resistance
     <Compile Include="HeartRate.cs" />
     <Compile Include="IClientCallback.cs" />
     <Compile Include="Program.cs" />

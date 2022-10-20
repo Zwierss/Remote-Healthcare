@@ -104,16 +104,6 @@ namespace FietsDemo
             }
             return Task.CompletedTask;
         }
-        //while (true)
-        //{
-        //    if (!_start)
-        //    {
-        //        bike.Reset();
-        //        heart.Reset();
-        //    }
-        //}
-        return Task.CompletedTask;
-    }
 
         //Run simulation
         public static void runSimulation()
@@ -134,26 +124,13 @@ namespace FietsDemo
         //Get bike data, use it during a session
         public static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
-            values[i] = int.Parse(data[i], System.Globalization.NumberStyles.HexNumber);
-        }
+            string[] data = BitConverter.ToString(e.Data).Split('-');
+            int[] values = new int[data.Length];
 
-        if (data.Length < 13)
-        {
-            PrintHeartData(values);
-        }
-        else
-        {
-            switch (data[4])
+            for (int i = 0; i < data.Length; i++)
             {
-                case "10":
-                    if(_first)
-                    {
-                        _first = false;
-                        _startElapsedTime = values[6];
-                        _previousElapsedTime = values[6];
-                        Console.WriteLine(_startElapsedTime);
-                    }
-                    Console.WriteLine((_previousElapsedTime) + " " + values[6] + " " + (values[9] + (values[8] << 8)) + " " + (_previousElapsedTime - _startElapsedTime));
+                values[i] = int.Parse(data[i], System.Globalization.NumberStyles.HexNumber);
+            }
 
             if (data.Length < 13)
             {
@@ -195,53 +172,51 @@ namespace FietsDemo
         //Print general data
         private static void PrintGeneralData(int[] values)
         {
-            Console.WriteLine("Received General Data");
-            Console.WriteLine("-----------");
-            Console.WriteLine("Equipment Type: " + values[5]);
-            Console.WriteLine("Elapsed Time: " + (values[6]) + " seconds");
-            Console.WriteLine("Distance Traveled: " + values[7] + " meters");
-            Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
-            Console.WriteLine("Heart Rate: " + _heartRate + " bpm");
-            Console.WriteLine("-----------");
-        }
+            if(_start)
+            {
+                Console.WriteLine("Received General Data");
+                Console.WriteLine("-----------");
+                Console.WriteLine("Equipment Type: " + values[5]);
+                Console.WriteLine("Elapsed Time: " + (values[6]) + " seconds");
+                Console.WriteLine("Distance Traveled: " + values[7] + " meters");
+                Console.WriteLine("Speed: " + (values[9] + (values[8] << 8) * 0.001) + " m/s");
+                Console.WriteLine("Heart Rate: " + _heartRate + " bpm");
+                Console.WriteLine("-----------");
+            }
            
 
-    }
+        }
 
         //Print bike data
         private static void PrintBikeData(int[] values)
         {
-            Console.WriteLine("Received Bike Data");    
-            Console.WriteLine("-----------");
-            Console.WriteLine("Event Count: " + values[5]);
-            Console.WriteLine("Instantaneous Cadence: " + values[6] + " rpm");
-            Console.WriteLine("Accumulated Power: " + (values[7] + (values[8] << 8)) + " W");
-            string splitted = Convert.ToString(values[10], 2);
-            Console.WriteLine("Instantaneous Power: " + (values[9] + Convert.ToInt32(splitted.Substring(0, 4), 2) << 8) + " W");
-            Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3, 4), 2));
-            Console.WriteLine("-----------");
-        }
+            if(_start)
+            {
+                Console.WriteLine("Received Bike Data");    
+                Console.WriteLine("-----------");
+                Console.WriteLine("Event Count: " + values[5]);
+                Console.WriteLine("Instantaneous Cadence: " + values[6] + " rpm");
+                Console.WriteLine("Accumulated Power: " + (values[7] + (values[8] << 8)) + " W");
+                string splitted = Convert.ToString(values[10], 2);
+                Console.WriteLine("Instantaneous Power: " + (values[9] + Convert.ToInt32(splitted.Substring(0, 4), 2) << 8) + " W");
+                Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3, 4), 2));
+                Console.WriteLine("-----------");
+            }
             
-    }
+        }
 
         //Get heart rate data
         public static void BleHeartRate_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
-            values[i] = int.Parse(data[i], System.Globalization.NumberStyles.HexNumber);
-        }
+            string[] data = BitConverter.ToString(e.Data).Split('-');
+            int[] values = new int[data.Length];
 
-        PrintHeartData(values);
-    }
+            for (int i = 0; i < data.Length; i++)
+            {
+                values[i] = int.Parse(data[i], System.Globalization.NumberStyles.HexNumber);
+            }
 
-    private static void PrintHeartData(int[] values)
-    {
-        if(_start) { 
-            _heartRate = values[1];
-            Console.WriteLine("Received Heart Rate Data");
-            Console.WriteLine("-----------");
-            Console.WriteLine(values[1] + " bpm");
-            Console.WriteLine("-----------");
-                
+            PrintHeartData(values);
         }
         
         //Prints heart rate data
@@ -259,8 +234,16 @@ namespace FietsDemo
         //Try to connect with server
         private static void OnConnect(IAsyncResult ar)
         {
-            Console.WriteLine("Kan geen verbinding maken met server");
-        }
+            try
+            {
+                _client.EndConnect(ar);
+                _connected = true;
+                Console.WriteLine("Verbonden!");
+            }
+            catch
+            {
+                Console.WriteLine("Kan geen verbinding maken met server");
+            }
 
 
         }
@@ -268,7 +251,16 @@ namespace FietsDemo
         //Create json object with bike values
         private static void ConvertToJson(int[] values)
         {
-            DataMessage dataMessage = new DataMessage()
+            //JObject jsonString = new JObject();
+            //JObject dataString = new JObject();
+            //dataString.Add("heartrate", values[10]);
+            //dataString.Add("speed", values[9] + (values[8] << 8) * 0.001);
+            //dataString.Add("time", "");
+            //dataString.Add("timestamp", values[6]);
+            //dataString.Add("endOfSession", false);
+            //jsonString.Add("id", "client/received");
+            //jsonString.Add("data", dataString
+            if (_start)
             {
 
                 DataMessage dataMessage = new DataMessage()
@@ -289,18 +281,10 @@ namespace FietsDemo
             //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
         }
 
-        //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
-    }
-
-    //Sends messages to server
-    private static void SendData(string ob)
-    {
-        var stream = new StreamWriter(_client.GetStream(), Encoding.ASCII);
+        //Sends messages to server
+        private static void SendData(string ob)
         {
-            stream.Write(ob + "\n");
-            stream.Flush();
-            Console.WriteLine("sent!");
-            if (_emergency)
+            var stream = new StreamWriter(_client.GetStream(), Encoding.ASCII);
             {
                 stream.Write(ob + "\n");
                 stream.Flush();
@@ -319,13 +303,11 @@ namespace FietsDemo
                 _distanceTraveled = 0;
             }
         }
-    }
 
         //Convert patientid into json string
         public static void SendPatientId()
         {
-            id = "server/login",
-            data = new SpecificLoginMessage()
+            LoginMessage login = new LoginMessage()
             {
                 id = "client/login",
                 data = new LoginMessageData()
@@ -411,7 +393,6 @@ namespace FietsDemo
         //Receives messages and takes action
         public static void MessageHandler(string message)
         {
-            Console.WriteLine("message: " + message);
             dynamic jsonMessage = JsonConvert.DeserializeObject(message);
             string id = "";
             try
@@ -453,7 +434,7 @@ namespace FietsDemo
                     _emergency = true;
                     Console.WriteLine("Dokter drukt op de noodstop");
 
-                break;
+                    break;
 
                 //doctor starts a session
                 case "doctor/startSession":
@@ -474,10 +455,11 @@ namespace FietsDemo
                     Console.WriteLine("Received message:" + jsonMessage.message);
                     break;
 
-            //error
-            default:
-                Console.WriteLine("received unknown message:\n" + message);
-                break;
+                //error
+                default:
+                    Console.WriteLine("received unknown message:\n" + message);
+                    break;
+            }
         }
 
     }

@@ -35,11 +35,4 @@ public class Bike
         
         return true;
     }
-    public async Task<bool> SetResistance(byte resistance)
-    {
-        
-        byte[] message = { 0xA4, 0x09, 0x4E, 0x05, 0x30, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, resistance, };
-        int errorCode = await _ble.WriteCharacteristic("6e40fec3-b5a3-f393-e0a9-e50e24dcca9e", message);
-        return true;
-    }
 }
