@@ -79,7 +79,11 @@ namespace FietsDemo
                 }
             }
         }
-        
+
+        public static void SetResistance(byte resistance)
+        {
+            _ = _bike.SetResistance(resistance);
+        }
         private static void PrintGeneralData(IReadOnlyList<int> values)
         {
             _client.OnNewBikeData(values);

@@ -28,6 +28,8 @@ public class Client : IClientCallback
     public bool SessionIsActive { get; set; }
     public bool ConnectedToServer { get; set; }
 
+    
+
     private readonly string _bikeSerial;
     private readonly string _hostname;
     private readonly int _port;
@@ -73,6 +75,7 @@ public class Client : IClientCallback
     {
         double speed = ((values[8] + values[9] * 255) * 0.001) * 3.6;
         _vr.UpdateBikeSpeed(speed);
+        
         if (!SessionIsActive) return;
     }
 
@@ -125,5 +128,6 @@ public class Client : IClientCallback
         _commands.Add("doctor/startsession", new StartSession());
         _commands.Add("doctor/endsession", new EndSession());
         _commands.Add("doctor/send", new SendDoctor());
+        _commands.Add("doctor/resistance", new SetResistance());
     }
 }
