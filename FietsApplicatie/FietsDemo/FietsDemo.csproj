@@ -62,5 +62,11 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VirtualReality\VirtualReality.csproj">
+      <Project>{21850f76-3cfc-47fb-bf50-4500bd5cf926}</Project>
+      <Name>VirtualReality</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

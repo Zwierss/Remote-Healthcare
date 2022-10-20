@@ -34,12 +34,7 @@ public class Client
 
     private bool _tunnelCreated;
 
-    private readonly Skybox _skybox;
-    private readonly HeightMap _map;
-    private readonly Route _route;
-    private readonly Bike _bike;
-    private readonly Camera _camera;
-    private readonly Tree _tree;
+    private Skybox _skybox;
 
     public Client()
     {

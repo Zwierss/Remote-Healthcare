@@ -40,7 +40,7 @@ namespace Server
             thread.Start();
         }
         
-        public Client()
+        public void HandleClient()
         {
             this.tcpClient = null;
 
@@ -254,6 +254,8 @@ namespace Server
         {
             Console.WriteLine("Write: " + jsonMessage);
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
+            byte[] RequestLength = BitConverter.GetBytes(jMessage.Length);
+            byte[] request = Encoding.ASCII.GetBytes(jMessage);
             {
                 stream.Write(jsonMessage);
                 stream.Flush();
