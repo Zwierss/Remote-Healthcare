@@ -23,13 +23,9 @@ public class HeartRate
         if (errorCode == 1) return false;
         
         await _ble.SetService("HeartRate");
-        _ble.SubscriptionValueChanged += Program.BleBike_SubscriptionValueChanged;
+        _ble.SubscriptionValueChanged += HardwareConnector.BleBike_SubscriptionValueChanged;
         await _ble.SubscribeToCharacteristic("HeartRateMeasurement");
 
         return true;
-    }
-    public void Reset()
-    {
-        _ble.Dispose();
     }
 }

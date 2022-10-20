@@ -1,8 +1,9 @@
 using Newtonsoft.Json.Linq;
+using VirtualReality.commands.tunnel;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.route;
 
-public class SpeedFollowRouteCommand : TunnelCallback
+public class SpeedFollowRouteCommand : ITunnelCallback
 {
 	public void OnCommandReceived(JObject o, VRClient parent)
 	{

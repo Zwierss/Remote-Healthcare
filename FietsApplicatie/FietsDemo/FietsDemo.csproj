@@ -37,9 +37,6 @@
     <Reference Include="BLELibrary">
       <HintPath>.\BLELibrary.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,16 +48,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bike.cs" />
+<<<<<<< HEAD
     <Compile Include="Messages\LoginMessage.cs" />
     <Compile Include="Messages\DataMessage.cs" />
+=======
+    <Compile Include="HardwareConnector.cs" />
+>>>>>>> client-resistance
     <Compile Include="HeartRate.cs" />
+    <Compile Include="IClientCallback.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtualReality\VirtualReality.csproj">

@@ -6,6 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtualReality.commands;
+using VirtualReality.commands.tunnel;
 using VirtualReality.components;
 
 namespace VirtualReality;
@@ -28,7 +29,7 @@ public class VRClient
     public string? CameraId { get; set; }
     public string? HeadId { get; set; }
     public string? PanelId { get; set; }
-    public bool IsSet { get; set; } = false;
+    private bool IsSet { get; set; } = false;
 
     private const string Hostname = "145.48.6.10";
     private const int Port = 6666;
@@ -165,16 +166,16 @@ public class VRClient
         _panel.AddPanel();
         _tree.PlaceTrees();
         IsSet = true;
-        new Thread(_skybox.Update).Start();
+        //new Thread(_skybox.Update).Start();
     }
 
     public void UpdateBikeSpeed(double speed)
     {
-        SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject(
-            "node", BikeId, 1, PacketSender.SendReplacedObject(
+        SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,JObject>(
+            "node", BikeId, 1, PacketSender.SendReplacedObject<double,string>(
                 "speed", speed, 1, "route\\speedfollowroute.json"
-            )
-        ), TunnelId!)!);
+            )!
+        )!, TunnelId!)!);
 
         _currentSpeed = speed;
     }
@@ -184,7 +185,7 @@ public class VRClient
         _panel.UpdatePanel(_currentSpeed, heartRate);
     }
 
-    private static byte[] Concat(byte[] b1, byte[] b2, int count)
+    public static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];
         Buffer.BlockCopy(b1, 0, r, 0, b1.Length);

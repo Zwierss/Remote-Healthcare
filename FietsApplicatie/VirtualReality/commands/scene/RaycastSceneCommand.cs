@@ -1,8 +1,9 @@
 using Newtonsoft.Json.Linq;
+using VirtualReality.commands.tunnel;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.scene;
 
-public class RaycastSceneCommand : TunnelCallback
+public class RaycastSceneCommand : ITunnelCallback
 {
 	public void OnCommandReceived(JObject o, VRClient parent)
 	{

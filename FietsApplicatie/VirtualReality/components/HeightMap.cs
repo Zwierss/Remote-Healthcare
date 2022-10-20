@@ -9,7 +9,7 @@ public class HeightMap
 {
 
     private readonly VRClient _parent;
-    private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("FietsDemo", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
+    private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("ClientApplication", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
 
     public HeightMap(VRClient parent)
     {

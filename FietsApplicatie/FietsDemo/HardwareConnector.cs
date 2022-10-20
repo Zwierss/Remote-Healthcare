@@ -4,47 +4,39 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
-using VirtualReality;
 
 namespace FietsDemo
 {
-    static class Controller
+    public static class HardwareConnector
     {
 
-        private static VRClient _vr;
-        
-        public static Task SetupHardware()
+        private static IClientCallback _client;
+        private static Bike _bike;
+        public static bool Connected { get; set; } = false;
+
+        public static async Task SetupHardware(IClientCallback client, string bikeSerial)
         {
-            _vr = new VRClient();
             new Thread(RunSimulation).Start();
-            
-            // Bike bike = new Bike();
+            _client = client;
+
+            // _bike = new Bike();
+            // _bike.Serial = bikeSerial;
             // HeartRate heart = new HeartRate();
             //
             // Console.WriteLine("Trying connection with devices");
-            // bool bikeConnection = bike.MakeConnection().Result;
-            // while(!bikeConnection) Thread.Sleep(1000);
-            // bool hearRateConnection = heart.MakeConnection().Result;
+            // bool bikeConnection = _bike.MakeConnection().Result;
+            // if(!bikeConnection) return;
             //
-            // if (!bikeConnection)
-            // {
-            //     if(!hearRateConnection){
-            //         Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
-            //         string input = Console.ReadLine();
-            //         if (input == "y")
-            //         {
-            //             Console.WriteLine("Starting Simulation");
-            //         }
-            //         else
-            //         {
-            //             Console.WriteLine("Closing down application");
-            //         }
-            //     }
-            // }
-            
-            new Thread(CreateVR).Start();
+            // bool hearRateConnection = heart.MakeConnection().Result;
+            // if(!hearRateConnection) return;
+
+            Connected = true;
             Console.Read();
-            return Task.CompletedTask;
+        }
+
+        private static void SetBikeSerial(string serial)
+        {
+            _bike.Serial = serial;
         }
 
         private static void RunSimulation()
@@ -55,22 +47,8 @@ namespace FietsDemo
                 int[] values = Simulator.SimulateGeneralData();
                 PrintGeneralData(values);
                 Thread.Sleep(500);
-                int[] bikeData = Simulator.simulateBikeData();
-                PrintBikeData(bikeData);
-            }
-        }
-
-        private static void CreateVR()
-        {
-            Thread.Sleep(1000);
-            
-#pragma warning disable CS4014
-            _vr.StartConnection();
-#pragma warning restore CS4014
-
-            while (true)
-            {
-                Thread.Sleep(10);
+                int[] heartData = Simulator.SimulateHeartRate();
+                PrintHeartData(heartData);
             }
         }
 
@@ -104,6 +82,7 @@ namespace FietsDemo
         
         private static void PrintGeneralData(IReadOnlyList<int> values)
         {
+            _client.OnNewBikeData(values);
             Console.WriteLine("Received General Data");
             Console.WriteLine("-----------");
             Console.WriteLine("Equipment Type: " + values[5]);
@@ -111,11 +90,6 @@ namespace FietsDemo
             Console.WriteLine("Distance Traveled: " + values[7] + " meters");
             double speed = (values[8] + values[9] * 255) * 0.001;
             Console.WriteLine("Speed: " + speed + " m/s");
-            if (_vr.IsSet)
-            {
-                _vr.UpdateBikeSpeed(speed * 3.6);
-                _vr.UpdatePanel(values[7]);
-            }
 
             Console.WriteLine("Heart Rate: " + values[10] + " bpm");
             Console.WriteLine("-----------");
@@ -138,13 +112,10 @@ namespace FietsDemo
 
         private static void PrintHeartData(IReadOnlyList<int> values)
         {
+            _client.OnNewHeartrateData(values);
             Console.WriteLine("Received Heart Rate Data");
             Console.WriteLine("-----------");
             Console.WriteLine(values[1] + " bpm");
-            if (_vr.IsSet)
-            {
-                _vr.UpdatePanel(values[1]);   
-            }
             Console.WriteLine("-----------");
         }
     }

@@ -1,11 +1,12 @@
 using Newtonsoft.Json.Linq;
+using VirtualReality.commands.tunnel;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.route;
 
-public class AddRouteCommand : TunnelCallback
+public class AddRouteCommand : ITunnelCallback
 {
 	public void OnCommandReceived(JObject o, VRClient parent)
 	{
-		parent.RouteId = o["data"]["uuid"].ToString();
+		parent.RouteId = o["data"]!["uuid"]!.ToString();
 	}
 }

@@ -1,4 +1,17 @@
 using System;
+
+namespace FietsDemo;
+
+public static class Program
+{
+    public static void Main(string[] args)
+    {
+        
+    }
+}
+
+/*
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -16,119 +29,80 @@ using FietsDemo.JSON;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace FietsDemo;
-
-public static class Program
+namespace FietsDemo
 {
-    private static TcpClient _client;
-    private static NetworkStream _stream;
-    private static string _username;
-    private static bool _stop = false;
-    private static bool _start = false;
-    private static bool _first = true;
-    private static bool _emergency = false;
-    private static string _host = "localhost";
-    //192.168.43.50
-    private static int _port = 15243;
-    private static bool _connected = false;
-    private static int _heartRate = 0;
-    private static int _elapsedTime = 0;
-    private static double _distanceTraveled = 0;
-    private static int _startElapsedTime = 0;
-    private static int _previousElapsedTime;
-
-    public static Task Main(string[] args)
+    class Program
     {
+        private static TcpClient _client;
+        private static NetworkStream _stream;
+        private static string _username;
+        private static bool _stop = false;
+        private static bool _start = false;
+        private static bool _first = true;
+        private static bool _emergency = false;
+        private static string _host = "localhost";
+        //192.168.43.50
+        private static int _port = 15243;
+        private static bool _connected = false;
+        private static int _heartRate = 0;
+        private static int _elapsedTime = 0;
+        private static double _distanceTraveled = 0;
+        private static double _startDistanceTraveled = 0;
+        private static int _startElapsedTime = 0;
+        private static int _previousElapsedTime;
 
-        //runSimulation();
-
-        Console.WriteLine("Client started");
-        _client = new TcpClient();
-        _client.BeginConnect(_host, _port, new AsyncCallback(OnConnect), null);
-
-        new Thread(() =>
+        public static Task Main(string[] args)
         {
-            while (true)
+            //Start connection with server
+            Console.WriteLine("Client started");
+            _client = new TcpClient();
+            _client.BeginConnect(_host, _port, new AsyncCallback(OnConnect), null);
+
+            //Read messages from server
+            ReadJsonMessage(_client);
+
+            //Login as client
+            Console.WriteLine("Typ uw pati�ntnummer");
+            _username = Console.ReadLine();
+
+            //Send login information to server
+            Console.WriteLine("patientId sent");
+            SendPatientId();
+
+            //Start and stop a session with client console (for testing)
+            ReadConsoleCommands();
+
+            //Start connection with bike
+            Bike bike = new Bike();
+            HeartRate heart = new HeartRate();
+
+            Console.WriteLine("Trying connection with devices");
+            bool bikeConnection = bike.MakeConnection().Result;
+            Thread.Sleep(10000);
+
+            //Start connection with heart rate 
+            bool heartRateConnection = heart.MakeConnection().Result;
+            Thread.Sleep(10000);
+
+            //Send connection information (with bike & heart rate) to server
+            SendConnectionData(bikeConnection, heartRateConnection);
+
+            //Start simulation if there's no connection with bike/heart rate sensor
+            if (!bikeConnection)
             {
-                ReadJsonMessage(_client);
-            }
-
-        }).Start();
-
-        Console.WriteLine("Typ uw pati�ntnummer");
-        _username = Console.ReadLine();
-        Console.WriteLine("patientId sent");
-        SendPatientId();
-
-        new Thread(() =>
-        {
-            while (true)
-            {
-                switch (Console.ReadLine())
+                if (!heartRateConnection)
                 {
-                    case "stop":
-                        _stop = true;
-                        break;
+                    Console.WriteLine("Starting Simulation");
+                    while (true)
+                    {
+                        runSimulation();
+                        Simulator.Reset();
 
-                    case "start":
-                        _stop = false;
-                        _start = true;
-                        _first = true;
-                        break;
+                    }
                 }
+                
             }
-
-        }).Start();
-
-        new Thread(() =>
-        {
-            while (true)
-            {
-                ReadJsonMessage(_client);
-            }
-
-        }).Start();
-
-        //_username = Console.ReadLine();
-
-
-        Bike bike = new Bike();
-        HeartRate heart = new HeartRate();
-            
-        Console.WriteLine("Trying connection with devices");
-        //bool bikeConnection = bike.MakeConnection().Result;
-        bool bikeConnection = false;
-        //Thread.Sleep(10000);
-
-
-        bool hearRateConnection = heart.MakeConnection().Result;
-        //Thread.Sleep(10000);
-
-        //bool clientConnection = _client.MakeConnection().Result;
-
-
-        if (!bikeConnection)
-        {
-            if (!hearRateConnection)
-            {
-                //Console.WriteLine("Could not connect with the devices. DO you want to connect with the simulator? (y/n)");
-                //string input = Console.ReadLine();
-                //if (input == "y")
-                //{
-                Console.WriteLine("Starting Simulation");
-                while (true)
-                {
-                    runSimulation();
-                    Simulator.Reset();
-                }
-                    
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Closing down application");
-                //    return Task.CompletedTask;
-                //}
-            }
+            return Task.CompletedTask;
         }
         //while (true)
         //{
@@ -141,29 +115,24 @@ public static class Program
         return Task.CompletedTask;
     }
 
-    public static void runSimulation()
-    {
-        //bool running = true;
-        while (_start)
+        //Run simulation
+        public static void runSimulation()
         {
-            Thread.Sleep(250);
-            int[] values = Simulator.SimulateGeneralData();
-            PrintGeneralData(values);
-            Thread.Sleep(250);
-            int[] bikeData = Simulator.SimulateBikeData();
-            PrintBikeData(bikeData);
-            ConvertToJson(values);
+            while (_start)
+            {
+                Thread.Sleep(250);
+                int[] values = Simulator.SimulateGeneralData();
+                PrintGeneralData(values);
+                Thread.Sleep(250);
+                //int[] bikeData = Simulator.SimulateBikeData();
+                //PrintBikeData(bikeData);
+                ConvertToJson(values);
+            }
+
         }
 
-    }
-
-
-    public static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
-    {
-        string[] data = BitConverter.ToString(e.Data).Split('-');
-        int[] values = new int[data.Length];
-
-        for (int i = 0; i < data.Length; i++)
+        //Get bike data, use it during a session
+        public static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             values[i] = int.Parse(data[i], System.Globalization.NumberStyles.HexNumber);
         }
@@ -186,31 +155,45 @@ public static class Program
                     }
                     Console.WriteLine((_previousElapsedTime) + " " + values[6] + " " + (values[9] + (values[8] << 8)) + " " + (_previousElapsedTime - _startElapsedTime));
 
-                    if (_previousElapsedTime != values[6])
-                    {
-                        _distanceTraveled += (values[9] + (values[8] << 8) * 0.001) / 4;
-                        _previousElapsedTime+=2;
-                        values[6] = _previousElapsedTime - _startElapsedTime;
+            if (data.Length < 13)
+            {
+                //PrintHeartData(values);
+            }
+            else
+            {
+                switch (data[4])
+                {
+                    case "10":
+                        if (_first)
+                        {
+                            _first = false;
+                            _startElapsedTime = values[6];
+                            _previousElapsedTime = values[6];
+                            _distanceTraveled = 0;
+                        }
 
-
-                        PrintGeneralData(values);
-                        ConvertToJson(values);
-                    }
-                    break;
-                case "19":
-                    PrintBikeData(values);
-                    //convertData(values);
-                    break;
+                        if(_stop || _emergency)
+                        {
+                            ConvertToJson(values);
+                        } else if (values[6] > _previousElapsedTime)
+                        {
+                            _distanceTraveled += (values[9] + (values[8] << 8) * 0.001) / 2;
+                            values[7] = (int)Math.Round(_distanceTraveled);
+                            _previousElapsedTime += 2;
+                            values[6] = _previousElapsedTime - _startElapsedTime;
+                            PrintGeneralData(values);
+                            ConvertToJson(values);
+                        }
+                        break;
+                    case "19":
+                        //PrintBikeData(values);
+                        break;
+                }
             }
         }
 
-
-
-    }
-
-    private static void PrintGeneralData(int[] values)
-    {
-        if(_start)
+        //Print general data
+        private static void PrintGeneralData(int[] values)
         {
             Console.WriteLine("Received General Data");
             Console.WriteLine("-----------");
@@ -225,9 +208,8 @@ public static class Program
 
     }
 
-    private static void PrintBikeData(int[] values)
-    {
-        if(_start)
+        //Print bike data
+        private static void PrintBikeData(int[] values)
         {
             Console.WriteLine("Received Bike Data");    
             Console.WriteLine("-----------");
@@ -242,12 +224,8 @@ public static class Program
             
     }
 
-    public static void BleHeartRate_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
-    {
-        string[] data = BitConverter.ToString(e.Data).Split('-');
-        int[] values = new int[data.Length];
-
-        for (int i = 0; i < data.Length; i++)
+        //Get heart rate data
+        public static void BleHeartRate_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             values[i] = int.Parse(data[i], System.Globalization.NumberStyles.HexNumber);
         }
@@ -265,51 +243,50 @@ public static class Program
             Console.WriteLine("-----------");
                 
         }
-           
-    }
-
-    private static void OnConnect(IAsyncResult ar)
-    {
-        try
+        
+        //Prints heart rate data
+        private static void PrintHeartData(int[] values)
         {
-            _client.EndConnect(ar);
-            _connected = true;
-            Console.WriteLine("Verbonden!");
+            if (!_start) return;
+            _heartRate = values[1];
+            Console.WriteLine("Received Heart Rate Data");
+            Console.WriteLine("-----------");
+            Console.WriteLine(values[1] + " bpm");
+            Console.WriteLine("-----------");
+
         }
-        catch
+
+        //Try to connect with server
+        private static void OnConnect(IAsyncResult ar)
         {
             Console.WriteLine("Kan geen verbinding maken met server");
         }
 
 
-    }
-    private static void ConvertToJson(int[] values)
-    {
-        //JObject jsonString = new JObject();
-        //JObject dataString = new JObject();
-        //dataString.Add("heartrate", values[10]);
-        //dataString.Add("speed", values[9] + (values[8] << 8) * 0.001);
-        //dataString.Add("time", "");
-        //dataString.Add("timestamp", values[6]);
-        //dataString.Add("endOfSession", false);
-        //jsonString.Add("id", "client/received");
-        //jsonString.Add("data", dataString
-        if (_start)
+        }
+
+        //Create json object with bike values
+        private static void ConvertToJson(int[] values)
         {
             DataMessage dataMessage = new DataMessage()
             {
-                id = "server/received",
-                data = new SpecificDataMessage()
-                {
-                    heartrate = values[10],
-                    speed = (values[9] + (values[8] << 8)) * 0.001,
-                    time = DateTime.Now,
-                    timestamp = values[6],
-                    endOfSession = _stop || _emergency
-                }
-            };
 
-            SendData(JsonConvert.SerializeObject(dataMessage));
+                DataMessage dataMessage = new DataMessage()
+                {
+                    id = "client/received",
+                    data = new DataMessageData()
+                    {
+                        heartrate = values[10],
+                        speed = (values[9] + (values[8] << 8)) * 0.001,
+                        time = DateTime.Now,
+                        timestamp = values[6],
+                        endOfSession = _stop || _emergency
+                    }
+                };
+                SendData(JsonConvert.SerializeObject(dataMessage));
+            }
+
+            //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
         }
 
         //SendData(PacketSender.SendReplacedObject("session", id, 1, "createtunnel.json"));
@@ -325,6 +302,12 @@ public static class Program
             Console.WriteLine("sent!");
             if (_emergency)
             {
+                stream.Write(ob + "\n");
+                stream.Flush();
+                Console.WriteLine("sent!");
+            }
+            if (_emergency)
+            {
                 Console.WriteLine("stopped");
                 _client.Close();
             }
@@ -338,16 +321,14 @@ public static class Program
         }
     }
 
-    //Converts patientid into json string
-    public static void SendPatientId()
-    {
-        LoginMessage login = new LoginMessage()
+        //Convert patientid into json string
+        public static void SendPatientId()
         {
             id = "server/login",
             data = new SpecificLoginMessage()
             {
                 id = "client/login",
-                data = new SpecificLoginMessage()
+                data = new LoginMessageData()
                 {
                     patientId = _username
                 }
@@ -356,34 +337,79 @@ public static class Program
             SendData(JsonConvert.SerializeObject(login));
         }
 
-    //Listens to incoming messages from server and converts to string
-    public static void ReadJsonMessage(TcpClient client)
-    {
-        if (_connected)
+        //Convert connection data into json string
+        public static void SendConnectionData(bool bikeConnection, bool heartrateConnection)
         {
-            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+            ConnectionMessage connection = new ConnectionMessage()
             {
-                string message = "";
-
-
-                while (stream.Peek() != -1)
+                id = "client/connection",
+                data = new ConnectionMessageData()
                 {
-                    message += stream.ReadLine();
+                    bike = bikeConnection,
+                    heartrate = heartrateConnection
+                }
+            };
+            Console.WriteLine(connection);
+            SendData(JsonConvert.SerializeObject(connection));
+        }
+
+        //Listens to incoming messages from server and converts to string
+        public static void ReadJsonMessage(TcpClient client)
+        {
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    if (_connected)
+                    {
+                        var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
+                        {
+                            string message = "";
+
+
+                            while (stream.Peek() != -1)
+                            {
+                                message += stream.ReadLine();
+                            }
+
+
+                            Console.WriteLine(message);
+                            MessageHandler(message);
+                        }
+                    }
                 }
 
-
-                Console.WriteLine(message);
-                MessageHandler(message);
-            }
+            }).Start();
+           
         }
-    }
 
-    //Receives messages and takes action
-    public static void MessageHandler(string message)
-    {
-        dynamic jsonMessage = JsonConvert.DeserializeObject(message);
-        string id = "";
-        try
+        //Reads commands (stop/start session) from console for testing
+        public static void ReadConsoleCommands()
+        {
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    switch (Console.ReadLine())
+                    {
+                        case "stop":
+                            Console.WriteLine("Stopped!");
+                            _stop = true;
+                            break;
+
+                        case "start":
+                            Console.WriteLine("started!");
+                            _stop = false;
+                            _start = true;
+                            _first = true;
+                            break;
+                    }
+                }
+
+            }).Start();
+        }
+        //Receives messages and takes action
+        public static void MessageHandler(string message)
         {
             Console.WriteLine("message: " + message);
             dynamic jsonMessage = JsonConvert.DeserializeObject(message);
@@ -422,34 +448,38 @@ public static class Program
                     Console.WriteLine("Server heeft data ontvangen");
                     break;
 
-            //doctor pressed emergency stop
-            case "server/emergencyStop":
-                Console.WriteLine("Dokter drukt op de noodstop");
+                //doctor pressed emergency stop
+                case "doctor/emergencyStop":
+                    _emergency = true;
+                    Console.WriteLine("Dokter drukt op de noodstop");
 
                 break;
 
-            //doctor starts a session
-            case "server/startSession":
-                _start = true;
-                Console.WriteLine("Dokter start een session");
-                break;
+                //doctor starts a session
+                case "doctor/startSession":
+                    _stop = false;
+                    _start = true;
+                    _first = true;
+                    Console.WriteLine("Dokter start een session");
+                    break;
 
                 //doctor stops the session
-                case "server/stopSession":
+                case "doctor/endSession":
                     _stop = true;
                     Console.WriteLine("Dokter start een session");
                     break;
 
-            //doctor sends a message
-            case "server/sent":
-                Console.WriteLine("Received message:" + jsonMessage.message);
-                break;
+                //doctor sends a message
+                case "doctor/sent":
+                    Console.WriteLine("Received message:" + jsonMessage.message);
+                    break;
 
             //error
             default:
                 Console.WriteLine("received unknown message:\n" + message);
                 break;
         }
+
     }
 }
-
+*/

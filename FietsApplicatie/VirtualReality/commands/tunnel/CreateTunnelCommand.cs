@@ -1,15 +1,14 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.tunnel;
 
 public class CreateTunnelCommand : ICommand
 {
     public void OnCommandReceived(JObject ob, VRClient vrClient)
     {
-        if(ob["data"]["status"].ToObject<string>().Equals("ok"))
+        if(ob["data"]!["status"]!.ToObject<string>()!.Equals("ok"))
         {
-            vrClient.SetTunnel(ob["data"]["id"].ToObject<string>());
+            vrClient.SetTunnel(ob["data"]!["id"]!.ToObject<string>()!);
         }
         Console.WriteLine("Done with command");
         
