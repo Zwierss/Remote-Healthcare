@@ -1,17 +1,13 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Server;
+namespace DoctorLogic;
 
 public static class PacketSender
 {
-
-    private static readonly string PathDir =
-        Environment.CurrentDirectory.Substring(0,
-            Environment.CurrentDirectory.LastIndexOf("Server", StringComparison.Ordinal)) +
-        "Server\\commands\\";
-
-    public static JObject? SendReplacedObject<TR, TO>(string variable, TR replacement, int position, TO targetObject)
+    private static readonly string PathDir = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("Doctor", StringComparison.Ordinal)) + "DoctorLogic\\commands\\";
+    
+    public static JObject? SendReplacedObject<TR,TO>(string variable, TR replacement, int position, TO targetObject)
     {
         JObject? data = targetObject switch
         {
@@ -50,9 +46,6 @@ public static class PacketSender
                 break;
             case int j:
                 currentObject![variable] = j;
-                break;
-            case List<string> s:
-                currentObject![variable] = new JArray(s);
                 break;
         }
 

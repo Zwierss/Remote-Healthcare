@@ -25,7 +25,6 @@ public class Client : IClientCallback
     private readonly byte[] _buffer = new byte[1024];
 
     public string Username { get; set; }
-    public string Doctor { get; set; }
     public bool SessionIsActive { get; set; }
     public bool ConnectedToServer { get; set; }
 
@@ -85,7 +84,6 @@ public class Client : IClientCallback
         _vr.UpdateBikeSpeed(speed);
         
         if (!SessionIsActive) return;
-        if (Doctor == null) return;
 
         JObject o = SendReplacedObject("client-id", Username, 1, SendReplacedObject(
             "speed", speed, 2, SendReplacedObject(
@@ -109,7 +107,6 @@ public class Client : IClientCallback
         _vr.UpdatePanel(values[1]);
         
         if (!SessionIsActive) return;
-        if (Doctor == null) return;
 
         _lastHeartrateData = values[1];
     }

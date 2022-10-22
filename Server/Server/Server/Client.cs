@@ -11,8 +11,8 @@ public class Client
     private readonly TcpClient _tcp;
     private readonly NetworkStream _stream;
     private readonly Dictionary<string, ICommand> _commands;
-    private MainServer _parent;
-    
+
+    public MainServer Parent { get; set; }
     public bool? IsDoctor { get; set; }
     public string Uuid { get; set; }
 
@@ -21,7 +21,7 @@ public class Client
 
     public Client(TcpClient tcp, MainServer parent)
     {
-        _parent = parent;
+        Parent = parent;
         _tcp = tcp;
         _stream = _tcp.GetStream();
         _commands = new Dictionary<string, ICommand>();
@@ -45,7 +45,7 @@ public class Client
         catch(IOException)
         {
             Console.WriteLine("Can no longer read from this client");
-            _parent.Clients.Remove(this);
+            Parent.Clients.Remove(this);
             return;
         }
 
@@ -67,6 +67,7 @@ public class Client
     {
         _commands.Add("server/client-enter", new NewClientCommand());
         _commands.Add("server/client-senddata", new ReceivedDataCommand());
+        _commands.Add("server/doctor-getclients", new GetClientCommand());
     }
     
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
