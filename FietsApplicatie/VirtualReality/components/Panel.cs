@@ -27,7 +27,7 @@ public class Panel
             {
                 transform = new
                 {
-                   position = new[]{0,0, 2},
+                   position = new[]{0,0, -2},
                    scale = 1,
                    rotation = new[]{0, 0, 0}
                 },
@@ -35,6 +35,7 @@ public class Panel
                 {
                     size = new[]{1,1},
                     resolution = new[]{512,512},
+                    castShadow = false
                 }
             }
         });
@@ -53,6 +54,10 @@ public class Panel
                 "text" ,speed + " km/h\n" + heartRate + " bpm", 1, "scene\\panel\\drawtextpanelscene.json"
             )!
         )!,_parent.TunnelId!)!);
+        
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>(
+            "id", _parent.PanelId!, 1, "scene\\panel\\setclearcolorpanelscene.json"
+        )!, _parent.TunnelId!)!);
         
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>(
             "id", _parent.PanelId!, 1, "scene\\panel\\swappanelscene.json"

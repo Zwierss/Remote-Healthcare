@@ -1,7 +1,7 @@
 using System.Net.Sockets;
 using System.Text;
+using ClientApplication.commandhandlers.client;
 using ClientApplication.commandhandlers.doctor;
-using ClientApplication.commandhandlers.server;
 using FietsDemo;
 using Newtonsoft.Json.Linq;
 using VirtualReality;
@@ -25,12 +25,15 @@ public class Client : IClientCallback
     private readonly byte[] _buffer = new byte[1024];
 
     public string Username { get; set; }
+    public string Doctor { get; set; }
     public bool SessionIsActive { get; set; }
     public bool ConnectedToServer { get; set; }
 
     private readonly string _bikeSerial;
     private readonly string _hostname;
     private readonly int _port;
+
+    private int _lastHeartrateData = 0;
 
     public Client(string username, string bikeSerial, string hostname, int port)
     {
@@ -51,35 +54,64 @@ public class Client : IClientCallback
         {
             _client = new TcpClient();
             await _client.ConnectAsync(_hostname, _port);
-            //await _vr.StartConnection();
+            await _vr.StartConnection();
             _stream = _client.GetStream();
+            Console.WriteLine("successfully connected to the server");
         }
         catch(Exception e)
         {
             Console.WriteLine(e.Message);
         }
         
-        // while (!Connected)
-        // {
-        //     await SetupHardware(this, _bikeSerial);
-        // }
-        
         SendData(SendReplacedObject<string, string>("uuid", Username, 1, "server\\init.json")!);
-
         _stream!.BeginRead(_buffer, 0, 1024, OnRead, null);
+
+        while (!_vr.IsSet)
+        {
+            
+        }
+
+        SetupHardware(this, _bikeSerial);
     }
 
     public void OnNewBikeData(IReadOnlyList<int> values)
     {
+        Console.WriteLine(ConnectedToServer);
+
+        if(!ConnectedToServer) return;
+        if (!_vr.IsSet) return;
+        
         double speed = ((values[8] + values[9] * 255) * 0.001) * 3.6;
         _vr.UpdateBikeSpeed(speed);
+        
         if (!SessionIsActive) return;
+        if (Doctor == null) return;
+
+        JObject o = SendReplacedObject("client-id", Username, 1, SendReplacedObject(
+            "speed", speed, 2, SendReplacedObject(
+                "heartrate", _lastHeartrateData, 2, SendReplacedObject(
+                    "distance", values[7], 2, SendReplacedObject(
+                        "time", Time, 2, "server\\senddata.json"
+                    )
+                )
+            )
+        ))!;
+
+        Console.WriteLine(o);
+        SendData(o);
     }
 
     public void OnNewHeartrateData(IReadOnlyList<int> values)
     {
+        if(!ConnectedToServer) return;
+        if (!_vr.IsSet) return;
+        
         _vr.UpdatePanel(values[1]);
+        
         if (!SessionIsActive) return;
+        if (Doctor == null) return;
+
+        _lastHeartrateData = values[1];
     }
 
     private void OnRead(IAsyncResult ar)
@@ -118,12 +150,10 @@ public class Client : IClientCallback
 
     private void InitCommands()
     {
-        _commands.Add("server/connected", new ServerConnected());
-        _commands.Add("server/login", new ServerLogin());
-        _commands.Add("server/received", new ServerReceived());
-        _commands.Add("doctor/emergencystop", new EmergencyStop());
-        _commands.Add("doctor/startsession", new StartSession());
-        _commands.Add("doctor/endsession", new EndSession());
-        _commands.Add("doctor/send", new SendDoctor());
+        _commands.Add("client/server-connected", new ServerConnected());
+        _commands.Add("doctor/emergency-stop", new EmergencyStop());
+        _commands.Add("doctor/start-session", new StartSession());
+        _commands.Add("doctor/end-session", new EndSession());
+        _commands.Add("doctor/send-message", new SendDoctor());
     }
 }

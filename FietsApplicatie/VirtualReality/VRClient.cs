@@ -29,7 +29,7 @@ public class VRClient
     public string? CameraId { get; set; }
     public string? HeadId { get; set; }
     public string? PanelId { get; set; }
-    private bool IsSet { get; set; } = false;
+    public bool IsSet { get; set; } = false;
 
     private const string Hostname = "145.48.6.10";
     private const int Port = 6666;
@@ -165,6 +165,7 @@ public class VRClient
         _camera.SetCamera();
         _panel.AddPanel();
         _tree.PlaceTrees();
+        Console.WriteLine("done!");
         IsSet = true;
         //new Thread(_skybox.Update).Start();
     }

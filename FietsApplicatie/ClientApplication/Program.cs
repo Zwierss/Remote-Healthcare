@@ -2,13 +2,13 @@
 
 namespace ClientApplication;
 
-public class Program
+public static class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         
         Client client = new(Environment.MachineName,"01140", "localhost", 6666);
-        client.SetupConnection();
+        await client.SetupConnection();
 
         while (true)
         {

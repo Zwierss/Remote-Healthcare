@@ -11,13 +11,17 @@ public class Client
     private readonly TcpClient _tcp;
     private readonly NetworkStream _stream;
     private readonly Dictionary<string, ICommand> _commands;
+    private MainServer _parent;
+    
     public bool? IsDoctor { get; set; }
+    public string Uuid { get; set; }
 
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
 
-    public Client(TcpClient tcp)
+    public Client(TcpClient tcp, MainServer parent)
     {
+        _parent = parent;
         _tcp = tcp;
         _stream = _tcp.GetStream();
         _commands = new Dictionary<string, ICommand>();
@@ -41,13 +45,13 @@ public class Client
         catch(IOException)
         {
             Console.WriteLine("Can no longer read from this client");
+            _parent.Clients.Remove(this);
             return;
         }
 
         while (_totalBuffer.Length >= 4)
         {
             JObject data = GetDecryptedMessage(_totalBuffer);
-            Console.WriteLine(data);
             _totalBuffer = Array.Empty<byte>();
 
             if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
@@ -62,6 +66,7 @@ public class Client
     private void InitCommands()
     {
         _commands.Add("server/client-enter", new NewClientCommand());
+        _commands.Add("server/client-senddata", new ReceivedDataCommand());
     }
     
     private static byte[] Concat(byte[] b1, byte[] b2, int count)

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
@@ -12,9 +12,11 @@ namespace FietsDemo
 
         private static IClientCallback _client;
         private static Bike _bike;
+        private static Thread _timer;
         public static bool Connected { get; set; } = false;
+        public static int Time { get; set; } = 0;
 
-        public static async Task SetupHardware(IClientCallback client, string bikeSerial)
+        public static void SetupHardware(IClientCallback client, string bikeSerial)
         {
             new Thread(RunSimulation).Start();
             _client = client;
@@ -29,7 +31,7 @@ namespace FietsDemo
             //
             // bool hearRateConnection = heart.MakeConnection().Result;
             // if(!hearRateConnection) return;
-
+            
             Connected = true;
             Console.Read();
         }
@@ -45,10 +47,12 @@ namespace FietsDemo
             {
                 Thread.Sleep(500);
                 int[] values = Simulator.SimulateGeneralData();
-                PrintGeneralData(values);
+                _client.OnNewBikeData(values);
+                //PrintGeneralData(values);
                 Thread.Sleep(500);
                 int[] heartData = Simulator.SimulateHeartRate();
-                PrintHeartData(heartData);
+                _client.OnNewHeartrateData(heartData);
+                //PrintHeartData(heartData);
             }
         }
 
@@ -64,25 +68,47 @@ namespace FietsDemo
 
             if (data.Length < 13)
             {
-                PrintHeartData(values);
+                _client.OnNewHeartrateData(values);
+                //PrintHeartData(values);
             }
             else
             {
                 switch (data[4])
                 {
                     case "10":
-                        PrintGeneralData(values);
+                        _client.OnNewBikeData(values);
+                        //PrintGeneralData(values);
                         break;
                     case "19":
-                        PrintBikeData(values);
+                        //PrintBikeData(values);
                         break;
                 }
             }
         }
-        
+
+        public static void StartSessionTimer()
+        {
+            _timer = new Thread(SessionTimer);
+            _timer.Start();
+            Time = 0;
+        }
+
+        public static void StopSessionTimer()
+        {
+            _timer?.Abort();
+        }
+
+        private static void SessionTimer()
+        {
+            while (true)
+            {
+                Time++;
+                Thread.Sleep(1000);
+            }
+        }
+
         private static void PrintGeneralData(IReadOnlyList<int> values)
         {
-            _client.OnNewBikeData(values);
             Console.WriteLine("Received General Data");
             Console.WriteLine("-----------");
             Console.WriteLine("Equipment Type: " + values[5]);
@@ -112,7 +138,6 @@ namespace FietsDemo
 
         private static void PrintHeartData(IReadOnlyList<int> values)
         {
-            _client.OnNewHeartrateData(values);
             Console.WriteLine("Received Heart Rate Data");
             Console.WriteLine("-----------");
             Console.WriteLine(values[1] + " bpm");
