@@ -1,7 +1,7 @@
 using System.Net.Sockets;
 using System.Text;
-using ClientApplication.commandhandlers.client;
 using ClientApplication.commandhandlers.doctor;
+using ClientApplication.commandhandlers.server;
 using FietsDemo;
 using Newtonsoft.Json.Linq;
 using VirtualReality;
@@ -62,7 +62,7 @@ public class Client : IClientCallback
             Console.WriteLine(e.Message);
         }
         
-        SendData(SendReplacedObject<string, string>("uuid", Username, 1, "server\\init.json")!);
+        SendData(SendReplacedObject<string, string>("uuid", Username, 1, "application\\server\\init.json")!);
         _stream!.BeginRead(_buffer, 0, 1024, OnRead, null);
 
         while (!_vr.IsSet)
@@ -89,7 +89,9 @@ public class Client : IClientCallback
             "speed", speed, 2, SendReplacedObject(
                 "heartrate", _lastHeartrateData, 2, SendReplacedObject(
                     "distance", values[7], 2, SendReplacedObject(
-                        "time", Time, 2, "server\\senddata.json"
+                        "time", Time, 2, SendReplacedObject(
+                            "receiver", "10", 2, "application\\doctor\\senddata.json"
+                        )
                     )
                 )
             )
@@ -148,9 +150,10 @@ public class Client : IClientCallback
     private void InitCommands()
     {
         _commands.Add("client/server-connected", new ServerConnected());
-        _commands.Add("doctor/emergency-stop", new EmergencyStop());
-        _commands.Add("doctor/start-session", new StartSession());
-        _commands.Add("doctor/end-session", new EndSession());
-        _commands.Add("doctor/send-message", new SendDoctor());
+        _commands.Add("client/startsession", new StartSession());
+        _commands.Add("client/stopsession", new StopSession());
+        _commands.Add("client/emergencystop", new EmergencyStop());
+        _commands.Add("client/doctormessage", new DoctorMessage());
+        _commands.Add("client/changeresistance", new ChangeResistance());
     }
 }

@@ -1,0 +1,10 @@
+{
+  "id": "client/doctormessage",
+  "data": {
+    "client": "uuid",
+    "data": {
+      "sender": "uuid",
+      "message": ""
+    }
+  }
+}

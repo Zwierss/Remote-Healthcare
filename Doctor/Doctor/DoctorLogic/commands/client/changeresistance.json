@@ -1,0 +1,9 @@
+{
+  "id": "changeresistance",
+  "data": {
+    "client": "uuid",
+    "data" : {
+      "resistance": 0
+    }
+  }
+}

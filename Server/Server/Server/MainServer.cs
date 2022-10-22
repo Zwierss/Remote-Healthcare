@@ -23,6 +23,7 @@ public class MainServer
 
     private void OnConnect(IAsyncResult ar)
     {
+        Console.WriteLine("new client connected");
         TcpClient tcp = _listener.EndAcceptTcpClient(ar);
         Client client = new(tcp,this);
         Clients.Add(client);

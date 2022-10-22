@@ -1,6 +1,8 @@
 ﻿using System.Net.Sockets;
 using Newtonsoft.Json.Linq;
 using Server.commandhandlers;
+using Server.commandhandlers.client;
+using Server.commandhandlers.doctor;
 using static Server.Cryptographer;
 
 namespace Server;
@@ -65,9 +67,14 @@ public class Client
 
     private void InitCommands()
     {
-        _commands.Add("server/client-enter", new NewClientCommand());
-        _commands.Add("server/client-senddata", new ReceivedDataCommand());
-        _commands.Add("server/doctor-getclients", new GetClientCommand());
+        _commands.Add("server/client-enter", new NewClient());
+        _commands.Add("doctor/senddata", new ReceivedData());
+        _commands.Add("server/getclients", new GetClient());
+        _commands.Add("client/startsession", new StartSession());
+        _commands.Add("client/stopsession", new StopSession());
+        _commands.Add("client/emergencystop", new EmergencyStop());
+        _commands.Add("client/doctormessage", new DoctorMessage());
+        _commands.Add("client/changeresistance", new ChangeResistance());
     }
     
     private static byte[] Concat(byte[] b1, byte[] b2, int count)

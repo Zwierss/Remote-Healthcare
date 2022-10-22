@@ -1,8 +1,8 @@
 using Newtonsoft.Json.Linq;
 
-namespace Server.commandhandlers;
+namespace ClientApplication.commandhandlers.doctor;
 
-public class ReceivedDataCommand : ICommand
+public class ChangeResistance : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {

@@ -1,8 +1,8 @@
 using Newtonsoft.Json.Linq;
 
-namespace Server.commandhandlers;
+namespace Server.commandhandlers.doctor;
 
-public class GetClientCommand : ICommand
+public class GetClient : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {
@@ -15,6 +15,6 @@ public class GetClientCommand : ICommand
             }
         }
         
-        parent.SendMessage(PacketSender.SendReplacedObject("clients", clientUuids, 1, "returnclients.json")!);
+        parent.SendMessage(PacketSender.SendReplacedObject("clients", clientUuids, 1, "doctor\\returnclients.json")!);
     }
 }

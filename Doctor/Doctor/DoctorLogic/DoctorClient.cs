@@ -1,4 +1,6 @@
 ﻿using System.Net.Sockets;
+using DoctorLogic.commandhandlers.client;
+using DoctorLogic.commandhandlers.server;
 using Newtonsoft.Json.Linq;
 using static DoctorLogic.Cryptographer;
 using static DoctorLogic.PacketSender;
@@ -43,7 +45,7 @@ public class DoctorClient
             return false;
         }
         
-        SendData(SendReplacedObject("uuid", Uuid, 1, "connect.json")!);
+        SendData(SendReplacedObject("uuid", Uuid, 1, "server\\connect.json")!);
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
 
         return true;
@@ -85,6 +87,9 @@ public class DoctorClient
 
     private void InitCommands()
     {
-        
+        _commands.Add("client/server-connected", new ServerConnected());
+        _commands.Add("doctor/return-clients", new ReturnClients());
+        _commands.Add("doctor/return-client", new ReturnClient());
+        _commands.Add("doctor/senddata", new ReceivedData());
     }
 }

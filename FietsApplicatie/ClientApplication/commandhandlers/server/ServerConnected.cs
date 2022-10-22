@@ -1,7 +1,6 @@
-using FietsDemo;
 using Newtonsoft.Json.Linq;
 
-namespace ClientApplication.commandhandlers.client;
+namespace ClientApplication.commandhandlers.server;
 
 public class ServerConnected : ICommand
 {
