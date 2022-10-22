@@ -32,7 +32,6 @@ public class NewClient : ICommand
         if(parent.Parent.Clients.Count == 0) return;
         foreach (Client c in parent.Parent.Clients)
         {
-            Console.WriteLine("" + c.IsDoctor + "" + c.Uuid);
             if(!c.IsDoctor) continue;
             c.SendMessage(PacketSender.SendReplacedObject("client", uuid, 1, "doctor\\returnclients.json")!);
         }
