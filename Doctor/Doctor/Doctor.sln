@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorLogic", "DoctorLogic\DoctorLogic.csproj", "{7385E920-538A-4F4A-8C4F-8B73F48D4217}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorApplication", "DoctorApplication\DoctorApplication.csproj", "{6980ED83-A182-43BB-94DC-D13A5F6F3669}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{7385E920-538A-4F4A-8C4F-8B73F48D4217}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7385E920-538A-4F4A-8C4F-8B73F48D4217}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7385E920-538A-4F4A-8C4F-8B73F48D4217}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6980ED83-A182-43BB-94DC-D13A5F6F3669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6980ED83-A182-43BB-94DC-D13A5F6F3669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6980ED83-A182-43BB-94DC-D13A5F6F3669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6980ED83-A182-43BB-94DC-D13A5F6F3669}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

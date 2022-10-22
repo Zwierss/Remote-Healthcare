@@ -14,8 +14,14 @@ public class NewClient : ICommand
         bool isDoctor =  packet["data"]!["doctor"]!.ToObject<bool>();
         parent.IsDoctor = isDoctor;
 
-        if (isDoctor) return;
-        
+        if (isDoctor)
+        {
+            bool exists = StorageManager.CheckIfDoctorExists(uuid, packet["data"]!["pass"]!.ToObject<string>()!);
+            Console.WriteLine(PacketSender.SendReplacedObject("status", exists, 1, "serverconnected.json")!);
+            parent.SendMessage(PacketSender.SendReplacedObject("status", exists, 1, "serverconnected.json")!);
+            return;   
+        }
+
         foreach (Client c in parent.Parent.Clients)
         {
             if((bool)!c.IsDoctor) return;

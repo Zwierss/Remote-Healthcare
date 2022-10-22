@@ -43,7 +43,7 @@ public static class Cryptographer
         using ICryptoTransform ct = aes.CreateDecryptor(aes.Key, aes.IV);
         using MemoryStream ms = new();
         using CryptoStream cs = new(ms, ct, CryptoStreamMode.Write);
-        cs.Write(message);
+        cs.Write(message, 0, message.Length);
         cs.FlushFinalBlock();
         return JObject.Parse(Encoding.Default.GetString(ms.ToArray()));
     }

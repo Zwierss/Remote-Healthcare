@@ -1,4 +1,6 @@
 {
   "id": "client/server-connected",
-  "status": "ok"
+  "data": {
+    "status": true
+  } 
 }

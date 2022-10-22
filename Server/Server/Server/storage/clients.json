@@ -1,0 +1,8 @@
+{
+  "clients":[
+    ["Test", "Test"]
+  ],
+  "doctors": [
+    ["Admin","Admin"]
+  ]
+}

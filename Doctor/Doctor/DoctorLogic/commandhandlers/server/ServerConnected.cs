@@ -6,6 +6,11 @@ public class ServerConnected : ICommand
 {
     public void OnCommandReceived(JObject packet, DoctorClient parent)
     {
-        parent.SendData(PacketSender.GetJson("server\\getclients.json"));
+        bool approved = packet["data"]!["status"]!.ToObject<bool>();
+        parent.LoginSuccessful = approved;
+        if (approved)
+        {
+            parent.SendData(PacketSender.GetJson("server\\getclients.json"));
+        }
     }
 }

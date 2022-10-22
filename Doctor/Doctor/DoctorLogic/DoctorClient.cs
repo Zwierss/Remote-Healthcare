@@ -20,18 +20,32 @@ public class DoctorClient
     private readonly string _hostname;
     private readonly int _port;
 
-    public string Uuid { get; set; }
+    private string _uuid;
+    private string _password;
 
-    public DoctorClient(string uuid, string hostname, int port)
+    public bool? LoginSuccessful { get; set; }
+
+    public DoctorClient(string uuid, string password, string hostname, int port)
     {
-        Uuid = uuid;
+        _uuid = uuid;
+        _password = password;
         _hostname = hostname;
         _port = port;
         _commands = new Dictionary<string, ICommand>();
         InitCommands();
     }
 
-    public async Task<bool> SetupConnection()
+    public void Start()
+    { 
+        new Thread(Also).Start();
+    }
+
+    private async void Also()
+    {
+        await SetupConnection();
+    }
+
+    public async Task SetupConnection()
     {
         try
         {
@@ -42,13 +56,10 @@ public class DoctorClient
         catch (Exception)
         {
             Console.WriteLine("Couldn't connect to server");
-            return false;
         }
         
-        SendData(SendReplacedObject("uuid", Uuid, 1, "server\\connect.json")!);
+        SendData(SendReplacedObject("uuid", _uuid, 1, SendReplacedObject("pass", _password, 1, "server\\connect.json"))!);
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
-
-        return true;
     }
 
     private void OnRead(IAsyncResult ar)
