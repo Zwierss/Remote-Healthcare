@@ -6,26 +6,35 @@ public class NewClient : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {
-        parent.SendMessage(PacketSender.GetJson("serverconnected.json"));
-
         string uuid = packet["data"]!["uuid"]!.ToObject<string>()!;
-        parent.Uuid = uuid;
-        
-        bool isDoctor =  packet["data"]!["doctor"]!.ToObject<bool>();
-        parent.IsDoctor = isDoctor;
+        bool isDoctor = packet["data"]!["doctor"]!.ToObject<bool>();
 
         if (isDoctor)
         {
             bool exists = StorageManager.CheckIfDoctorExists(uuid, packet["data"]!["pass"]!.ToObject<string>()!);
-            Console.WriteLine(PacketSender.SendReplacedObject("status", exists, 1, "serverconnected.json")!);
-            parent.SendMessage(PacketSender.SendReplacedObject("status", exists, 1, "serverconnected.json")!);
-            return;   
+            bool alreadyOpen = StorageManager.CheckIfAlreadyOpen(uuid, parent.Parent.Clients);
+            
+            if (exists && alreadyOpen)
+            {
+                parent.SendMessage(PacketSender.SendReplacedObject("status", 1, 1, "serverconnected.json")!);
+            }
+            else
+            {
+                parent.SendMessage(PacketSender.SendReplacedObject("status", 0, 1, "serverconnected.json")!);
+                parent.SelfDestruct();
+                return;
+            }
         }
+        
+        parent.Uuid = uuid;
+        parent.IsDoctor = isDoctor;
 
+        if(parent.Parent.Clients.Count == 0) return;
         foreach (Client c in parent.Parent.Clients)
         {
-            if((bool)!c.IsDoctor) return;
-            c.SendMessage(PacketSender.SendReplacedObject("client", uuid, 1, "doctor\\returnclient.json")!);
+            Console.WriteLine("" + c.IsDoctor + "" + c.Uuid);
+            if(!c.IsDoctor) continue;
+            c.SendMessage(PacketSender.SendReplacedObject("client", uuid, 1, "doctor\\returnclients.json")!);
         }
     }
 }

@@ -15,7 +15,7 @@ public class Client
     private readonly Dictionary<string, ICommand> _commands;
 
     public MainServer Parent { get; set; }
-    public bool? IsDoctor { get; set; }
+    public bool IsDoctor { get; set; }
     public string Uuid { get; set; }
 
     private byte[] _totalBuffer = Array.Empty<byte>();
@@ -33,6 +33,7 @@ public class Client
 
     public void SendMessage(JObject packet)
     {
+        Console.WriteLine(packet);
         byte[] encryptedMessage = GetEncryptedMessage(packet);
         _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
     }
@@ -44,16 +45,17 @@ public class Client
             int rc = _stream.EndRead(ar);
             _totalBuffer = Concat(_totalBuffer, _buffer, rc);
         }
-        catch(IOException)
+        catch(Exception)
         {
             Console.WriteLine("Can no longer read from this client");
-            Parent.Clients.Remove(this);
+            SelfDestruct();
             return;
         }
 
         while (_totalBuffer.Length >= 4)
         {
             JObject data = GetDecryptedMessage(_totalBuffer);
+            Console.WriteLine(data);
             _totalBuffer = Array.Empty<byte>();
 
             if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
@@ -62,7 +64,22 @@ public class Client
             break;
         }
 
-        _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+        try
+        {
+            _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("this object no longer exists");
+        }
+    }
+
+    public void SelfDestruct()
+    {
+        Parent.Clients.Remove(this);
+        _stream.Close(400);
+        _tcp.Close();
+        Console.WriteLine(Parent.Clients.Count);
     }
 
     private void InitCommands()

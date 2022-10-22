@@ -8,7 +8,7 @@ public class MainServer
 
     private TcpListener _listener;
 
-    public List<Client> Clients { get; set; }
+    public List<Client> Clients { get; }
 
     private const string Hostname = "localhost";
     private const int Port = 6666;

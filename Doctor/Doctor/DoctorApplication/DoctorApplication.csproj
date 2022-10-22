@@ -5,7 +5,7 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
         <ProjectGuid>{6980ED83-A182-43BB-94DC-D13A5F6F3669}</ProjectGuid>
-        <OutputType>WinExe</OutputType>
+        <OutputType>Exe</OutputType>
         <RootNamespace>DoctorApplication</RootNamespace>
         <AssemblyName>DoctorApplication</AssemblyName>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -35,9 +35,18 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="mscorlib" />
+        <Reference Include="MvvmHelpers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Refractored.MvvmHelpers.1.6.2\lib\net461\MvvmHelpers.dll</HintPath>
+        </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
+        <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+          <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Windows.Forms" />
         <Reference Include="System.Xml" />
         <Reference Include="System.Xaml">
             <RequiredTargetFramework>4.0</RequiredTargetFramework>
@@ -51,6 +60,19 @@
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
+        <Compile Include="BeginWindow.xaml.cs">
+          <DependentUpon>BeginWindow.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="commands\CommandBase.cs" />
+        <Compile Include="commands\LogInCommand.cs" />
+        <Compile Include="SelectionWindow.xaml.cs">
+          <DependentUpon>SelectionWindow.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="stores\NavigationStore.cs" />
+        <Compile Include="viewmodels\BeginViewModel.cs" />
+        <Compile Include="viewmodels\MainViewModel.cs" />
+        <Compile Include="viewmodels\SelectionViewModel.cs" />
+        <Page Include="BeginWindow.xaml" />
         <Page Include="MainWindow.xaml">
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
@@ -63,6 +85,7 @@
             <DependentUpon>MainWindow.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Page Include="SelectionWindow.xaml" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Properties\AssemblyInfo.cs">
@@ -80,6 +103,7 @@
     </ItemGroup>
     <ItemGroup>
         <None Include="App.config" />
+        <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\DoctorLogic\DoctorLogic.csproj">

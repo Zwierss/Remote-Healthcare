@@ -1,7 +1,7 @@
 ﻿using DoctorLogic;
 
-DoctorClient client = new DoctorClient("Admin", "Admin", "localhost", 6666);
-await client.SetupConnection();
+DoctorClient client = new DoctorClient("Admin", "Admin", "localhost", 6666, null);
+client.SetupConnection();
 
 while (true)
 {

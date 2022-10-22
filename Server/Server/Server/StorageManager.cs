@@ -26,4 +26,17 @@ public static class StorageManager
         }
         return false;
     }
+
+    public static bool CheckIfAlreadyOpen(string username, List<Client> clients)
+    {
+        foreach (Client c in clients)
+        {
+            if (c.Uuid == username)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

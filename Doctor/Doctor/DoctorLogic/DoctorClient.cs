@@ -1,6 +1,11 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using System.Windows;
 using DoctorLogic.commandhandlers.client;
 using DoctorLogic.commandhandlers.server;
+using MvvmHelpers;
 using Newtonsoft.Json.Linq;
 using static DoctorLogic.Cryptographer;
 using static DoctorLogic.PacketSender;
@@ -12,7 +17,9 @@ public class DoctorClient
 {
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
-    
+
+    public IWindow ViewModel { get; set; }
+
     private TcpClient _tcp;
     private NetworkStream _stream;
     private readonly Dictionary<string, ICommand> _commands;
@@ -23,10 +30,9 @@ public class DoctorClient
     private string _uuid;
     private string _password;
 
-    public bool? LoginSuccessful { get; set; }
-
-    public DoctorClient(string uuid, string password, string hostname, int port)
+    public DoctorClient(string uuid, string password, string hostname, int port, IWindow viewModel)
     {
+        ViewModel = viewModel;
         _uuid = uuid;
         _password = password;
         _hostname = hostname;
@@ -35,17 +41,7 @@ public class DoctorClient
         InitCommands();
     }
 
-    public void Start()
-    { 
-        new Thread(Also).Start();
-    }
-
-    private async void Also()
-    {
-        await SetupConnection();
-    }
-
-    public async Task SetupConnection()
+    public async void SetupConnection()
     {
         try
         {
@@ -55,13 +51,14 @@ public class DoctorClient
         }
         catch (Exception)
         {
-            Console.WriteLine("Couldn't connect to server");
+            
         }
         
         SendData(SendReplacedObject("uuid", _uuid, 1, SendReplacedObject("pass", _password, 1, "server\\connect.json"))!);
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
+    [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: System.Net.Sockets.OverlappedAsyncResult")]
     private void OnRead(IAsyncResult ar)
     {
         try
@@ -71,14 +68,12 @@ public class DoctorClient
         }
         catch(IOException)
         {
-            Console.WriteLine("Can no longer read from this server");
             return;
         }
 
         while (_totalBuffer.Length >= 4)
         {
             JObject data = GetDecryptedMessage(_totalBuffer);
-            Console.WriteLine(data);
             _totalBuffer = Array.Empty<byte>();
 
             if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
@@ -87,7 +82,14 @@ public class DoctorClient
             break;
         }
 
-        _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+        try
+        {
+            _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+        }
     }
 
     public void SendData(JObject message)

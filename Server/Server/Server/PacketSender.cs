@@ -54,8 +54,11 @@ public static class PacketSender
             case List<string> s:
                 currentObject![variable] = new JArray(s);
                 break;
+            case bool b:
+                currentObject![variable] = b;
+                break;
         }
-
+        
         return data;
     }
 
