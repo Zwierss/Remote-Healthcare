@@ -17,13 +17,8 @@ namespace Server.DataSaving
             Console.WriteLine(Environment.CurrentDirectory);
             string directoryPath = Environment.CurrentDirectory + "\\Clients\\" + client.PatientId;
             Directory.CreateDirectory(directoryPath);
-            string path = Environment.CurrentDirectory + "\\Clients\\" + client.PatientId + "\\" + client.PatientId + ".JSON";
+            string path = Environment.CurrentDirectory + "\\Clients\\" + client.patientId + "\\" + "InitialPatientFilePatient[" + client.patientId + "].JSON";
             File.Create(path).Close();
-
-            // ClientData clientData = new ClientData()
-            // {
-            //     patentId = client.patientId
-            // };
             
             string clientAsJson = JsonConvert.SerializeObject(client);
             File.WriteAllText(path, clientAsJson);
@@ -31,33 +26,34 @@ namespace Server.DataSaving
 
         public static bool ClientExists(string patientId)
         {
-            string[] clientFiles = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients");
-            foreach (string clientPath in clientFiles)
+
+            if (Directory.GetDirectories(Environment.CurrentDirectory + "\\Clients") == null)
             {
-                // var clientInJson = JObject.Parse(File.ReadAllText(clientPath));
-                // Client client = new Client();
-                // client.patientId = clientInJson["patientId"].ToString();
-                // client.patientId = clientPath;
-                if(clientPath == patientId)
+                Directory.CreateDirectory(Environment.CurrentDirectory + "\\Clients\\PatientZero");
+            }
+            
+            string[] clientDirectories = Directory.GetDirectories(Environment.CurrentDirectory + "\\Clients");
+            foreach (string clientPath in clientDirectories)
+            {
+                string path = Environment.CurrentDirectory + "\\Clients\\" + patientId;
+                if(clientPath == path)
                 {
                     return true;
                 }
             }
-
             return false;
         }
 
         public static void AddPatientFile(TcpClient client, List<JObject> sessionData)
         {
-            JObject jObject = JObject.Parse(Client.ReadJsonMessage(client));
+            JObject jObject = Client.ReadMessage(client);
             String patientId = jObject["data"]["patientId"].ToString();
 
             int amountOfFiles = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients\\" + patientId).Length;
-            
-            string path = Environment.CurrentDirectory + "\\Clients\\" + patientId + "\\" + patientId + " session#" + amountOfFiles +
+            string path = Environment.CurrentDirectory + "\\Clients\\" + patientId + "\\[" + patientId + "] session#" + amountOfFiles +
                           ".JSON";
+            
             File.Create(path).Close();
-
             File.WriteAllText(path, sessionData.ToString());
         }
     }
