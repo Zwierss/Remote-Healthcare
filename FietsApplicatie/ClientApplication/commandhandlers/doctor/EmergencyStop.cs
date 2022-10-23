@@ -9,5 +9,6 @@ public class EmergencyStop : ICommand
     {
         parent.SessionIsActive = false;
         HardwareConnector.StopSessionTimer();
+        parent.Stop();
     }
 }
