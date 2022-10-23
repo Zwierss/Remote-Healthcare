@@ -19,6 +19,7 @@ public class House
         List<float[]> r = new();
 
         r.Add(new float[]{ 40, 80 });
+        r.Add(new float[]{ -70, 20 });
         r.Add(new float[]{ -70, 0 });
 
         float[][] coordinates = r.ToArray();
