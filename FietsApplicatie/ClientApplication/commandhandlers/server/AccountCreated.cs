@@ -12,7 +12,7 @@ public class AccountCreated : ICommand
         {
             parent.Callback.OnCallback(Success);
         }
-        else if (status == 2)
+        else if (status == 0)
         {
             parent.Callback.OnCallback(Error, "Er bestaat al een gebruiker met deze gebruikersnaam.");
         }

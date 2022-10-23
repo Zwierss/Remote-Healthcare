@@ -1,17 +1,15 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Security;
+using System;
 using ClientGUI.stores;
 using ClientGUI.viewmodels;
 
 namespace ClientGUI.commands;
 
-public class LogInCommand : CommandBase
+public class CreateCommand : CommandBase
 {
-    
-    private readonly BeginViewModel _view;
 
-    public LogInCommand(BeginViewModel view)
+    private AccountViewModel _view;
+
+    public CreateCommand(AccountViewModel view)
     {
         _view = view;
     }
@@ -27,7 +25,7 @@ public class LogInCommand : CommandBase
         }
         catch (Exception)
         {
-            _view.ErrorMessage = "Voer alstublieft een (geldig) wachtwoord in";
+            _view.ErrorMessage = "Voer alstublieft een wachtwoord in";
             return;
         }
 
@@ -41,8 +39,6 @@ public class LogInCommand : CommandBase
             return;
         }
 
-        _view.NavigationStore.Client.SetupConnection(_view.Username, password, _view.Ip, port, _view.FietsNr, _view.IsChecked);
+        _view.NavigationStore.Client.CreateAccount(_view.Username, password, _view.Ip, port);
     }
-    
-    
 }

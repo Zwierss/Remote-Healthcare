@@ -13,8 +13,8 @@ public class CreateAccount : ICommand
 
         if (StorageManager.CheckIfNewUsername(uuid, type))
         {
-            parent.SendMessage(PacketSender.SendReplacedObject("status", 1, 1, "accountcreated.json")!);
             StorageManager.AddNewAccount(uuid,pass,type);
+            parent.SendMessage(PacketSender.SendReplacedObject("status", 1, 1, "accountcreated.json")!);
         }
         else
         {

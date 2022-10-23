@@ -1,7 +1,7 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace ClientGUI;
+namespace DoctorApplication;
 
 public partial class AccountWindow : UserControl
 {

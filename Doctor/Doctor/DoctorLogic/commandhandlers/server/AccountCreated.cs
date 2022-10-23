@@ -12,7 +12,7 @@ public class AccountCreated : ICommand
         {
             parent.ViewModel.OnChangedValues(Success);
         }
-        else if (status == 2)
+        else if (status == 0)
         {
             parent.ViewModel.OnChangedValues(Error, "Er bestaat al een gebruiker met deze gebruikersnaam.");
         }

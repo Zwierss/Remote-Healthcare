@@ -6,7 +6,7 @@
         xmlns:viewmodels="clr-namespace:DoctorApplication.viewmodels"
         xmlns:doctorApplication="clr-namespace:DoctorApplication"
         mc:Ignorable="d"
-        Title="Dokter Login" Height="400" Width="525">
+        Title="Dokter Login" Height="450" Width="800">
         <ContentControl Content="{Binding CurrentViewModel}">
             <ContentControl.Resources>
                 <DataTemplate DataType="{x:Type viewmodels:BeginViewModel}">
@@ -14,6 +14,9 @@
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:SelectionViewModel}">
                     <doctorApplication:SelectionWindow/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:AccountViewModel}">
+                    <doctorApplication:AccountWindow/>                    
                 </DataTemplate>
             </ContentControl.Resources>
         </ContentControl>

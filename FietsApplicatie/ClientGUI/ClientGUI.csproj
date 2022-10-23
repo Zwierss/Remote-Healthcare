@@ -64,15 +64,19 @@
       <DependentUpon>AccountWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="commands\CommandBase.cs" />
+    <Compile Include="commands\CreateCommand.cs" />
     <Compile Include="commands\LogInCommand.cs" />
+    <Compile Include="commands\MakeAccountCommand.cs" />
     <Compile Include="commands\StopCommand.cs" />
     <Compile Include="LoadingWindow.xaml.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="stores\NavigationStore.cs" />
+    <Compile Include="stores\UtilStore.cs" />
     <Compile Include="SuccessWindow.xaml.cs">
       <DependentUpon>SuccessWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="viewmodels\AccountViewModel.cs" />
     <Compile Include="viewmodels\BeginViewModel.cs" />
     <Compile Include="viewmodels\LoadingViewModel.cs" />
     <Compile Include="viewmodels\MainViewModel.cs" />

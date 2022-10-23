@@ -20,21 +20,29 @@ public class LogInCommand : CommandBase
 
     public override void Execute(object parameter)
     {
-        _view.NavigationStore.Client.ViewModel = _view;
-        _view.NavigationStore.Client.SetupConnection(_view.Username, SecureStringToString(_view.SecurePassword), "localhost", 6666);
-    }
-    
-    private string SecureStringToString(SecureString value)
-    {
-        IntPtr valuePtr = IntPtr.Zero;
+        int port;
+        string password;
+
         try
         {
-            valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
-            return Marshal.PtrToStringUni(valuePtr);
+            password = UtilStore.SecureStringToString(_view.SecurePassword);
         }
-        finally
+        catch(Exception)
         {
-            Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+            _view.ErrorMessage = "Voer alstublieft een (geldig) wachtwoord in";
+            return;
         }
+        
+        try
+        {
+            port = int.Parse(_view.Port);
+        }
+        catch (Exception)
+        {
+            _view.ErrorMessage = "Port moet een getal zijn";
+            return;
+        }
+
+        _view.NavigationStore.Client.SetupConnection(_view.Username, password, _view.Ip, port);
     }
 }

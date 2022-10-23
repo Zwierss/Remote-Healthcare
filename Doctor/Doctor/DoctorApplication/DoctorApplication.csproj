@@ -60,18 +60,26 @@
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
+        <Compile Include="AccountWindow.xaml.cs">
+          <DependentUpon>AccountWindow.xaml</DependentUpon>
+        </Compile>
         <Compile Include="BeginWindow.xaml.cs">
           <DependentUpon>BeginWindow.xaml</DependentUpon>
         </Compile>
         <Compile Include="commands\CommandBase.cs" />
+        <Compile Include="commands\CreateCommand.cs" />
         <Compile Include="commands\LogInCommand.cs" />
+        <Compile Include="commands\MakeAccountCommand.cs" />
         <Compile Include="SelectionWindow.xaml.cs">
           <DependentUpon>SelectionWindow.xaml</DependentUpon>
         </Compile>
         <Compile Include="stores\NavigationStore.cs" />
+        <Compile Include="stores\UtilStore.cs" />
+        <Compile Include="viewmodels\AccountViewModel.cs" />
         <Compile Include="viewmodels\BeginViewModel.cs" />
         <Compile Include="viewmodels\MainViewModel.cs" />
         <Compile Include="viewmodels\SelectionViewModel.cs" />
+        <Page Include="AccountWindow.xaml" />
         <Page Include="BeginWindow.xaml" />
         <Page Include="MainWindow.xaml">
             <Generator>MSBuild:Compile</Generator>

@@ -1,27 +1,35 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Security;
+﻿using System.Security;
 using DoctorApplication.commands;
 using DoctorApplication.stores;
 using DoctorLogic;
 using MvvmHelpers;
-using MvvmHelpers.Commands;
-using ICommand = System.Windows.Input.ICommand;
 using static DoctorLogic.State;
+using ICommand = System.Windows.Input.ICommand;
 
 namespace DoctorApplication.viewmodels;
 
-public class BeginViewModel : ObservableObject, IWindow
+public class AccountViewModel : ObservableObject, IWindow
 {
     public NavigationStore NavigationStore { get; set; }
 
-    public string Username { get; set; }
+    public ICommand Create { get; }
 
-    private SecureString _secureString;
+    private string _username;
+    public string Username
+    {
+        get => _username;
+        set
+        {
+            _username = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    private SecureString _securePassword;
     public SecureString SecurePassword
     {
-        get => _secureString;
-        set => _secureString = value;
+        get => _securePassword;
+        set => _securePassword = value;
     }
     
     private string _ip = "localhost";
@@ -57,15 +65,11 @@ public class BeginViewModel : ObservableObject, IWindow
         }
     }
 
-    public ICommand LogIn { get; }
-    public ICommand MakeNew { get; }
-
-    public BeginViewModel(NavigationStore navigationStore)
+    public AccountViewModel(NavigationStore navigationStore)
     {
         NavigationStore = navigationStore;
         NavigationStore.Client.ViewModel = this;
-        LogIn = new LogInCommand(this);
-        MakeNew = new MakeAccountCommand(this);
+        Create = new CreateCommand(this);
     }
 
     public void OnChangedValues(State state, string value = "")
@@ -73,11 +77,11 @@ public class BeginViewModel : ObservableObject, IWindow
         switch (state)
         {
             case Success:
-                NavigationStore.CurrentViewModel = new SelectionViewModel(NavigationStore);
+                NavigationStore.CurrentViewModel = new BeginViewModel(NavigationStore);
+                break;
+            case Error:
+                ErrorMessage = value;
                 break;
         }
-
-        
-        ErrorMessage = value;
     }
 }

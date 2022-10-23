@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:DoctorApplication"
              xmlns:viewmodels="clr-namespace:DoctorApplication.viewmodels"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <ListView x:Name="ViewList" ItemsSource="{Binding Clients}">
         </ListView>

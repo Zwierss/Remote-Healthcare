@@ -78,12 +78,14 @@ public class BeginViewModel : ObservableObject, IClientCallback
     }
 
     public ICommand LogIn { get; }
+    public ICommand MakeNew { get; }
 
     public BeginViewModel(NavigationStore navigationStore)
     {
         NavigationStore = navigationStore;
         NavigationStore.Client.Callback = this;
         LogIn = new LogInCommand(this);
+        MakeNew = new MakeAccountCommand(this);
     }
 
     public void OnCallback(State state, string value = "")

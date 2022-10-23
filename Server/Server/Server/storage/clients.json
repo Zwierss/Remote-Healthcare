@@ -1,8 +1,1 @@
-{
-  "clients":[
-    ["Test", "Test"]
-  ],
-  "doctors": [
-    ["Admin","Admin"]
-  ]
-}
+{"clients":[["Admin","Admin"],["Geert ","Wilders"]],"doctors":[["Admin","Admin"],["Xander","Zwiers"]]}
