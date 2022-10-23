@@ -129,6 +129,7 @@ public class DoctorClient
     {
         _commands.Add("client/server-connected", new ServerConnected());
         _commands.Add("client/disconnected", new Disconnected());
+        _commands.Add("client/account-created", new AccountCreated());
         _commands.Add("doctor/return-clients", new ReturnClients());
         _commands.Add("doctor/return-client", new ReturnClient());
         _commands.Add("doctor/senddata", new ReceivedData());

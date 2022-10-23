@@ -208,5 +208,6 @@ public class Client : IHardwareCallback
         _commands.Add("client/emergencystop", new EmergencyStop());
         _commands.Add("client/doctormessage", new DoctorMessage());
         _commands.Add("client/changeresistance", new ChangeResistance());
+        _commands.Add("client/account-created", new AccountCreated());
     }
 }

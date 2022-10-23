@@ -2,6 +2,7 @@
   "id": "server/create-account",
   "data": {
     "uuid": "",
-    "pass": ""
+    "pass": "",
+    "doctor": true
   }
 }

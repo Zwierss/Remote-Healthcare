@@ -6,7 +6,7 @@
         xmlns:clientGui="clr-namespace:ClientGUI"
         xmlns:viewmodels="clr-namespace:ClientGUI.viewmodels"
         mc:Ignorable="d"
-        Title="Dokter Login" Height="450" Width="800">
+        Title="Client Login" Height="450" Width="800">
         <ContentControl Content="{Binding CurrentViewModel}">
             <ContentControl.Resources>
                 <DataTemplate DataType="{x:Type viewmodels:BeginViewModel}">

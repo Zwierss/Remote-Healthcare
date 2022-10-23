@@ -15,6 +15,23 @@ public static class StorageManager
         return (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(PathDir + filename)));
     }
 
+    public static void AddNewAccount(string username, string password, string type)
+    {
+        JObject accounts = GetStorageFiles("clients.json");
+        List<string[]> accountTypes = accounts[type]!.ToObject<string[][]>()!.ToList();
+        string[] newAccount = { username, password };
+        accountTypes.Add(newAccount);
+        JArray array = new JArray(accountTypes);
+        accounts[type] = array;
+        
+        File.WriteAllText(PathDir + "clients.json", accounts.ToString());
+        using StreamWriter sw = File.CreateText(PathDir + "clients.json");
+        using (JsonTextWriter writer = new JsonTextWriter(sw))
+        {
+            accounts.WriteTo(writer);
+        }
+    }
+
     public static bool CheckIfNewUsername(string username, string type)
     {
         string[][] accounts = GetStorageFiles("clients.json")[type]!.ToObject<string[][]>()!;
