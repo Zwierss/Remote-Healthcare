@@ -92,6 +92,8 @@ public class Client
         _commands.Add("client/emergencystop", new EmergencyStop());
         _commands.Add("client/doctormessage", new DoctorMessage());
         _commands.Add("client/changeresistance", new ChangeResistance());
+        _commands.Add("server/disconnect", new Disconnect());
+        _commands.Add("server/create-account", new CreateAccount());
     }
     
     private static byte[] Concat(byte[] b1, byte[] b2, int count)

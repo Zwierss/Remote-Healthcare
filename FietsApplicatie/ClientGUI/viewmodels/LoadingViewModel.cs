@@ -14,6 +14,7 @@ public class LoadingViewModel : ObservableObject, IClientCallback
     public LoadingViewModel(NavigationStore navigationStore)
     {
         NavigationStore = navigationStore;
+        NavigationStore.Client.Callback = this;
     }
 
     public void OnCallback(State state, string value = "")
@@ -21,7 +22,7 @@ public class LoadingViewModel : ObservableObject, IClientCallback
         switch (state)
         {
             case Success:
-                
+                NavigationStore.CurrentViewModel = new SuccessViewModel(NavigationStore);
                 break;
         }
     }

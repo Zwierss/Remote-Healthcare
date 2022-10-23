@@ -18,7 +18,18 @@ public class LogInCommand : CommandBase
     public override void Execute(object parameter)
     {
         int port;
-        string password = SecureStringToString(_view.SecurePassword);
+        string password;
+
+        try
+        {
+            password = SecureStringToString(_view.SecurePassword);
+        }
+        catch (Exception)
+        {
+            _view.ErrorMessage = "Voer alstublieft een wachtwoord in";
+            return;
+        }
+
         try
         {
             port = int.Parse(_view.Port);

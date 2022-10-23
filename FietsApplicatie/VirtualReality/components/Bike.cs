@@ -41,7 +41,7 @@ public class Bike
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, JObject>(
             "route", _parent.RouteId!, 1, PacketSender.SendReplacedObject<string,JObject>(
                 "node", _parent.BikeId!, 1, PacketSender.SendReplacedObject<double,string>(
-                    "speed", 10.0, 1, "route\\followroute.json")!)!
+                    "speed", 0.0, 1, "route\\followroute.json")!)!
         )!, _parent.TunnelId!)!);
         Console.WriteLine("done with bike");
     }

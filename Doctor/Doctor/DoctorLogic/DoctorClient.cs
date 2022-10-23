@@ -39,9 +39,7 @@ public class DoctorClient
         
         try
         {
-            _tcp = new TcpClient();
-            await _tcp.ConnectAsync(hostname, port);
-            _stream = _tcp.GetStream();
+            await Connect(hostname, port);
         }
         catch (Exception)
         {
@@ -51,6 +49,29 @@ public class DoctorClient
         
         SendData(SendReplacedObject("uuid", Uuid, 1, SendReplacedObject("pass", password, 1, "server\\connect.json"))!);
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+    }
+    
+    public async void CreateAccount(string username, string password, string hostname, int port)
+    {
+        try
+        {
+            await Connect(hostname, port);
+        }
+        catch (Exception)
+        {
+            ViewModel.OnChangedValues(Error,"Kan niet verbinden met deze server");
+            return;
+        }
+        
+        SendData(SendReplacedObject("uuid", username, 1, SendReplacedObject("pass", password, 1, "server\\createaccount.json"))!);
+        _stream!.BeginRead(_buffer, 0, 1024, OnRead, null);
+    }
+    
+    private async Task Connect(string hostname, int port)
+    {
+        _tcp = new TcpClient();
+        await _tcp.ConnectAsync(hostname, port);
+        _stream = _tcp.GetStream();
     }
 
     [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: System.Net.Sockets.OverlappedAsyncResult")]
@@ -107,6 +128,7 @@ public class DoctorClient
     private void InitCommands()
     {
         _commands.Add("client/server-connected", new ServerConnected());
+        _commands.Add("client/disconnected", new Disconnected());
         _commands.Add("doctor/return-clients", new ReturnClients());
         _commands.Add("doctor/return-client", new ReturnClient());
         _commands.Add("doctor/senddata", new ReceivedData());

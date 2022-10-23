@@ -60,8 +60,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AccountWindow.xaml.cs">
+      <DependentUpon>AccountWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="commands\CommandBase.cs" />
     <Compile Include="commands\LogInCommand.cs" />
+    <Compile Include="commands\StopCommand.cs" />
     <Compile Include="LoadingWindow.xaml.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
     </Compile>
@@ -72,6 +76,8 @@
     <Compile Include="viewmodels\BeginViewModel.cs" />
     <Compile Include="viewmodels\LoadingViewModel.cs" />
     <Compile Include="viewmodels\MainViewModel.cs" />
+    <Compile Include="viewmodels\SuccessViewModel.cs" />
+    <Page Include="AccountWindow.xaml" />
     <Page Include="BeginWindow.xaml" />
     <Page Include="LoadingWindow.xaml" />
     <Page Include="MainWindow.xaml">

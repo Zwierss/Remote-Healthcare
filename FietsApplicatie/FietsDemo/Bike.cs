@@ -35,4 +35,10 @@ public class Bike
         
         return true;
     }
+
+    public void Disconnect()
+    {
+        _ble.CloseDevice();
+        _ble.Dispose();
+    }
 }

@@ -28,4 +28,10 @@ public class HeartRate
 
         return true;
     }
+
+    public void Disconnect()
+    {
+        _ble.CloseDevice();
+        _ble.Dispose();
+    }
 }

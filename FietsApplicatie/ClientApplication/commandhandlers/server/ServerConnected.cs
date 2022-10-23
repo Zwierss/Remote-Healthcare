@@ -12,7 +12,7 @@ public class ServerConnected : ICommand
         {
             parent.ConnectedToServer = true;
             parent.Callback.OnCallback(Success);
-            parent.SetupRest();
+            new Thread(parent.SetupRest).Start();
         }
         else if (status == 0)
         {

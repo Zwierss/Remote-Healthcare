@@ -13,7 +13,7 @@ using static ClientApplication.State;
 
 namespace ClientApplication;
 
-public class Client : FietsDemo.IClientCallback
+public class Client : IHardwareCallback
 {
     private readonly VRClient _vr;
     private TcpClient? _client;
@@ -26,7 +26,6 @@ public class Client : FietsDemo.IClientCallback
     public string Username { get; set; }
     public bool SessionIsActive { get; set; }
     public bool ConnectedToServer { get; set; }
-    
     public IClientCallback Callback { get; set; }
 
     private int _lastHeartrateData = 0;
@@ -49,11 +48,9 @@ public class Client : FietsDemo.IClientCallback
         
         try
         {
-            _client = new TcpClient();
-            await _client.ConnectAsync(hostname, port);
-            _stream = _client.GetStream();
+            await Connect(hostname, port);
         }
-        catch(Exception e)
+        catch(Exception)
         {
             Callback.OnCallback(Error, "Kon geen verbinding maken met deze server.");
             return;
@@ -65,15 +62,39 @@ public class Client : FietsDemo.IClientCallback
         _stream!.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
+    public async void CreateAccount(string username, string password, string hostname, int port)
+    {
+        try
+        {
+            await Connect(hostname, port);
+        }
+        catch (Exception)
+        {
+            Callback.OnCallback(Error,"Kan niet verbinden met deze server");
+            return;
+        }
+        
+        SendData(SendReplacedObject("uuid", username, 1, SendReplacedObject("pass", password, 1, "application\\server\\createaccount.json"))!);
+        _stream!.BeginRead(_buffer, 0, 1024, OnRead, null);
+    }
+
+    private async Task Connect(string hostname, int port)
+    {
+        _client = new TcpClient();
+        await _client.ConnectAsync(hostname, port);
+        _stream = _client.GetStream();
+    }
+
     public async void SetupRest()
     {
-        // await _vr.StartConnection();
-        //
-        // while (!_vr.IsSet)
-        // {
-        //     
-        // }
+        await _vr.StartConnection();
+        
+        while (!_vr.IsSet)
+        {
+            
+        }
 
+        Console.WriteLine("done with vr");
         SetupHardware(this, _bikeNr, _sim);
     }
 
@@ -90,7 +111,7 @@ public class Client : FietsDemo.IClientCallback
         if(!ConnectedToServer) return;
         if (!_vr.IsSet) return;
         
-        double speed = ((values[8] + values[9] * 255) * 0.001) * 3.6;
+        double speed = Math.Round((values[8] + values[9] * 255) * 0.001 * 3.6, 1, MidpointRounding.AwayFromZero);
         _vr.UpdateBikeSpeed(speed);
         
         if (!SessionIsActive) return;
@@ -120,6 +141,20 @@ public class Client : FietsDemo.IClientCallback
         if (!SessionIsActive) return;
 
         _lastHeartrateData = values[1];
+    }
+
+    public void OnSuccessfulConnect()
+    {
+        Callback.OnCallback(Success);
+    }
+
+    public void Stop()
+    {
+        SendData(SendReplacedObject("client", Username, 1, "application\\server\\disconnect.json")!);
+        HardwareConnector.Stop();
+        _vr.Stop();
+        SessionIsActive = false;
+        ConnectedToServer = false;
     }
 
     private void OnRead(IAsyncResult ar)
@@ -154,6 +189,7 @@ public class Client : FietsDemo.IClientCallback
         catch (Exception)
         {
             Console.WriteLine("Stream closed");
+            SelfDestruct();
         }
     }
 
@@ -166,6 +202,7 @@ public class Client : FietsDemo.IClientCallback
     private void InitCommands()
     {
         _commands.Add("client/server-connected", new ServerConnected());
+        _commands.Add("client/disconnected", new Disconnected());
         _commands.Add("client/startsession", new StartSession());
         _commands.Add("client/stopsession", new StopSession());
         _commands.Add("client/emergencystop", new EmergencyStop());

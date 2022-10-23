@@ -8,24 +8,29 @@ namespace FietsDemo
     public static class HardwareConnector
     {
 
-        private static IClientCallback _client;
+        private static IHardwareCallback _client;
         private static Bike _bike;
+        private static HeartRate _heart;
         private static Thread _timer;
+        private static Thread _simThread;
+        private static bool _sim;
         public static bool Connected { get; set; } = false;
         public static int Time { get; set; } = 0;
 
-        public static void SetupHardware(IClientCallback client, string bikeSerial, bool sim)
+        public static void SetupHardware(IHardwareCallback client, string bikeSerial, bool sim)
         {
             _client = client;
+            _sim = sim;
             if (sim)
             {
-                new Thread(RunSimulation).Start();
+                _simThread = new Thread(RunSimulation);
+                _simThread.Start();
             }
             else
             {
                 _bike = new Bike();
                 _bike.Serial = bikeSerial;
-                HeartRate heart = new HeartRate();
+                _heart = new HeartRate();
             
                 Console.WriteLine("Trying connection with devices");
                 bool bikeConnection = _bike.MakeConnection().Result;
@@ -34,21 +39,29 @@ namespace FietsDemo
                     Thread.Sleep(1000);
                     bikeConnection = _bike.MakeConnection().Result;
                 }
-                bool hearRateConnection = heart.MakeConnection().Result;
+                bool hearRateConnection = _heart.MakeConnection().Result;
                 while (!hearRateConnection)
                 {
                     Thread.Sleep(1000);
                     hearRateConnection = _bike.MakeConnection().Result;
                 }
             }
-            
+            _client.OnSuccessfulConnect();
             Connected = true;
             Console.Read();
         }
 
-        private static void SetBikeSerial(string serial)
+        public static void Stop()
         {
-            _bike.Serial = serial;
+            if (_sim)
+            {
+                _simThread.Abort();
+            }
+            else
+            {
+                _bike.Disconnect();
+                _heart.Disconnect();
+            }
         }
 
         private static void RunSimulation()

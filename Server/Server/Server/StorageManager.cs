@@ -15,6 +15,16 @@ public static class StorageManager
         return (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(PathDir + filename)));
     }
 
+    public static bool CheckIfNewUsername(string username, string type)
+    {
+        string[][] accounts = GetStorageFiles("clients.json")[type]!.ToObject<string[][]>()!;
+        foreach (string[] account in accounts)
+        {
+            if (account[0] == username) return false;
+        }
+        return true;
+    }
+
     public static bool CheckIfAccountExists(string username, string password, string type)
     {
         string[][] accounts = GetStorageFiles("clients.json")[type]!.ToObject<string[][]>()!;
