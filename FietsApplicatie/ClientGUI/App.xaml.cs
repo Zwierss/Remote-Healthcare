@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using ClientApplication;
 using ClientGUI.viewmodels;
 using DoctorApplication.stores;
 
@@ -11,7 +13,7 @@ namespace ClientGUI
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            NavigationStore navigationStore = new();
+            NavigationStore navigationStore = new(new Client());
 
             navigationStore.CurrentViewModel = new BeginViewModel(navigationStore);
             

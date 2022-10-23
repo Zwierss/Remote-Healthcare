@@ -17,10 +17,22 @@ public class LogInCommand : CommandBase
 
     public override void Execute(object parameter)
     {
-        
+        int port;
+        string password = SecureStringToString(_view.SecurePassword);
+        try
+        {
+            port = int.Parse(_view.Port);
+        }
+        catch (Exception)
+        {
+            _view.ErrorMessage = "Port moet een getal zijn";
+            return;
+        }
+
+        _view.NavigationStore.Client.SetupConnection(_view.Username, password, _view.Ip, port);
     }
     
-    private string SecureStringToString(SecureString value)
+    private static string SecureStringToString(SecureString value)
     {
         IntPtr valuePtr = IntPtr.Zero;
         try

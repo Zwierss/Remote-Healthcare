@@ -7,8 +7,8 @@ public static class Program
     public static void Main(string[] args)
     {
         
-        Client client = new(Environment.MachineName,"01140", "localhost", 6666);
-        client.SetupConnection();
+        Client client = new();
+        client.SetupConnection("Test","Test", "localhost", 6666);
 
         while (true)
         {

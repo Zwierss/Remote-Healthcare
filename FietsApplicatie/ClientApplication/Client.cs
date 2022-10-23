@@ -9,13 +9,12 @@ using static VirtualReality.PacketSender;
 using static ClientApplication.Cryptograhper;
 using static VirtualReality.VRClient;
 using static FietsDemo.HardwareConnector;
+using static ClientApplication.State;
 
 namespace ClientApplication;
 
 public class Client : IClientCallback
 {
-    private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("ClientApplication", StringComparison.Ordinal)) + "ClientApplication\\packets\\";
-    
     private readonly VRClient _vr;
     private TcpClient? _client;
     private NetworkStream? _stream;
@@ -27,50 +26,56 @@ public class Client : IClientCallback
     public string Username { get; set; }
     public bool SessionIsActive { get; set; }
     public bool ConnectedToServer { get; set; }
-
-    private readonly string _bikeSerial;
-    private readonly string _hostname;
-    private readonly int _port;
+    
+    public ClientCallback Callback { get; set; }
 
     private int _lastHeartrateData = 0;
 
-    public Client(string username, string bikeSerial, string hostname, int port)
+    public Client()
     {
         _vr = new VRClient();
         _commands = new Dictionary<string, ICommand>();
         InitCommands();
-        Username = username;
-        _bikeSerial = bikeSerial;
-        _hostname = hostname;
-        _port = port;
         SessionIsActive = false;
         ConnectedToServer = false;
     }
 
-    public async void SetupConnection()
+    public async void SetupConnection(string username, string password, string hostname, int port)
     {
         try
         {
             _client = new TcpClient();
-            await _client.ConnectAsync(_hostname, _port);
-            await _vr.StartConnection();
+            await _client.ConnectAsync(hostname, port);
             _stream = _client.GetStream();
-            Console.WriteLine("successfully connected to the server");
         }
         catch(Exception e)
         {
-            Console.WriteLine(e.Message);
+            Callback.OnCallback(Error, "Kon geen verbinding maken met deze server.");
+            return;
         }
         
-        SendData(SendReplacedObject<string, string>("uuid", Username, 1, "application\\server\\init.json")!);
+        SendData(SendReplacedObject<string, JObject>("uuid", username, 1, SendReplacedObject<string,string>(
+            "pass", password, 1, "application\\server\\init.json"
+        )!)!);
         _stream!.BeginRead(_buffer, 0, 1024, OnRead, null);
+    }
 
+    public async void SetupRest()
+    {
+        await _vr.StartConnection();
+        
         while (!_vr.IsSet)
         {
             
         }
 
-        SetupHardware(this, _bikeSerial);
+        SetupHardware(this, "01140");
+    }
+
+    public void SelfDestruct()
+    {
+        _stream?.Close(400);
+        _client?.Close();
     }
 
     public void OnNewBikeData(IReadOnlyList<int> values)
@@ -96,8 +101,7 @@ public class Client : IClientCallback
                 )
             )
         ))!;
-
-        Console.WriteLine(o);
+        
         SendData(o);
     }
 
@@ -138,7 +142,14 @@ public class Client : IClientCallback
             break;
         }
 
-        _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+        try
+        {
+            _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Stream closed");
+        }
     }
 
     private void SendData(JObject message)
