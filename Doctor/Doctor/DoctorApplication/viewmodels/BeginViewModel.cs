@@ -13,8 +13,7 @@ namespace DoctorApplication.viewmodels;
 
 public class BeginViewModel : ObservableObject, IWindow
 {
-    private NavigationStore _navigationStore;
-    public DoctorClient Client { get; set; }
+    public NavigationStore NavigationStore { get; set; }
 
     public string Username { get; set; }
 
@@ -40,7 +39,7 @@ public class BeginViewModel : ObservableObject, IWindow
 
     public BeginViewModel(NavigationStore navigationStore)
     {
-        _navigationStore = navigationStore;
+        NavigationStore = navigationStore;
         LogIn = new LogInCommand(this);
     }
 
@@ -49,7 +48,7 @@ public class BeginViewModel : ObservableObject, IWindow
         switch (state)
         {
             case Success:
-                _navigationStore.CurrentViewModel = new SelectionViewModel(Client);
+                NavigationStore.CurrentViewModel = new SelectionViewModel(NavigationStore);
                 break;
         }
 

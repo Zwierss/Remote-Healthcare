@@ -13,7 +13,7 @@ using static ClientApplication.State;
 
 namespace ClientApplication;
 
-public class Client : IClientCallback
+public class Client : FietsDemo.IClientCallback
 {
     private readonly VRClient _vr;
     private TcpClient? _client;
@@ -27,9 +27,11 @@ public class Client : IClientCallback
     public bool SessionIsActive { get; set; }
     public bool ConnectedToServer { get; set; }
     
-    public ClientCallback Callback { get; set; }
+    public IClientCallback Callback { get; set; }
 
     private int _lastHeartrateData = 0;
+    private string _bikeNr;
+    private bool _sim;
 
     public Client()
     {
@@ -40,8 +42,11 @@ public class Client : IClientCallback
         ConnectedToServer = false;
     }
 
-    public async void SetupConnection(string username, string password, string hostname, int port)
+    public async void SetupConnection(string username, string password, string hostname, int port, string bikeNr, bool sim)
     {
+        _bikeNr = bikeNr;
+        _sim = sim;
+        
         try
         {
             _client = new TcpClient();
@@ -62,14 +67,14 @@ public class Client : IClientCallback
 
     public async void SetupRest()
     {
-        await _vr.StartConnection();
-        
-        while (!_vr.IsSet)
-        {
-            
-        }
+        // await _vr.StartConnection();
+        //
+        // while (!_vr.IsSet)
+        // {
+        //     
+        // }
 
-        SetupHardware(this, "01140");
+        SetupHardware(this, _bikeNr, _sim);
     }
 
     public void SelfDestruct()

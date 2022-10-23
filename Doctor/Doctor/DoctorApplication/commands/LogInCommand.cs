@@ -20,8 +20,8 @@ public class LogInCommand : CommandBase
 
     public override void Execute(object parameter)
     {
-        _view.Client = new DoctorClient(_view.Username, SecureStringToString(_view.SecurePassword), "localhost", 6666, _view);
-        _view.Client.SetupConnection();
+        _view.NavigationStore.Client.ViewModel = _view;
+        _view.NavigationStore.Client.SetupConnection(_view.Username, SecureStringToString(_view.SecurePassword), "localhost", 6666);
     }
     
     private string SecureStringToString(SecureString value)

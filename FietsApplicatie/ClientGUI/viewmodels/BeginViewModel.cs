@@ -9,7 +9,7 @@ using static ClientApplication.State;
 
 namespace ClientGUI.viewmodels;
 
-public class BeginViewModel : ObservableObject, ClientCallback
+public class BeginViewModel : ObservableObject, IClientCallback
 {
     public NavigationStore NavigationStore { get; set; }
 
@@ -55,6 +55,28 @@ public class BeginViewModel : ObservableObject, ClientCallback
         }
     }
 
+    private string _fietsNr = "01140";
+    public string FietsNr
+    {
+        get => _fietsNr;
+        set
+        {
+            _fietsNr = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private bool _isChecked;
+    public bool IsChecked
+    {
+        get => _isChecked;
+        set
+        {
+            _isChecked = value;
+            OnPropertyChanged();
+        }
+    }
+
     public ICommand LogIn { get; }
 
     public BeginViewModel(NavigationStore navigationStore)
@@ -72,7 +94,7 @@ public class BeginViewModel : ObservableObject, ClientCallback
                 ErrorMessage = value;
                 break;
             case Success:
-                Console.WriteLine("ja");
+                NavigationStore.CurrentViewModel = new LoadingViewModel(NavigationStore);
                 break;
         }
     }

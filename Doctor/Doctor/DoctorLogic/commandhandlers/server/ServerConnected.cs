@@ -16,6 +16,7 @@ public class ServerConnected : ICommand
         else if(approved == 0)
         {
             parent.ViewModel.OnChangedValues(Error,"Deze combinatie van gebruikersnaam en wachtwoord bestaat niet.");
+            parent.SelfDestruct();
         }
     }
 }

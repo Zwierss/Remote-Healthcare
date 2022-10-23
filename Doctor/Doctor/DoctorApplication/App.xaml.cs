@@ -12,7 +12,7 @@ namespace DoctorApplication
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            NavigationStore navigationStore = new();
+            NavigationStore navigationStore = new(new DoctorClient());
 
             navigationStore.CurrentViewModel = new BeginViewModel(navigationStore);
             

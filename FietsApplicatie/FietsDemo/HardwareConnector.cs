@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using Avans.TI.BLE;
 
 namespace FietsDemo
@@ -16,21 +14,33 @@ namespace FietsDemo
         public static bool Connected { get; set; } = false;
         public static int Time { get; set; } = 0;
 
-        public static void SetupHardware(IClientCallback client, string bikeSerial)
+        public static void SetupHardware(IClientCallback client, string bikeSerial, bool sim)
         {
-            new Thread(RunSimulation).Start();
             _client = client;
-
-            // _bike = new Bike();
-            // _bike.Serial = bikeSerial;
-            // HeartRate heart = new HeartRate();
-            //
-            // Console.WriteLine("Trying connection with devices");
-            // bool bikeConnection = _bike.MakeConnection().Result;
-            // if(!bikeConnection) return;
-            //
-            // bool hearRateConnection = heart.MakeConnection().Result;
-            // if(!hearRateConnection) return;
+            if (sim)
+            {
+                new Thread(RunSimulation).Start();
+            }
+            else
+            {
+                _bike = new Bike();
+                _bike.Serial = bikeSerial;
+                HeartRate heart = new HeartRate();
+            
+                Console.WriteLine("Trying connection with devices");
+                bool bikeConnection = _bike.MakeConnection().Result;
+                while (!bikeConnection)
+                {
+                    Thread.Sleep(1000);
+                    bikeConnection = _bike.MakeConnection().Result;
+                }
+                bool hearRateConnection = heart.MakeConnection().Result;
+                while (!hearRateConnection)
+                {
+                    Thread.Sleep(1000);
+                    hearRateConnection = _bike.MakeConnection().Result;
+                }
+            }
             
             Connected = true;
             Console.Read();

@@ -25,29 +25,22 @@ public class DoctorClient
     private NetworkStream _stream;
     private readonly Dictionary<string, ICommand> _commands;
 
-    private readonly string _hostname;
-    private readonly int _port;
+    public string Uuid { get; set; }
 
-    public string _uuid { get; set; }
-    private string _password;
-
-    public DoctorClient(string uuid, string password, string hostname, int port, IWindow viewModel)
+    public DoctorClient()
     {
-        ViewModel = viewModel;
-        _uuid = uuid;
-        _password = password;
-        _hostname = hostname;
-        _port = port;
         _commands = new Dictionary<string, ICommand>();
         InitCommands();
     }
 
-    public async void SetupConnection()
+    public async void SetupConnection(string uuid, string password, string hostname, int port)
     {
+        Uuid = uuid;
+        
         try
         {
             _tcp = new TcpClient();
-            await _tcp.ConnectAsync(_hostname, _port);
+            await _tcp.ConnectAsync(hostname, port);
             _stream = _tcp.GetStream();
         }
         catch (Exception)
@@ -56,7 +49,7 @@ public class DoctorClient
             return;
         }
         
-        SendData(SendReplacedObject("uuid", _uuid, 1, SendReplacedObject("pass", _password, 1, "server\\connect.json"))!);
+        SendData(SendReplacedObject("uuid", Uuid, 1, SendReplacedObject("pass", password, 1, "server\\connect.json"))!);
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
@@ -77,8 +70,7 @@ public class DoctorClient
         {
             JObject data = GetDecryptedMessage(_totalBuffer);
             _totalBuffer = Array.Empty<byte>();
-
-            Console.WriteLine(data);
+            
             if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
                 _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
 
@@ -89,10 +81,16 @@ public class DoctorClient
         {
             _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Debug.WriteLine(e);
+            Console.WriteLine("Stream closed");
         }
+    }
+
+    public void SelfDestruct()
+    {
+        _stream.Close(400);
+        _tcp.Close();
     }
 
     public void SendData(JObject message)

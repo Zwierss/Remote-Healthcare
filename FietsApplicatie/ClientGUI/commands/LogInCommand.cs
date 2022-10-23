@@ -29,7 +29,7 @@ public class LogInCommand : CommandBase
             return;
         }
 
-        _view.NavigationStore.Client.SetupConnection(_view.Username, password, _view.Ip, port);
+        _view.NavigationStore.Client.SetupConnection(_view.Username, password, _view.Ip, port, _view.FietsNr, _view.IsChecked);
     }
     
     private static string SecureStringToString(SecureString value)

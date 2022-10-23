@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Documents;
 using System.Windows.Forms;
+using DoctorApplication.stores;
 using DoctorLogic;
 using MvvmHelpers;
 using static DoctorLogic.State;
@@ -11,6 +12,8 @@ namespace DoctorApplication.viewmodels;
 
 public class SelectionViewModel : ObservableObject, IWindow
 {
+
+    public NavigationStore NavigationStore { get; set; }
 
     private List<string> _clients;
     public List<string> Clients
@@ -22,14 +25,12 @@ public class SelectionViewModel : ObservableObject, IWindow
             OnPropertyChanged();
         }
     }
-
-    public DoctorClient Client { get; set; }
-
-    public SelectionViewModel(DoctorClient client)
+    
+    public SelectionViewModel(NavigationStore navigationStore)
     {
-        Client = client;
-        Client.ViewModel = this;
-        Client.GetClients();
+        NavigationStore = navigationStore;
+        NavigationStore.Client.ViewModel = this;
+        NavigationStore.Client.GetClients();
     }
 
     public void OnChangedValues(State state, string value = "")

@@ -12,12 +12,15 @@
         <Label Content="Wachtwoord" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         <TextBox x:Name="uuid" HorizontalAlignment="Left" Margin="110,51,0,0" TextWrapping="Wrap" Text="{Binding Username}" VerticalAlignment="Top" Width="198"/>
         <PasswordBox x:Name="pass" HorizontalAlignment="Left" Margin="110,82,0,0" PasswordChanged="PasswordBox_OnPasswordChanged" VerticalAlignment="Top" Width="198"/>
-        <Button x:Name="login_btn" Content="Log in" HorizontalAlignment="Left" Margin="10,198,0,0" VerticalAlignment="Top" Width="144" Command="{Binding LogIn}"/>
-        <Button Content="Maak nieuw account" HorizontalAlignment="Left" Margin="164,198,0,0" VerticalAlignment="Top" Width="144"/>
+        <Button x:Name="login_btn" Content="Log in" HorizontalAlignment="Left" Margin="10,226,0,0" VerticalAlignment="Top" Width="144" Command="{Binding LogIn}"/>
+        <Button Content="Maak nieuw account" HorizontalAlignment="Left" Margin="164,225,0,0" VerticalAlignment="Top" Width="144"/>
         <TextBox x:Name="ip" Text="{Binding Ip}" HorizontalAlignment="Left" Margin="110,113,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198"/>
         <Label Content="IP-adres" HorizontalAlignment="Left" Margin="10,109,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         <Label Content="Poort"  HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         <TextBox x:Name="port" Text="{Binding Port}" HorizontalAlignment="Left" Margin="110,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="11" FontStyle="Italic" Foreground="#FFC12C2C" Text="{Binding ErrorMessage}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,276,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="11" FontStyle="Italic" Foreground="#FFC12C2C" Text="{Binding ErrorMessage}"/>
+        <Label Content="Fietsnummer"  HorizontalAlignment="Left" Margin="10,170,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
+        <TextBox x:Name="fietsnr" Text="{Binding FietsNr}" HorizontalAlignment="Left" Margin="110,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198"/>
+        <CheckBox Content="Start Simulatie" IsChecked="{Binding IsChecked}" HorizontalAlignment="Center" Margin="0,175,0,0" VerticalAlignment="Top" FontSize="11"/>
     </Grid>
 </UserControl>

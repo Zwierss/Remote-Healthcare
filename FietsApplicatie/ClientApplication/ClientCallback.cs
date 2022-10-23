@@ -1,6 +1,6 @@
 namespace ClientApplication;
 
-public interface ClientCallback
+public interface IClientCallback
 {
     void OnCallback(State state, string value = "");
 }
