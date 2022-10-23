@@ -17,7 +17,7 @@ public class Tree
     public void PlaceTrees()
     {
         List<float[]> r = new();
-        //House south
+        //House south 1
         r.Add(new float[] { -62, -10 });
         r.Add(new float[] { -62, 10 });
         r.Add(new float[] { -64, -10 });
@@ -37,6 +37,53 @@ public class Tree
         r.Add(new float[] { -67, -12 });
         r.Add(new float[] { -69, -12 });
         r.Add(new float[] { -71, -12 });
+
+        //House south 2
+        r.Add(new float[] { -59, 40 });
+        r.Add(new float[] { -61, 39 });
+        r.Add(new float[] { -59, 38 });
+        r.Add(new float[] { -61, 37 });
+        r.Add(new float[] { -59, 36 });
+        r.Add(new float[] { -61, 35 });
+        r.Add(new float[] { -59, 34 });
+        r.Add(new float[] { -61, 33 });
+        r.Add(new float[] { -59, 32 });
+        r.Add(new float[] { -61, 31 });
+        r.Add(new float[] { -59, 30 });
+        r.Add(new float[] { -61, 30 });
+        r.Add(new float[] { -63, 30 });
+        r.Add(new float[] { -65, 30 });
+        r.Add(new float[] { -67, 30 });
+        r.Add(new float[] { -69, 30 });
+        r.Add(new float[] { -71, 30 });
+
+        //Sharp corner south-east
+        r.Add(new float[] { -55, 50 });
+        r.Add(new float[] { -55, 51 });
+        r.Add(new float[] { -54, 52 });
+        r.Add(new float[] { -55, 52 });
+        r.Add(new float[] { -56, 52 });
+        r.Add(new float[] { -57, 52 });
+        r.Add(new float[] { -58, 52 });
+        r.Add(new float[] { -59, 52 });
+        r.Add(new float[] { -60, 52 });
+        r.Add(new float[] { -54, 53 });
+        r.Add(new float[] { -53, 54 });
+        r.Add(new float[] { -53, 55 });
+        r.Add(new float[] { -50, 56 });
+        r.Add(new float[] { -48, 57 });
+        r.Add(new float[] { -47, 58 });
+        r.Add(new float[] { -45, 58 });
+        r.Add(new float[] { -44, 58 });
+        r.Add(new float[] { -42, 56 });
+        r.Add(new float[] { -41, 56 });
+        r.Add(new float[] { -39, 54 });
+        r.Add(new float[] { -38, 54 });
+        r.Add(new float[] { -36, 52 });
+        r.Add(new float[] { -35, 52 });
+        r.Add(new float[] { -33, 50 });
+        r.Add(new float[] { -33, 48 });
+        
 
         r.Add(new float[] { -62, -12 });
         r.Add(new float[] { -64, -13 });
