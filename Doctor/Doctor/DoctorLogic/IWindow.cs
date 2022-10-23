@@ -2,5 +2,5 @@
 
 public interface IWindow
 {
-    void OnChangedValues(string value = "");
+    void OnChangedValues(State state, string value = "");
 }

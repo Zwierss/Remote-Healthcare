@@ -6,13 +6,12 @@ public static class Switch
 {
     public static void SendToClient(JObject packet, Client parent)
     {
-        string receiver = packet["data"]!["receiver"]!.ToObject<string>()!;
+        string receiver = packet["data"]!["client"]!.ToObject<string>()!;
         foreach (Client c in parent.Parent.Clients)
         {
-            if (!string.IsNullOrEmpty(c.Uuid = receiver))
-            {
-                c.SendMessage(packet);
-            }
+            if (c.Uuid != receiver) continue;
+            c.SendMessage(packet);
+            break;
         }
     }
 }

@@ -1,8 +1,8 @@
 {
   "id": "doctor/senddata",
   "data": {
-    "client-id": "uuid",
-    "receiver": "uuid",
+    "uuid": "uuid",
+    "client": "uuid",
     "data": {
       "speed": 0.0,
       "heartrate": 0,

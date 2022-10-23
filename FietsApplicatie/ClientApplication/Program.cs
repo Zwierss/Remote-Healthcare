@@ -4,11 +4,11 @@ namespace ClientApplication;
 
 public static class Program
 {
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
         
         Client client = new(Environment.MachineName,"01140", "localhost", 6666);
-        await client.SetupConnection();
+        client.SetupConnection();
 
         while (true)
         {

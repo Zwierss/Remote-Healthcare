@@ -1,20 +1,14 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Security;
-using DoctorApplication.commands;
+﻿using System.Security;
+using ClientGUI.commands;
 using DoctorApplication.stores;
-using DoctorLogic;
 using MvvmHelpers;
-using MvvmHelpers.Commands;
 using ICommand = System.Windows.Input.ICommand;
-using static DoctorLogic.State;
 
-namespace DoctorApplication.viewmodels;
+namespace ClientGUI.viewmodels;
 
-public class BeginViewModel : ObservableObject, IWindow
+public class BeginViewModel : ObservableObject
 {
     private NavigationStore _navigationStore;
-    public DoctorClient Client { get; set; }
 
     public string Username { get; set; }
 
@@ -42,18 +36,5 @@ public class BeginViewModel : ObservableObject, IWindow
     {
         _navigationStore = navigationStore;
         LogIn = new LogInCommand(this);
-    }
-
-    public void OnChangedValues(State state, string value = "")
-    {
-        switch (state)
-        {
-            case Success:
-                _navigationStore.CurrentViewModel = new SelectionViewModel(Client);
-                break;
-        }
-
-        
-        ErrorMessage = value;
     }
 }

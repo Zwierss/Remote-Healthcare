@@ -30,10 +30,11 @@ public class NewClient : ICommand
         parent.IsDoctor = isDoctor;
 
         if(parent.Parent.Clients.Count == 0) return;
+        if(isDoctor) return;
         foreach (Client c in parent.Parent.Clients)
         {
             if(!c.IsDoctor) continue;
-            c.SendMessage(PacketSender.SendReplacedObject("client", uuid, 1, "doctor\\returnclients.json")!);
+            c.SendMessage(PacketSender.SendReplacedObject("client", uuid, 1, "doctor\\returnclient.json")!);
         }
     }
 }

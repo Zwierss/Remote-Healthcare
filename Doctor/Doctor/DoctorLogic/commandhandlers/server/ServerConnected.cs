@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Newtonsoft.Json.Linq;
+using static DoctorLogic.State;
 
 namespace DoctorLogic.commandhandlers.server;
 
@@ -10,12 +11,11 @@ public class ServerConnected : ICommand
         int approved = packet["data"]["status"].ToObject<int>();
         if (approved == 1)
         {
-            parent.ViewModel.OnChangedValues();
-            parent.SendData(PacketSender.GetJson("server\\getclients.json"));
+            parent.ViewModel.OnChangedValues(Success);
         }
         else if(approved == 0)
         {
-            parent.ViewModel.OnChangedValues("Deze combinatie van gebruikersnaam en wachtwoord bestaat niet.");
+            parent.ViewModel.OnChangedValues(Error,"Deze combinatie van gebruikersnaam en wachtwoord bestaat niet.");
         }
     }
 }

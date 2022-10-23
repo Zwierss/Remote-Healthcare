@@ -47,7 +47,7 @@ public class Client : IClientCallback
         ConnectedToServer = false;
     }
 
-    public async Task SetupConnection()
+    public async void SetupConnection()
     {
         try
         {

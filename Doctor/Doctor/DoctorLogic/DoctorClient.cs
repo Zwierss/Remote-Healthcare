@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using static DoctorLogic.Cryptographer;
 using static DoctorLogic.PacketSender;
 using static DoctorLogic.Util;
+using static DoctorLogic.State;
 
 namespace DoctorLogic;
 
@@ -27,7 +28,7 @@ public class DoctorClient
     private readonly string _hostname;
     private readonly int _port;
 
-    private string _uuid;
+    public string _uuid { get; set; }
     private string _password;
 
     public DoctorClient(string uuid, string password, string hostname, int port, IWindow viewModel)
@@ -51,7 +52,8 @@ public class DoctorClient
         }
         catch (Exception)
         {
-            
+            ViewModel.OnChangedValues(Error, "Kon geen verbniding maken met de server. Mogelijk bent u niet verbonden via het juiste IP adres of poort.");
+            return;
         }
         
         SendData(SendReplacedObject("uuid", _uuid, 1, SendReplacedObject("pass", _password, 1, "server\\connect.json"))!);
@@ -76,6 +78,7 @@ public class DoctorClient
             JObject data = GetDecryptedMessage(_totalBuffer);
             _totalBuffer = Array.Empty<byte>();
 
+            Console.WriteLine(data);
             if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
                 _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
 
@@ -96,6 +99,11 @@ public class DoctorClient
     {
         byte[] encryptedMessage = GetEncryptedMessage(message);
         _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
+    }
+
+    public void GetClients()
+    {
+        SendData(PacketSender.GetJson("server\\getclients.json"));
     }
 
     private void InitCommands()

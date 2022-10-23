@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualReality", "VirtualRe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApplication", "ClientApplication\ClientApplication.csproj", "{D1DCF941-1AFD-44BE-8204-F1046248C2FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientGUI", "ClientGUI\ClientGUI.csproj", "{442D83E5-7730-497F-808D-1A61EDD35B0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D1DCF941-1AFD-44BE-8204-F1046248C2FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1DCF941-1AFD-44BE-8204-F1046248C2FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1DCF941-1AFD-44BE-8204-F1046248C2FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{442D83E5-7730-497F-808D-1A61EDD35B0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{442D83E5-7730-497F-808D-1A61EDD35B0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{442D83E5-7730-497F-808D-1A61EDD35B0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{442D83E5-7730-497F-808D-1A61EDD35B0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

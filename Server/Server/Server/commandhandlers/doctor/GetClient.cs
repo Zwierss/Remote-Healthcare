@@ -9,7 +9,7 @@ public class GetClient : ICommand
         List<string> clientUuids = new();
         foreach (Client c in parent.Parent.Clients)
         {
-            if ((bool)!c.IsDoctor)
+            if (!c.IsDoctor)
             {
                 clientUuids.Add(c.Uuid);
             }
