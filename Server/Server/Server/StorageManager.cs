@@ -63,12 +63,23 @@ public static class StorageManager
         return false;
     }
 
-    public static bool CheckIfAlreadyOpen(string username, List<Client> clients)
+    public static bool CheckIfAlreadyOpen(string username, List<Client> clients, bool type)
     {
-        foreach (Client c in clients)
+        if (type)
         {
-            if (c.Uuid == username)
+            foreach (var c in clients)
             {
+                if (!c.IsDoctor) continue;
+                if (c.Uuid != username) continue;
+                return false;
+            }
+        }
+        else
+        {
+            foreach (var c in clients)
+            {
+                if (c.IsDoctor) continue;
+                if (c.Uuid != username) continue;
                 return false;
             }
         }

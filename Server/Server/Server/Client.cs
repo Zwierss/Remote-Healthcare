@@ -70,7 +70,7 @@ public class Client
         }
         catch (Exception)
         {
-            Console.WriteLine("this object no longer exists");
+            SelfDestruct();
         }
     }
 

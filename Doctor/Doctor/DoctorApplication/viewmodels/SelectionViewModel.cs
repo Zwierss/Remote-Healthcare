@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Documents;
 using System.Windows.Forms;
+using DoctorApplication.commands;
 using DoctorApplication.stores;
 using DoctorLogic;
 using MvvmHelpers;
 using static DoctorLogic.State;
+using ICommand = System.Windows.Input.ICommand;
 
 namespace DoctorApplication.viewmodels;
 
 public class SelectionViewModel : ObservableObject, IWindow
 {
+    public string SelectedClient { get; set; }
 
     public NavigationStore NavigationStore { get; set; }
 
@@ -25,12 +28,15 @@ public class SelectionViewModel : ObservableObject, IWindow
             OnPropertyChanged();
         }
     }
+
+    public ICommand Select;
     
     public SelectionViewModel(NavigationStore navigationStore)
     {
         NavigationStore = navigationStore;
         NavigationStore.Client.ViewModel = this;
         NavigationStore.Client.GetClients();
+        Select = new SelectCommand(this);
     }
 
     public void OnChangedValues(State state, string value = "")

@@ -19,7 +19,7 @@ public class NewClient : ICommand
             exists = StorageManager.CheckIfAccountExists(uuid, packet["data"]!["pass"]!.ToObject<string>()!, "clients");
         }
 
-        bool alreadyOpen = StorageManager.CheckIfAlreadyOpen(uuid, parent.Parent.Clients);
+        bool alreadyOpen = StorageManager.CheckIfAlreadyOpen(uuid, parent.Parent.Clients, isDoctor);
             
         if (exists && alreadyOpen)
         {

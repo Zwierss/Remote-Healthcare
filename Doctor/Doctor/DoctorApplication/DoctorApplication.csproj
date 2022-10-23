@@ -70,6 +70,7 @@
         <Compile Include="commands\CreateCommand.cs" />
         <Compile Include="commands\LogInCommand.cs" />
         <Compile Include="commands\MakeAccountCommand.cs" />
+        <Compile Include="commands\SelectCommand.cs" />
         <Compile Include="SelectionWindow.xaml.cs">
           <DependentUpon>SelectionWindow.xaml</DependentUpon>
         </Compile>
