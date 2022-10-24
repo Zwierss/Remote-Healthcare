@@ -63,7 +63,7 @@ namespace Server.DataSaving
         }
 
         //get session data
-        public static string GetPatientSession(string patientId, int session)
+        public static string[] GetPatientSession(string patientId, int session)
         {
             //string file = Environment.CurrentDirectory + "\\Clients\\[" + patientId + "] session#" + session + ".JSON";
             string[] files = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients\\" + patientId);
@@ -75,9 +75,9 @@ namespace Server.DataSaving
                 //idk man
                 if (session.Equals(int.Parse(Regex.Replace(fileName.Substring(patientId.Length + 1), "[^0-9]", ""))))
                 {
-                    Console.WriteLine(file);
-                    return file;
+                    return File.ReadAllLines(file);
                 }
+
             }
             return null;
 
@@ -107,9 +107,6 @@ namespace Server.DataSaving
         {
             Console.WriteLine(Environment.CurrentDirectory);
             string[] files = Directory.GetDirectories(Environment.CurrentDirectory + "\\Clients");
-            foreach (string file in files)
-            Console.WriteLine(Path.GetFileName(file));
-            Console.WriteLine("done + \n");
             return files;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Server.DataSaving;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -61,5 +62,24 @@ namespace Server
 
             return message.ToString();
         }
+    }
+
+    public class GetJsonPatientIdsMessage
+    {
+        public string id = "server/patientIds";
+        public string[] data { get; set; }
+    }
+
+    public class GetJsonSessionsMessage
+    {
+        public string id = "server/sessionList";
+        public List<Tuple<int, string>> data { get; set; }
+
+    }
+
+    public class GetJsonSessionDataMessage
+    {
+        public string id = "server/sessionData";
+        public string[] data { get; set; }
     }
 }
