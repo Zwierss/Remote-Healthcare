@@ -38,6 +38,7 @@ public class VRClient
     private bool _tunnelCreated;
     private bool _stopRunning;
     private double _currentSpeed;
+    private bool _isActive;
 
     private readonly Skybox _skybox;
     private readonly HeightMap _map;
@@ -65,11 +66,13 @@ public class VRClient
         IsSet = false;
         _currentSpeed = 0;
         CurrentMessage = "";
+        _isActive = false;
     }
 
     public async Task StartConnection()
     {
         _stopRunning = false;
+        _isActive = true;
         
         try
         {
@@ -92,16 +95,30 @@ public class VRClient
         string message = o.ToString();
         byte[] requestLength = BitConverter.GetBytes(message.Length);
         byte[] request = Encoding.ASCII.GetBytes(message);
-        _stream.Write(requestLength, 0 , requestLength.Length);
-        _stream.Write(request, 0, request.Length);
+        try
+        {
+            _stream.Write(requestLength, 0, requestLength.Length);
+            _stream.Write(request, 0, request.Length);
+        }
+        catch (Exception)
+        {
+            Stop();
+        }
     }
     
     public void SendTunnel(string tunnelId, dynamic jsonData)
     {
         var command = new { id = "tunnel/send", data = (dynamic)new { dest = TunnelId, data = new { id = tunnelId, data = jsonData } } };
         byte[] d = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(command));
-        _stream.WriteAsync(BitConverter.GetBytes(d.Length), 0, 4).Wait();
-        _stream.WriteAsync(d, 0, d.Length).Wait();
+        try
+        {
+            _stream.WriteAsync(BitConverter.GetBytes(d.Length), 0, 4).Wait();
+            _stream.WriteAsync(d, 0, d.Length).Wait();
+        }
+        catch (Exception)
+        {
+            Stop();
+        }
     }
 
     public void SetTunnel(string id)
@@ -173,7 +190,6 @@ public class VRClient
         _tree.PlaceTrees();
         _house.PlaceHouses();
         IsSet = true;
-        //new Thread(_skybox.Update).Start();
     }
 
     public void UpdateBikeSpeed(double speed)
@@ -211,10 +227,13 @@ public class VRClient
 
     public void Stop()
     {
+        if(!_isActive) return;
+        
         UpdateBikeSpeed(0.0);
         _stopRunning = true;
         IsSet = false;
         _stream.Close(400);
         _client.Close();
+        _isActive = false;
     }
 }

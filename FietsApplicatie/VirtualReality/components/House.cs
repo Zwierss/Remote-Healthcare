@@ -31,29 +31,36 @@ public class House
         Thread.Sleep(2000);
 
         float[] heights = _parent.Heights;
-        for (int i = 0; i < heights.Length; i++)
+        try
         {
-            int type = new Random().Next(8);
-            if (type == 8) type = 10;
-            _parent.SendTunnel("scene/node/add", new
+            for (int i = 0; i < heights.Length; i++)
             {
-                name = "house-" + Guid.NewGuid(),
-                components = new
+                int type = new Random().Next(8);
+                if (type == 8) type = 10;
+                _parent.SendTunnel("scene/node/add", new
                 {
-                    transform = new
+                    name = "house-" + Guid.NewGuid(),
+                    components = new
                     {
-                        position = new[] { coordinates[i][0], heights[i], coordinates[i][1] },
-                        scale = 6,
-                        rotation = new[] { 0, 0, 0 }
-                    },
-                    model = new
-                    {
-                        file = Path + "houses\\set1\\house" + type + ".obj",
-                        animated = false
+                        transform = new
+                        {
+                            position = new[] { coordinates[i][0], heights[i], coordinates[i][1] },
+                            scale = 6,
+                            rotation = new[] { 0, 0, 0 }
+                        },
+                        model = new
+                        {
+                            file = Path + "houses\\set1\\house" + type + ".obj",
+                            animated = false
+                        }
                     }
-                }
-            });
-            Thread.Sleep(10);
+                });
+                Thread.Sleep(10);
+            }
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("error wile rendering houses");
         }
     }
 }

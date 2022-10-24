@@ -7,6 +7,7 @@ public class StartSession : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {
+        parent.Doctor = packet["data"]!["doctor"]!.ToObject<string>()!;
         parent.SessionIsActive = true;
         HardwareConnector.StartSessionTimer();
     }

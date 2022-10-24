@@ -27,10 +27,31 @@ public class Client : IHardwareCallback
     public bool SessionIsActive { get; set; }
     public bool ConnectedToServer { get; set; }
     public IClientCallback Callback { get; set; }
+    public string Doctor { get; set; }
+    public List<double> CollectedSpeeds { get; }
+    public List<int> CollectedRates { get; }
 
-    private int _lastHeartrateData = 0;
+    private int _prevDistance;
+    public int PrevDistance
+    {
+        get => _prevDistance;
+        set
+        {
+            if (value == 0)
+            {
+                _distanceCorrection = 0;
+            }
+            _prevDistance = value;
+        }
+        
+    }
+
+    private bool _isActive;
+    private int _lastHeartrateData;
     private string _bikeNr;
     private bool _sim;
+    private int _distanceCorrection;
+    private int _distanceLoopCounter;
 
     public Client()
     {
@@ -39,6 +60,12 @@ public class Client : IHardwareCallback
         InitCommands();
         SessionIsActive = false;
         ConnectedToServer = false;
+        _isActive = false;
+        _distanceCorrection = 0;
+        _distanceLoopCounter = 0;
+        _prevDistance = 0;
+        CollectedSpeeds = new List<double>();
+        CollectedRates = new List<int>();
     }
 
     public async void SetupConnection(string username, string password, string hostname, int port, string bikeNr, bool sim)
@@ -88,6 +115,8 @@ public class Client : IHardwareCallback
 
     public async void SetupRest()
     {
+        _isActive = true;
+        
         await _vr.StartConnection();
         
         while (!_vr.IsSet)
@@ -112,15 +141,46 @@ public class Client : IHardwareCallback
         
         double speed = Math.Round((values[8] + values[9] * 255) * 0.001 * 3.6, 1, MidpointRounding.AwayFromZero);
         _vr.UpdateBikeSpeed(speed);
-        
-        if (!SessionIsActive) return;
 
-        JObject o = SendReplacedObject("client-id", Username, 1, SendReplacedObject(
+        if (!SessionIsActive)
+        {
+            _distanceCorrection = values[7];
+            return;
+        }
+        
+        CollectedSpeeds.Add(speed);
+        double speedAvg = 0;
+        foreach (double s in CollectedSpeeds)
+        {
+            speedAvg += s;
+        }
+        speedAvg = Math.Round(speedAvg / CollectedSpeeds.Count, 1, MidpointRounding.AwayFromZero);
+        
+        CollectedRates.Add(_lastHeartrateData);
+        int heartrateAvg = 0;
+        foreach (int s in CollectedRates)
+        {
+            heartrateAvg += s;
+        }
+        heartrateAvg /= CollectedRates.Count;
+
+
+        if (PrevDistance > values[7])
+        {
+            _distanceLoopCounter++;
+        }
+        PrevDistance = values[7];
+        
+        JObject o = SendReplacedObject("client", Doctor, 1, SendReplacedObject(
             "speed", speed, 2, SendReplacedObject(
                 "heartrate", _lastHeartrateData, 2, SendReplacedObject(
-                    "distance", values[7], 2, SendReplacedObject(
+                    "distance", values[7] + 255*_distanceLoopCounter - _distanceCorrection, 2, SendReplacedObject(
                         "time", Time, 2, SendReplacedObject(
-                            "receiver", "10", 2, "application\\doctor\\senddata.json"
+                            "uuid", Username, 1, SendReplacedObject(
+                                "speedavg", speedAvg, 2, SendReplacedObject(
+                                    "avgheartrate", heartrateAvg, 2, "application\\doctor\\senddata.json"
+                                )
+                            )
                         )
                     )
                 )
@@ -149,11 +209,13 @@ public class Client : IHardwareCallback
 
     public void Stop()
     {
+        if (!_isActive) return;
         HardwareConnector.Stop();
         _vr.Stop();
         SessionIsActive = false;
         ConnectedToServer = false;
         SendData(SendReplacedObject("client", Username, 1, "application\\server\\disconnect.json")!);
+        _isActive = false;
     }
 
     public void SendDoctorMessage(string message)
@@ -171,6 +233,7 @@ public class Client : IHardwareCallback
         catch(IOException)
         {
             Console.WriteLine("Can no longer read from this server");
+            Stop();
             return;
         }
 
@@ -193,14 +256,21 @@ public class Client : IHardwareCallback
         catch (Exception)
         {
             Console.WriteLine("Stream closed");
-            SelfDestruct();
+            Stop();
         }
     }
 
     private void SendData(JObject message)
     {
         byte[] encryptedMessage = GetEncryptedMessage(message);
-        _stream!.Write(encryptedMessage, 0, encryptedMessage.Length);
+        try
+        {
+            _stream!.Write(encryptedMessage, 0, encryptedMessage.Length);
+        }
+        catch (Exception)
+        {
+            Stop();
+        }
     }
 
     private void InitCommands()

@@ -11,6 +11,7 @@ namespace DoctorLogic
         Success,
         Error,
         Store,
-        Replace
+        Replace,
+        Data
     }
 }

@@ -1,7 +1,10 @@
 using System;
+using DoctorApplication.commands;
 using DoctorApplication.stores;
 using DoctorLogic;
 using MvvmHelpers;
+using ICommand = System.Windows.Input.ICommand;
+using static DoctorLogic.State;
 
 namespace DoctorApplication.viewmodels;
 
@@ -11,6 +14,7 @@ public class ClientViewModel : ObservableObject, IWindow
     public string UserId { get; }
     public string DoctorMsg { get; set; }
     public string Resistance { get; set; }
+    public bool SessionIsActive { get; set; }
 
     private string _onlineStr = "Online";
     public string OnlineStr
@@ -89,6 +93,17 @@ public class ClientViewModel : ObservableObject, IWindow
         }
     }
 
+    private string _heartbeatAvg = "--";
+    public string HeartbeatAvg
+    {
+        get => _heartbeatAvg;
+        set
+        {
+            _heartbeatAvg = value;
+            OnPropertyChanged();
+        }
+    }
+
     private string _time = "--";
     public string Time
     {
@@ -100,11 +115,17 @@ public class ClientViewModel : ObservableObject, IWindow
         }
     }
 
+    public ICommand EmergencyStop { get; }
+    public ICommand SessionC { get; }
+
     public ClientViewModel(NavigationStore navigationStore, string userId)
     {
         UserId = userId;
         NavigationStore = navigationStore;
         NavigationStore.Client.ViewModel = this;
+        EmergencyStop = new EmergencyStopCommand(this);
+        SessionC = new SessionCommand(this);
+        SessionIsActive = false;
     }
 
     public void OnChangedResistance(int resistance)
@@ -114,6 +135,17 @@ public class ClientViewModel : ObservableObject, IWindow
 
     public void OnChangedValues(State state, string value = "")
     {
-        
+        switch (state)
+        {
+            case Data:
+                string[] args = value.Split('+');
+                Speed = args[0];
+                Heartbeat = args[1];
+                SpeedAvg = args[2];
+                HeartbeatAvg = args[3];
+                Distance = args[4];
+                Time = args[5];
+                break;
+        }
     }
 }

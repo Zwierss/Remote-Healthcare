@@ -81,25 +81,16 @@ public class DoctorClient
         {
             int rc = _stream.EndRead(ar);
             _totalBuffer = Concat(_totalBuffer, _buffer, rc);
-        }
-        catch(Exception)
-        {
-            return;
-        }
-
-        while (_totalBuffer.Length >= 4)
-        {
-            JObject data = GetDecryptedMessage(_totalBuffer);
-            _totalBuffer = Array.Empty<byte>();
+            while (_totalBuffer.Length >= 4)
+            {
+                JObject data = GetDecryptedMessage(_totalBuffer);
+                _totalBuffer = Array.Empty<byte>();
             
-            if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
-                _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
+                if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
+                    _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
 
-            break;
-        }
-
-        try
-        {
+                break;
+            }
             _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         }
         catch (Exception)
@@ -123,6 +114,18 @@ public class DoctorClient
     public void EmergencyStop(string client)
     {
         SendData(SendReplacedObject("client", client, 1, "client\\emergencystop.json")!);
+    }
+
+    public void StartSession(string client)
+    {
+        SendData(SendReplacedObject("client", client, 1, SendReplacedObject(
+            "doctor", Uuid, 1, "client\\startsession.json"
+        ))!);
+    }
+
+    public void StopSession(string client)
+    {
+        SendData(SendReplacedObject("client", client, 1, "client\\stopsession.json")!);
     }
 
     public void SendData(JObject message)
