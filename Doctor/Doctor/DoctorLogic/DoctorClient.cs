@@ -43,7 +43,8 @@ public class DoctorClient
         }
         catch (Exception)
         {
-            ViewModel.OnChangedValues(Error, "Kon geen verbniding maken met de server. Mogelijk bent u niet verbonden via het juiste IP adres of poort.");
+            string[] arg = { "Kon geen verbniding maken met de server. Mogelijk bent u niet verbonden via het juiste IP adres of poort."};
+            ViewModel.OnChangedValues(Error, arg);
             return;
         }
         
@@ -59,7 +60,8 @@ public class DoctorClient
         }
         catch (Exception)
         {
-            ViewModel.OnChangedValues(Error,"Kan niet verbinden met deze server");
+            string[] arg = { "Kan niet verbinden met deze server" };
+            ViewModel.OnChangedValues(Error, arg);
             return;
         }
         

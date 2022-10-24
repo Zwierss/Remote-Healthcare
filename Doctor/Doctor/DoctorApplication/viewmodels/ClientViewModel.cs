@@ -1,4 +1,6 @@
+#nullable enable
 using System;
+using System.Linq;
 using DoctorApplication.commands;
 using DoctorApplication.stores;
 using DoctorLogic;
@@ -13,8 +15,19 @@ public class ClientViewModel : ObservableObject, IWindow
     public NavigationStore NavigationStore { get; }
     public string UserId { get; }
     public string DoctorMsg { get; set; }
-    public string Resistance { get; set; }
     public bool SessionIsActive { get; set; }
+    public bool IsOnline { get; set; }
+
+    private string _errorMessage = "";
+    public string ErrorMessage
+    {
+        get => _errorMessage;
+        set
+        {
+            _errorMessage = value;
+            OnPropertyChanged();
+        }
+    }
 
     private string _onlineStr = "Online";
     public string OnlineStr
@@ -121,6 +134,7 @@ public class ClientViewModel : ObservableObject, IWindow
 
     public ClientViewModel(NavigationStore navigationStore, string userId)
     {
+        IsOnline = true;
         UserId = userId;
         NavigationStore = navigationStore;
         NavigationStore.Client.ViewModel = this;
@@ -132,21 +146,37 @@ public class ClientViewModel : ObservableObject, IWindow
 
     public void OnChangedResistance(int resistance)
     {
+        if (!IsOnline) return;
         NavigationStore.Client.ChangeResistance(UserId, resistance);
     }
 
-    public void OnChangedValues(State state, string value = "")
+    public void OnChangedValues(State state, string[]? args = null)
     {
         switch (state)
         {
             case Data:
-                string[] args = value.Split('+');
-                Speed = args[0];
+                Speed = args![0];
                 Heartbeat = args[1];
                 SpeedAvg = args[2];
                 HeartbeatAvg = args[3];
                 Distance = args[4];
                 Time = args[5];
+                break;
+            case Store:
+                if (args!.ToList().Contains(UserId))
+                {
+                    OnlineSrc = "resources/online.png";
+                    OnlineStr = "Online";
+                    IsOnline = true;
+                    ErrorMessage = "";
+                }
+                else
+                {
+                    IsOnline = false;
+                    OnlineSrc = "resources/offline.png";
+                    OnlineStr = "Offline";
+                }
+
                 break;
         }
     }

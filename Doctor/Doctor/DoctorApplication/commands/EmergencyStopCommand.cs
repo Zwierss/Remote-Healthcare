@@ -13,6 +13,13 @@ public class EmergencyStopCommand : CommandBase
 
     public override void Execute(object parameter)
     {
-        _view.NavigationStore.Client.EmergencyStop(_view.UserId);
+        if (_view.IsOnline)
+        {
+            _view.NavigationStore.Client.EmergencyStop(_view.UserId);
+        }
+        else
+        {
+            _view.ErrorMessage = "Deze client is niet meer online";
+        }
     }
 }

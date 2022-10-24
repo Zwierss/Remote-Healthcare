@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Globalization;
+using Newtonsoft.Json.Linq;
 using static DoctorLogic.State;
 
 namespace DoctorLogic.commandhandlers.client;
@@ -12,9 +13,14 @@ public class ReceivedData : ICommand
         double speedAvg = packet["data"]!["data"]!["speedavg"]!.ToObject<double>();
         int heartrateAvg = packet["data"]!["data"]!["avgheartrate"]!.ToObject<int>();
         int distance = packet["data"]!["data"]!["distance"]!.ToObject<int>();
-        int time = packet["data"]!["data"]!["time"]!.ToObject<int>(); 
-        
-        string arg = speed + "+" + heartrate + "+" + speedAvg + "+" + heartrateAvg + "+" + distance + "+" + time;
-        parent.ViewModel.OnChangedValues(Data, arg);
+        int time = packet["data"]!["data"]!["time"]!.ToObject<int>();
+
+        string[] args = new[]
+        {
+            speed.ToString(CultureInfo.InvariantCulture), heartrate.ToString(),
+            speedAvg.ToString(CultureInfo.InvariantCulture), heartrateAvg.ToString(), distance.ToString(),
+            time.ToString()
+        };
+        parent.ViewModel.OnChangedValues(Data, args);
     }
 }

@@ -14,6 +14,12 @@ public class SessionCommand : CommandBase
 
     public override void Execute(object parameter)
     {
+        if (!_view.IsOnline)
+        {
+            _view.ErrorMessage = "Deze client is niet meer online";
+            return;
+        }
+
         if (_view.SessionIsActive)
         {
             _view.Speed = "--";

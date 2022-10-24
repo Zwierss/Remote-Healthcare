@@ -9,9 +9,6 @@ public class ReturnClients : ICommand
     {
         string[] clients = packet["data"]!["clients"]!.ToObject<string[]>()!;
         parent.ViewModel.OnChangedValues(Replace);
-        foreach (string s in clients)
-        {
-            parent.ViewModel.OnChangedValues(Store, s);
-        }
+        parent.ViewModel.OnChangedValues(Store,clients);
     }
 }

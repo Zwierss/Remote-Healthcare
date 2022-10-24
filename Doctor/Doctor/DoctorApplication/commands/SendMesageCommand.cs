@@ -14,7 +14,14 @@ public class SendMesageCommand : CommandBase
 
     public override void Execute(object parameter)
     {
-        string message = _view.DoctorMsg;
-        _view.NavigationStore.Client.SendDoctorMessage(_view.UserId, message);
+        if (_view.IsOnline)
+        {
+            string message = _view.DoctorMsg;
+            _view.NavigationStore.Client.SendDoctorMessage(_view.UserId, message);
+        }
+        else
+        {
+            _view.ErrorMessage = "Deze client is niet meer online";
+        }
     }
 }

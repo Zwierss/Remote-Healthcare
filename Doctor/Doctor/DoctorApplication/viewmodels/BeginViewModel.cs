@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using DoctorApplication.commands;
@@ -68,16 +69,17 @@ public class BeginViewModel : ObservableObject, IWindow
         MakeNew = new MakeAccountCommand(this);
     }
 
-    public void OnChangedValues(State state, string value = "")
+    public void OnChangedValues(State state, string[]? args = null)
     {
         switch (state)
         {
             case Success:
                 NavigationStore.CurrentViewModel = new SelectionViewModel(NavigationStore);
+                ErrorMessage = "";
+                break;
+            case Error:
+                ErrorMessage = args![0];
                 break;
         }
-
-        
-        ErrorMessage = value;
     }
 }

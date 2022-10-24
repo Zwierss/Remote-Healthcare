@@ -1,4 +1,5 @@
-﻿using System.Security;
+﻿#nullable enable
+using System.Security;
 using DoctorApplication.commands;
 using DoctorApplication.stores;
 using DoctorLogic;
@@ -72,7 +73,7 @@ public class AccountViewModel : ObservableObject, IWindow
         Create = new CreateCommand(this);
     }
 
-    public void OnChangedValues(State state, string value = "")
+    public void OnChangedValues(State state, string[]? args = null)
     {
         switch (state)
         {
@@ -80,7 +81,7 @@ public class AccountViewModel : ObservableObject, IWindow
                 NavigationStore.CurrentViewModel = new BeginViewModel(NavigationStore);
                 break;
             case Error:
-                ErrorMessage = value;
+                ErrorMessage = args![0];
                 break;
         }
     }

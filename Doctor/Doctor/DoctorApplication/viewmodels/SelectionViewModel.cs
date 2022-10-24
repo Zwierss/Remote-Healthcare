@@ -1,6 +1,8 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using DoctorApplication.commands;
@@ -39,13 +41,12 @@ public class SelectionViewModel : ObservableObject, IWindow
         Selection = new SelectCommand(this);
     }
 
-    public void OnChangedValues(State state, string value = "")
+    public void OnChangedValues(State state, string[]? args = null)
     {
         switch (state)
         {
             case Store:
-                List<string> clients = new List<string>(Clients){value};
-                Clients = clients;
+                Clients = args!.ToList();
                 break;
             case Replace:
                 Clients.Clear();

@@ -6,7 +6,6 @@ namespace DoctorApplication.stores;
 
 public class NavigationStore
 {
-
     public DoctorClient Client { get; set; }
 
     public NavigationStore(DoctorClient client)

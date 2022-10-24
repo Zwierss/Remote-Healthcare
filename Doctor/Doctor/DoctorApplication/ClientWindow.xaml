@@ -29,6 +29,7 @@
         <Slider HorizontalAlignment="Left" Margin="451,245,0,0" VerticalAlignment="Top" Width="215" Maximum="255" ValueChanged="Slider_ValueChanged"/>
         <TextBlock HorizontalAlignment="Left" Margin="451,0,0,0" TextWrapping="Wrap" Text="Pas weerstand aan" VerticalAlignment="Center"/>
         <Label Content="Tijd:" HorizontalAlignment="Left" Margin="10,233,0,0" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,380,0,0" TextWrapping="Wrap" Text="{Binding ErrorMessage}" VerticalAlignment="Top" FontSize="11" FontStyle="Italic" Foreground="#FFCC2E2E"/>
 
     </Grid>
 </UserControl>

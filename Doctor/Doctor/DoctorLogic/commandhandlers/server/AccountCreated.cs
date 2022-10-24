@@ -14,7 +14,7 @@ public class AccountCreated : ICommand
         }
         else if (status == 0)
         {
-            parent.ViewModel.OnChangedValues(Error, "Er bestaat al een gebruiker met deze gebruikersnaam.");
+            parent.ViewModel.OnChangedValues(Error, new[]{"Er bestaat al een gebruiker met deze gebruikersnaam."});
         }
 
         parent.SelfDestruct();
