@@ -16,6 +16,7 @@ namespace Server
 
         static void Main(string[] args)
         {
+            //DataSaver.GetPatientData();
             Network network = new Network();
 
             Thread thread = new Thread(network.RunServer);

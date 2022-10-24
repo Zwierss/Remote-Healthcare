@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="bin\Debug\net6.0\Clients\NewFolder\" />
+    <Folder Include="bin\Debug\net6.0\NewFolder\" />
     <Folder Include="DataSaving\Clients\" />
   </ItemGroup>
 
