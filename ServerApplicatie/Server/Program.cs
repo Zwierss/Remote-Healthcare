@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using Server.DataSaving;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Server
 {
@@ -18,8 +20,17 @@ namespace Server
         static void Main(string[] args)
         {
             //DataSaver.ClientExists(new Client("123").patientId);
-            List<Tuple<int, string>> test = DataSaver.GetPatientSessions("123");
-            test.ForEach(p => Console.WriteLine(p));
+
+            //List<Tuple<int, string>> test = DataSaver.GetPatientSessions("123");
+            //test.ForEach(p => Console.WriteLine(p));
+
+            string file = DataSaver.GetPatientSession("123", 2);
+            string[] lines = File.ReadAllLines(file);
+            foreach (string line in lines)
+                Console.WriteLine(line);
+
+
+
             Network network = new Network();
 
             Thread thread = new Thread(network.RunServer);

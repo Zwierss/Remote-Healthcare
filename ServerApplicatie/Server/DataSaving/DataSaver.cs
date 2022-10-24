@@ -48,7 +48,7 @@ namespace Server.DataSaving
             }
             return false;
         }
-
+        
         public static void AddPatientFile(string patientId)
         {
             //JObject jObject = Client.ReadMessage(client);
@@ -62,15 +62,25 @@ namespace Server.DataSaving
             File.WriteAllText(path, "data");
         }
 
-        //get session
-        public static void GetPatientSession(string patientId, int session)
+        //get session data
+        public static string GetPatientSession(string patientId, int session)
         {
-            string[] files = Directory.GetDirectories(Environment.CurrentDirectory + "\\Clients\\" + patientId);
-            foreach (string file in files)
-                if (session.Equals(int.Parse(Regex.Replace(file.Substring(patientId.Length+1), "[^0-9]", ""))))
-                {
+            //string file = Environment.CurrentDirectory + "\\Clients\\[" + patientId + "] session#" + session + ".JSON";
+            string[] files = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients\\" + patientId);
 
+
+            foreach (string file in files)
+            {
+                string fileName = Path.GetFileName(file);
+                //idk man
+                if (session.Equals(int.Parse(Regex.Replace(fileName.Substring(patientId.Length + 1), "[^0-9]", ""))))
+                {
+                    Console.WriteLine(file);
+                    return file;
                 }
+            }
+            return null;
+
         }
 
         //get list of session
