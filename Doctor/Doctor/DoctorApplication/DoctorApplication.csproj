@@ -66,6 +66,9 @@
         <Compile Include="BeginWindow.xaml.cs">
           <DependentUpon>BeginWindow.xaml</DependentUpon>
         </Compile>
+        <Compile Include="ClientWindow.xaml.cs">
+          <DependentUpon>ClientWindow.xaml</DependentUpon>
+        </Compile>
         <Compile Include="commands\CommandBase.cs" />
         <Compile Include="commands\CreateCommand.cs" />
         <Compile Include="commands\LogInCommand.cs" />
@@ -78,10 +81,12 @@
         <Compile Include="stores\UtilStore.cs" />
         <Compile Include="viewmodels\AccountViewModel.cs" />
         <Compile Include="viewmodels\BeginViewModel.cs" />
+        <Compile Include="viewmodels\ClientViewModel.cs" />
         <Compile Include="viewmodels\MainViewModel.cs" />
         <Compile Include="viewmodels\SelectionViewModel.cs" />
         <Page Include="AccountWindow.xaml" />
         <Page Include="BeginWindow.xaml" />
+        <Page Include="ClientWindow.xaml" />
         <Page Include="MainWindow.xaml">
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>

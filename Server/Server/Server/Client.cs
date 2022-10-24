@@ -77,9 +77,24 @@ public class Client
     public void SelfDestruct()
     {
         Parent.Clients.Remove(this);
+        SendClientList();
         _stream.Close(400);
         _tcp.Close();
         Console.WriteLine(Parent.Clients.Count);
+    }
+
+    public void SendClientList()
+    {
+        List<string> clientUuids = new();
+        foreach (Client c in Parent.Clients)
+        {
+            if (!c.IsDoctor)
+            {
+                clientUuids.Add(c.Uuid);
+            }
+        }
+        
+        SendMessage(PacketSender.SendReplacedObject("clients", clientUuids, 1, "doctor\\returnclients.json")!);
     }
 
     private void InitCommands()
