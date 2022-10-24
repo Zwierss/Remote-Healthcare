@@ -182,8 +182,9 @@ namespace Server
 
             while (true)
             {
-                
+
                 //JObject dokterMessage = JObject.Parse(ReadJsonMessage(tcpClient));
+                int a = int.Parse(dokterMessage["session"].ToString());
 
                 if (dokterMessage["id"].ToString() == "doctor/clients")
                 {
@@ -195,6 +196,35 @@ namespace Server
                         patients.Add(new Patient() { patientId = client.ToString() });
                     }
                 }
+
+                else if (dokterMessage["id"].ToString() == "doctor/patientIds")
+                {
+                    GetJsonPatientIdsMessage patientIds = new GetJsonPatientIdsMessage
+                    {
+                        data = DataSaver.GetPatientIds()
+                    };
+                    WriteJsonMessage(tcpClient, JsonConvert.SerializeObject(patientId));
+                }
+
+                else if (dokterMessage["id"].ToString() == "doctor/sessionList")
+                {
+                    GetJsonSessionsMessage sessions = new GetJsonSessionsMessage
+                    {
+                        data = DataSaver.GetPatientSessions(dokterMessage["patientId"].ToString())
+                    };
+                    WriteJsonMessage(tcpClient, JsonConvert.SerializeObject(sessions));
+                }
+
+                else if (dokterMessage["id"].ToString() == "doctor/sessionData")
+                {
+                    GetJsonSessionDataMessage sessionData = new GetJsonSessionDataMessage
+                    {
+                        data = DataSaver.GetPatientSession(dokterMessage["patientId"].ToString(), int.Parse(dokterMessage["session"].ToString()))
+                    };
+                    WriteJsonMessage(tcpClient, JsonConvert.SerializeObject(sessionData));
+                }
+
+
                 else if (dokterMessage["id"].ToString() == "doctor/startSession")
                 {
                     string patientId = dokterMessage["client"].ToString();
