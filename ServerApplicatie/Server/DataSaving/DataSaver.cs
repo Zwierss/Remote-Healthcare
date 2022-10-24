@@ -7,6 +7,9 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
+using System.Linq;
+using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace Server.DataSaving
 {
@@ -59,7 +62,22 @@ namespace Server.DataSaving
             File.WriteAllText(path, sessionData.ToString());
         }
 
-        
+
+        //get list of session
+        public static List<Tuple<int, string>> GetPatientSessions(int patientid)
+        {
+            var sessions = new List<Tuple<int, string>>();
+            string[] files = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients\\" + patientid);
+            foreach (string file in files)
+                if(file.Contains("session#"))
+                {
+                    string fileName = file.ToString();
+                    int sessionCount = int.Parse(Regex.Replace(fileName, "[^0-9]", ""));
+                    sessions.Add(new Tuple<int, string>(sessionCount, ""));
+                }
+           
+            return sessions;
+        }
 
         //get patientids
         public static string[] GetPatientIds()
