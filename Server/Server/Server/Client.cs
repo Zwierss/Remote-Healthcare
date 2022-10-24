@@ -52,32 +52,25 @@ public class Client
         {
             int rc = _stream.EndRead(ar);
             _totalBuffer = Concat(_totalBuffer, _buffer, rc);
+            
+            while (_totalBuffer.Length >= 4)
+            {
+                JObject data = GetDecryptedMessage(_totalBuffer);
+                Console.WriteLine(data);
+                _totalBuffer = Array.Empty<byte>();
+
+                if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
+                    _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
+
+                break;
+            }
+
+            
+            _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         }
         catch(Exception)
         {
             Console.WriteLine("Can no longer read from this client");
-            SelfDestruct();
-            return;
-        }
-
-        while (_totalBuffer.Length >= 4)
-        {
-            JObject data = GetDecryptedMessage(_totalBuffer);
-            Console.WriteLine(data);
-            _totalBuffer = Array.Empty<byte>();
-
-            if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
-                _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
-
-            break;
-        }
-
-        try
-        {
-            _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
-        }
-        catch (Exception)
-        {
             SelfDestruct();
         }
     }
@@ -86,6 +79,7 @@ public class Client
     {
         await SendClientList();
         Parent.Clients.Remove(this);
+        Parent.OnlineClients.Remove(this);
         _stream.Close(400);
         _tcp.Close();
     }
@@ -118,15 +112,19 @@ public class Client
     private void InitCommands()
     {
         _commands.Add("server/client-enter", new NewClient());
-        _commands.Add("doctor/senddata", new ReceivedData());
+        _commands.Add("doctor/senddata", new Switch());
         _commands.Add("server/getclients", new GetClient());
-        _commands.Add("client/startsession", new StartSession());
-        _commands.Add("client/stopsession", new StopSession());
-        _commands.Add("client/emergencystop", new EmergencyStop());
-        _commands.Add("client/doctormessage", new DoctorMessage());
-        _commands.Add("client/setresistance", new ChangeResistance());
+        _commands.Add("client/startsession", new Switch());
+        _commands.Add("client/stopsession", new Switch());
+        _commands.Add("client/emergencystop", new Switch());
+        _commands.Add("client/doctormessage", new Switch());
+        _commands.Add("client/setresistance", new Switch());
         _commands.Add("server/disconnect", new Disconnect());
         _commands.Add("server/create-account", new CreateAccount());
+        _commands.Add("server/ready", new ClientReady());
+        _commands.Add("doctor/subscribed", new Switch());
+        _commands.Add("client/subscribe", new Switch());
+        _commands.Add("client/unsubscribe", new Switch());
     }
     
     private static byte[] Concat(byte[] b1, byte[] b2, int count)

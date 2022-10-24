@@ -1,7 +1,7 @@
-﻿using System;
+﻿using System.Windows.Forms;
 using DoctorApplication.viewmodels;
 
-namespace DoctorApplication.commands;
+namespace DoctorApplication.commands.SelectionView;
 
 public class SelectCommand : CommandBase
 {
@@ -16,6 +16,6 @@ public class SelectCommand : CommandBase
     {
         string client = _view.SelectedClient;
         if (string.IsNullOrEmpty(client)) return;
-        _view.NavigationStore.CurrentViewModel = new ClientViewModel(_view.NavigationStore, client);
+        _view.NavigationStore.Client.Subscribe(_view.NavigationStore.Client.Uuid,_view.SelectedClient);
     }
 }

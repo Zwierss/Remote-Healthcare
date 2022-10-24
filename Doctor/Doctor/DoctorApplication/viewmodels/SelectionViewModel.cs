@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using DoctorApplication.commands;
+using DoctorApplication.commands.SelectionView;
 using DoctorApplication.stores;
 using DoctorLogic;
 using MvvmHelpers;
@@ -50,6 +51,11 @@ public class SelectionViewModel : ObservableObject, IWindow
                 break;
             case Replace:
                 Clients.Clear();
+                break;
+            case Error:
+                break;
+            case Success:
+                NavigationStore.CurrentViewModel = new ClientViewModel(NavigationStore, SelectedClient);
                 break;
         }
     }

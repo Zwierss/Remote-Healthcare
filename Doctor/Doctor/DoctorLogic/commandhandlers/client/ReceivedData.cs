@@ -15,12 +15,24 @@ public class ReceivedData : ICommand
         int distance = packet["data"]!["data"]!["distance"]!.ToObject<int>();
         int time = packet["data"]!["data"]!["time"]!.ToObject<int>();
 
-        string[] args = new[]
+        string[] args;
+        if ((int)speedAvg == -1 || heartrateAvg == -1 || distance == -1 || time == -1)
         {
-            speed.ToString(CultureInfo.InvariantCulture), heartrate.ToString(),
-            speedAvg.ToString(CultureInfo.InvariantCulture), heartrateAvg.ToString(), distance.ToString(),
-            time.ToString()
-        };
+            args = new[]
+            {
+                speed.ToString(CultureInfo.InvariantCulture), heartrate.ToString(),
+                "--", "--", "--", "--"
+            };
+        }
+        else
+        {
+            args = new[]
+            {
+                speed.ToString(CultureInfo.InvariantCulture), heartrate.ToString(),
+                speedAvg.ToString(CultureInfo.InvariantCulture), heartrateAvg.ToString(), distance.ToString(),
+                time.ToString()
+            };
+        }
         parent.ViewModel.OnChangedValues(Data, args);
     }
 }

@@ -1,6 +1,6 @@
 using DoctorApplication.viewmodels;
 
-namespace DoctorApplication.commands;
+namespace DoctorApplication.commands.ClientView;
 
 public class SessionCommand : CommandBase
 {
@@ -17,18 +17,13 @@ public class SessionCommand : CommandBase
         if (!_view.IsOnline)
         {
             _view.ErrorMessage = "Deze client is niet meer online";
+            OverrideViews();
             return;
         }
 
         if (_view.SessionIsActive)
         {
-            _view.Speed = "--";
-            _view.Heartbeat = "--";
-            _view.SpeedAvg = "--";
-            _view.HeartbeatAvg = "--";
-            _view.Distance = "--";
-            _view.Time = "--";
-            _view.SessionBtn = "Start sessie";
+            OverrideViews();
             _view.NavigationStore.Client.StopSession(_view.UserId);
         }
         else
@@ -38,5 +33,16 @@ public class SessionCommand : CommandBase
         }
 
         _view.SessionIsActive = !_view.SessionIsActive;
+    }
+
+    public void OverrideViews()
+    {
+        _view.Speed = "--";
+        _view.Heartbeat = "--";
+        _view.SpeedAvg = "--";
+        _view.HeartbeatAvg = "--";
+        _view.Distance = "--";
+        _view.Time = "--";
+        _view.SessionBtn = "Start sessie";
     }
 }

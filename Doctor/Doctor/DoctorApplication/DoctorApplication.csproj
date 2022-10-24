@@ -70,14 +70,15 @@
     <Compile Include="ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="commands\AccountView\CreateCommand.cs" />
+    <Compile Include="commands\BeginView\LogInCommand.cs" />
+    <Compile Include="commands\BeginView\MakeAccountCommand.cs" />
+    <Compile Include="commands\ClientView\EmergencyStopCommand.cs" />
+    <Compile Include="commands\ClientView\GoBackClientCommand.cs" />
+    <Compile Include="commands\ClientView\SendMesageCommand.cs" />
+    <Compile Include="commands\ClientView\SessionCommand.cs" />
     <Compile Include="commands\CommandBase.cs" />
-    <Compile Include="commands\CreateCommand.cs" />
-    <Compile Include="commands\EmergencyStopCommand.cs" />
-    <Compile Include="commands\LogInCommand.cs" />
-    <Compile Include="commands\MakeAccountCommand.cs" />
-    <Compile Include="commands\SelectCommand.cs" />
-    <Compile Include="commands\SendMesageCommand.cs" />
-    <Compile Include="commands\SessionCommand.cs" />
+    <Compile Include="commands\SelectionView\SelectCommand.cs" />
     <Compile Include="SelectionWindow.xaml.cs">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
     </Compile>
@@ -129,7 +130,6 @@
       <Name>DoctorLogic</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Resource Include="resources\offline.png" />
     <Resource Include="resources\online.png" />

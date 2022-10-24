@@ -2,9 +2,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Server.commandhandlers;
 
-public static class Switch
+public class Switch : ICommand
 {
-    public static void SendToClient(JObject packet, Client parent)
+    public void OnCommandReceived(JObject packet, Client parent)
     {
         string receiver = packet["data"]!["client"]!.ToObject<string>()!;
         foreach (Client c in parent.Parent.Clients)

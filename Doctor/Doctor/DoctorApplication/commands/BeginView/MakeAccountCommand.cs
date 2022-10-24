@@ -1,6 +1,6 @@
 ﻿using DoctorApplication.viewmodels;
 
-namespace DoctorApplication.commands;
+namespace DoctorApplication.commands.BeginView;
 
 public class MakeAccountCommand : CommandBase
 {

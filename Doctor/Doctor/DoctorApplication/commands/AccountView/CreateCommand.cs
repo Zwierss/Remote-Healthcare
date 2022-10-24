@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using System.Security;
 using DoctorApplication.stores;
 using DoctorApplication.viewmodels;
-using DoctorLogic;
-using MvvmHelpers;
 
-namespace DoctorApplication.commands;
+namespace DoctorApplication.commands.AccountView;
 
-public class LogInCommand : CommandBase
+public class CreateCommand : CommandBase
 {
-    
-    private readonly BeginViewModel _view;
 
-    public LogInCommand(BeginViewModel view)
+    private AccountViewModel _view;
+
+    public CreateCommand(AccountViewModel view)
     {
         _view = view;
     }
@@ -27,12 +23,12 @@ public class LogInCommand : CommandBase
         {
             password = UtilStore.SecureStringToString(_view.SecurePassword);
         }
-        catch(Exception)
+        catch (Exception)
         {
-            _view.ErrorMessage = "Voer alstublieft een (geldig) wachtwoord in";
+            _view.ErrorMessage = "Voer alstublieft een wachtwoord in";
             return;
         }
-        
+
         try
         {
             port = int.Parse(_view.Port);
@@ -43,6 +39,6 @@ public class LogInCommand : CommandBase
             return;
         }
 
-        _view.NavigationStore.Client.SetupConnection(_view.Username, password, _view.Ip, port);
+        _view.NavigationStore.Client.CreateAccount(_view.Username, password, _view.Ip, port);
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using DoctorApplication.commands;
+using DoctorApplication.commands.BeginView;
 using DoctorApplication.stores;
 using DoctorLogic;
 using MvvmHelpers;

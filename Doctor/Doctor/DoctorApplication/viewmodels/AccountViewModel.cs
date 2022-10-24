@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System.Security;
 using DoctorApplication.commands;
+using DoctorApplication.commands.AccountView;
 using DoctorApplication.stores;
 using DoctorLogic;
 using MvvmHelpers;

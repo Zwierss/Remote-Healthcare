@@ -1,6 +1,6 @@
 using DoctorApplication.viewmodels;
 
-namespace DoctorApplication.commands;
+namespace DoctorApplication.commands.ClientView;
 
 public class EmergencyStopCommand : CommandBase
 {

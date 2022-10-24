@@ -12,7 +12,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="682,51,0,0" TextWrapping="Wrap" Text="{Binding OnlineStr}" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
         <Button Command="{Binding SessionC}" Content="{Binding SessionBtn}" HorizontalAlignment="Left" Margin="10,318,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
         <Button Command="{Binding EmergencyStop}" Content="Noodstop" HorizontalAlignment="Left" Margin="158,318,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
-        <Button Content="Ga terug" HorizontalAlignment="Left" Margin="299,318,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
+        <Button Command="{Binding GoBack}" Content="Ga terug" HorizontalAlignment="Left" Margin="299,318,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
         <TextBox x:Name="bericht" HorizontalAlignment="Left" Margin="451,285,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="215" Height="28" Text="{Binding DoctorMsg}"/>
         <Button Command="{Binding SendMessage}" Content="Stuur bericht" HorizontalAlignment="Left" Margin="451,318,0,0" VerticalAlignment="Top" Height="40" Width="215"/>
         <Label Content="Snelheid (km/h):" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top"/>

@@ -154,7 +154,19 @@ public class DoctorClient
 
     public void GetClients()
     {
-        SendData(PacketSender.GetJson("server\\getclients.json"));
+        SendData(GetJson("server\\getclients.json"));
+    }
+
+    public void Subscribe(string doctor, string client)
+    {
+        SendData(SendReplacedObject("client", client, 1, SendReplacedObject(
+            "doctor", doctor, 1, "client\\subscribe.json"
+        ))!);
+    }
+
+    public void Unsubscribe(string client)
+    {
+        SendData(SendReplacedObject("client", client, 1, "client\\unsubscribe.json")!);
     }
 
     private void InitCommands()
@@ -165,5 +177,6 @@ public class DoctorClient
         _commands.Add("doctor/return-clients", new ReturnClients());
         _commands.Add("doctor/return-client", new ReturnClient());
         _commands.Add("doctor/senddata", new ReceivedData());
+        _commands.Add("doctor/subscribed", new Subscribed());
     }
 }

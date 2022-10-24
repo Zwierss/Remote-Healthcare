@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using DoctorApplication.commands;
+using DoctorApplication.commands.ClientView;
 using DoctorApplication.stores;
 using DoctorLogic;
 using MvvmHelpers;
@@ -131,6 +132,7 @@ public class ClientViewModel : ObservableObject, IWindow
     public ICommand EmergencyStop { get; }
     public ICommand SessionC { get; }
     public ICommand SendMessage { get; }
+    public ICommand GoBack { get; }
 
     public ClientViewModel(NavigationStore navigationStore, string userId)
     {
@@ -141,6 +143,7 @@ public class ClientViewModel : ObservableObject, IWindow
         EmergencyStop = new EmergencyStopCommand(this);
         SessionC = new SessionCommand(this);
         SendMessage = new SendMesageCommand(this);
+        GoBack = new GoBackClientCommand(this);
         SessionIsActive = false;
     }
 
@@ -175,6 +178,7 @@ public class ClientViewModel : ObservableObject, IWindow
                     IsOnline = false;
                     OnlineSrc = "resources/offline.png";
                     OnlineStr = "Offline";
+                    SessionC.Execute(this);
                 }
 
                 break;

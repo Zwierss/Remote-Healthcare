@@ -28,6 +28,7 @@ public class Client : IHardwareCallback
     public bool ConnectedToServer { get; set; }
     public IClientCallback Callback { get; set; }
     public string Doctor { get; set; }
+    public bool IsSubscribed { get; set; }
     public List<double> CollectedSpeeds { get; }
     public List<int> CollectedRates { get; }
 
@@ -66,6 +67,7 @@ public class Client : IHardwareCallback
         _prevDistance = 0;
         CollectedSpeeds = new List<double>();
         CollectedRates = new List<int>();
+        IsSubscribed = false;
     }
 
     public async void SetupConnection(string username, string password, string hostname, int port, string bikeNr, bool sim)
@@ -126,6 +128,7 @@ public class Client : IHardwareCallback
 
         Console.WriteLine("done with vr");
         SetupHardware(this, _bikeNr, _sim);
+        SendData(SendReplacedObject("uuid", Username, 1, "application\\server\\clientready.json")!);
     }
 
     public void SelfDestruct()
@@ -138,44 +141,52 @@ public class Client : IHardwareCallback
     {
         if(!ConnectedToServer) return;
         if (!_vr.IsSet) return;
+        double speedAvg = -1;
+        int heartrateAvg = -1;
+        int time = -1;
+        int distance = -1;
         
         double speed = Math.Round((values[8] + values[9] * 255) * 0.001 * 3.6, 1, MidpointRounding.AwayFromZero);
         _vr.UpdateBikeSpeed(speed);
 
-        if (!SessionIsActive)
+        if (!IsSubscribed) return;
+
+        if (SessionIsActive)
+        {
+            CollectedSpeeds.Add(speed);
+            foreach (double s in CollectedSpeeds)
+            {
+                speedAvg += s;
+            }
+            speedAvg = Math.Round(speedAvg / CollectedSpeeds.Count, 1, MidpointRounding.AwayFromZero);
+        
+            CollectedRates.Add(_lastHeartrateData);
+            foreach (int s in CollectedRates)
+            {
+                heartrateAvg += s;
+            }
+            heartrateAvg /= CollectedRates.Count;
+
+            distance = values[7];
+            if (PrevDistance > distance)
+            {
+                _distanceLoopCounter++;
+            }
+            PrevDistance = distance;
+            distance = distance + 255 * _distanceLoopCounter - _distanceCorrection;
+
+            time = Time;
+        }
+        else
         {
             _distanceCorrection = values[7];
-            return;
         }
-        
-        CollectedSpeeds.Add(speed);
-        double speedAvg = 0;
-        foreach (double s in CollectedSpeeds)
-        {
-            speedAvg += s;
-        }
-        speedAvg = Math.Round(speedAvg / CollectedSpeeds.Count, 1, MidpointRounding.AwayFromZero);
-        
-        CollectedRates.Add(_lastHeartrateData);
-        int heartrateAvg = 0;
-        foreach (int s in CollectedRates)
-        {
-            heartrateAvg += s;
-        }
-        heartrateAvg /= CollectedRates.Count;
 
-
-        if (PrevDistance > values[7])
-        {
-            _distanceLoopCounter++;
-        }
-        PrevDistance = values[7];
-        
         JObject o = SendReplacedObject("client", Doctor, 1, SendReplacedObject(
             "speed", speed, 2, SendReplacedObject(
                 "heartrate", _lastHeartrateData, 2, SendReplacedObject(
-                    "distance", values[7] + 255*_distanceLoopCounter - _distanceCorrection, 2, SendReplacedObject(
-                        "time", Time, 2, SendReplacedObject(
+                    "distance", distance, 2, SendReplacedObject(
+                        "time", time, 2, SendReplacedObject(
                             "uuid", Username, 1, SendReplacedObject(
                                 "speedavg", speedAvg, 2, SendReplacedObject(
                                     "avgheartrate", heartrateAvg, 2, "application\\doctor\\senddata.json"
@@ -186,7 +197,6 @@ public class Client : IHardwareCallback
                 )
             )
         ))!;
-        
         SendData(o);
     }
 
@@ -196,9 +206,6 @@ public class Client : IHardwareCallback
         if (!_vr.IsSet) return;
         
         _vr.UpdatePanel(values[1]);
-        
-        if (!SessionIsActive) return;
-
         _lastHeartrateData = values[1];
     }
 
@@ -214,8 +221,18 @@ public class Client : IHardwareCallback
         _vr.Stop();
         SessionIsActive = false;
         ConnectedToServer = false;
+        IsSubscribed = false;
         SendData(SendReplacedObject("client", Username, 1, "application\\server\\disconnect.json")!);
         _isActive = false;
+    }
+
+    public void Subscribed(string doctor, string client, int status)
+    {
+        SendData(SendReplacedObject("client", doctor, 1, SendReplacedObject(
+            "uuid", client, 1, SendReplacedObject(
+                "status", status, 1, "application\\doctor\\subscribed.json"
+            )
+        ))!);
     }
 
     public void SendDoctorMessage(string message)
@@ -232,7 +249,6 @@ public class Client : IHardwareCallback
         }
         catch(IOException)
         {
-            Console.WriteLine("Can no longer read from this server");
             Stop();
             return;
         }
@@ -283,5 +299,7 @@ public class Client : IHardwareCallback
         _commands.Add("client/doctormessage", new DoctorMessage());
         _commands.Add("client/setresistance", new SetResistance());
         _commands.Add("client/account-created", new AccountCreated());
+        _commands.Add("client/subscribe", new DoctorSubscribe());
+        _commands.Add("client/unsubscribe", new DoctorUnsubscribe());
     }
 }
