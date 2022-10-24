@@ -46,7 +46,8 @@ public class VRClient
     private readonly Camera _camera;
     private readonly Tree _tree;
     private readonly Panel _panel;
-
+    private readonly House _house;
+    
     public VRClient()
     {
         _commands = new Dictionary<string, ICommand>();
@@ -56,8 +57,9 @@ public class VRClient
         _map = new HeightMap(this);
         _route = new Route(this);
         _bike = new Bike(this);
-        _camera = new Camera(this);
+        //_camera = new Camera(this);
         _tree = new Tree(this);
+        _house = new House(this);
         _panel = new Panel(this);
         Heights = new float[200];
         IsSet = false;
@@ -162,6 +164,7 @@ public class VRClient
         _camera.SetView();
         _panel.AddPanel();
         _tree.PlaceTrees();
+        _house.PlaceHouses();
         IsSet = true;
         //new Thread(_skybox.Update).Start();
     }

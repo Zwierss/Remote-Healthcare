@@ -28,7 +28,7 @@ public class Panel
                 },
                 panel = new
                 {
-                    size = new[]{1,1},
+                    size = new[]{0.5,0.5},
                     resolution = new[]{512,512},
                     castShadow = false
                 }
