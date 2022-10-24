@@ -107,6 +107,11 @@ public class ClientViewModel : ObservableObject, IWindow
         NavigationStore.Client.ViewModel = this;
     }
 
+    public void OnChangedResistance(int resistance)
+    {
+        Console.WriteLine(resistance);
+    }
+
     public void OnChangedValues(State state, string value = "")
     {
         

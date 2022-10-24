@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <TextBlock Text="{Binding UserId}" HorizontalAlignment="Left" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+        <TextBlock Text="{Binding UserId}" HorizontalAlignment="Left" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
         <Image HorizontalAlignment="Left" Height="28" Margin="730,46,0,0" VerticalAlignment="Top" Width="36" Source="{Binding OnlineSrc}"/>
         <TextBlock HorizontalAlignment="Left" Margin="682,51,0,0" TextWrapping="Wrap" Text="{Binding OnlineStr}" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
         <Button Content="{Binding SessionBtn}" HorizontalAlignment="Left" Margin="10,318,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
@@ -19,12 +19,14 @@
         <Label Content="Hartslag (bpm):" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
         <Label Content="Afstand afgelegd (km/h):" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top"/>
         <Label Content="Tijd:" HorizontalAlignment="Left" Margin="10,207,0,0" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,157,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,185,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,212,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,92,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,123,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,157,0,0" TextWrapping="Wrap" Text="{Binding Speed}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,185,0,0" TextWrapping="Wrap" Text="{Binding Heartbeat}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,212,0,0" TextWrapping="Wrap" Text="{Binding SpeedAvg}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,92,0,0" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,123,0,0" TextWrapping="Wrap" Text="{Binding Time}" VerticalAlignment="Top"/>
         <Label Content="Snelheid gem. (km/h):" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top"/>
+        <Slider HorizontalAlignment="Left" Margin="451,245,0,0" VerticalAlignment="Top" Width="215" Maximum="300" ValueChanged="Slider_ValueChanged"/>
+        <TextBlock HorizontalAlignment="Left" Margin="451,0,0,0" TextWrapping="Wrap" Text="Pas weerstand aan" VerticalAlignment="Center"/>
 
     </Grid>
 </UserControl>

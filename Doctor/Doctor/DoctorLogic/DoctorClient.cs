@@ -120,6 +120,11 @@ public class DoctorClient
         SendData(SendReplacedObject("client", Uuid, 1, "server\\disconnect.json")!);
     }
 
+    public void EmergencyStop(string client)
+    {
+        SendData(SendReplacedObject("client", client, 1, "client\\emergencystop.json")!);
+    }
+
     public void SendData(JObject message)
     {
         byte[] encryptedMessage = GetEncryptedMessage(message);
