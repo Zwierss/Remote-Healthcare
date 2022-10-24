@@ -38,6 +38,14 @@ public class Client
         _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
     }
 
+    public async Task<Task> SendMessageAsync(JObject packet)
+    {
+        Console.WriteLine(packet);
+        byte[] encryptedMessage = GetEncryptedMessage(packet);
+        await _stream.WriteAsync(encryptedMessage, 0, encryptedMessage.Length);
+        return Task.CompletedTask;
+    }
+
     private void OnRead(IAsyncResult ar)
     {
         try
@@ -74,27 +82,37 @@ public class Client
         }
     }
 
-    public void SelfDestruct()
+    public async void SelfDestruct()
     {
+        await SendClientList();
         Parent.Clients.Remove(this);
-        SendClientList();
         _stream.Close(400);
         _tcp.Close();
-        Console.WriteLine(Parent.Clients.Count);
     }
 
-    public void SendClientList()
+    public async Task<Task> SendClientList()
     {
+        if (IsDoctor) return Task.CompletedTask;
         List<string> clientUuids = new();
+        List<Client> doctors = new();
         foreach (Client c in Parent.Clients)
         {
             if (!c.IsDoctor)
             {
                 clientUuids.Add(c.Uuid);
             }
+            else
+            {
+                doctors.Add(c);
+            }
+        }
+
+        foreach (Client c in doctors)
+        {
+            await c.SendMessageAsync(PacketSender.SendReplacedObject("clients", clientUuids, 1, "doctor\\returnclients.json")!);    
         }
         
-        SendMessage(PacketSender.SendReplacedObject("clients", clientUuids, 1, "doctor\\returnclients.json")!);
+        return Task.CompletedTask;
     }
 
     private void InitCommands()

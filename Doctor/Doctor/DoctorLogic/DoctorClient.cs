@@ -79,10 +79,10 @@ public class DoctorClient
     {
         try
         {
-            int rc = _stream!.EndRead(ar);
+            int rc = _stream.EndRead(ar);
             _totalBuffer = Concat(_totalBuffer, _buffer, rc);
         }
-        catch(IOException)
+        catch(Exception)
         {
             return;
         }
@@ -105,6 +105,7 @@ public class DoctorClient
         catch (Exception)
         {
             Console.WriteLine("Stream closed");
+            SelfDestruct();
         }
     }
 
@@ -112,6 +113,11 @@ public class DoctorClient
     {
         _stream.Close(400);
         _tcp.Close();
+    }
+
+    public void Stop()
+    {
+        SendData(SendReplacedObject("client", Uuid, 1, "server\\disconnect.json")!);
     }
 
     public void SendData(JObject message)

@@ -57,7 +57,7 @@ public class VRClient
         _map = new HeightMap(this);
         _route = new Route(this);
         _bike = new Bike(this);
-        //_camera = new Camera(this);
+        _camera = new Camera(this);
         _tree = new Tree(this);
         _house = new House(this);
         _panel = new Panel(this);
@@ -129,21 +129,28 @@ public class VRClient
         
         while (_totalBuffer.Length >= 4)
         {
-            int packetSize = BitConverter.ToInt32(_totalBuffer, 0);
-            if (_totalBuffer.Length >= packetSize + 4)
+            try
             {
-                string data = Encoding.UTF8.GetString(_totalBuffer, 4, packetSize);
-                JObject jData = JObject.Parse(data);
+                int packetSize = BitConverter.ToInt32(_totalBuffer, 0);
+                if (_totalBuffer.Length >= packetSize + 4)
+                {
+                    string data = Encoding.UTF8.GetString(_totalBuffer, 4, packetSize);
+                    JObject jData = JObject.Parse(data);
                 
-                if(_commands.ContainsKey(jData["id"]!.ToObject<string>()!))
-                    _commands[jData["id"]!.ToObject<string>()!].OnCommandReceived(jData, this);
+                    if(_commands.ContainsKey(jData["id"]!.ToObject<string>()!))
+                        _commands[jData["id"]!.ToObject<string>()!].OnCommandReceived(jData, this);
                 
-                var newBuffer = new byte[_totalBuffer.Length - packetSize - 4];
-                Array.Copy(_totalBuffer, packetSize + 4, newBuffer, 0, newBuffer.Length);
-                _totalBuffer = newBuffer;
+                    var newBuffer = new byte[_totalBuffer.Length - packetSize - 4];
+                    Array.Copy(_totalBuffer, packetSize + 4, newBuffer, 0, newBuffer.Length);
+                    _totalBuffer = newBuffer;
+                }
+                else
+                    break;
             }
-            else
+            catch (Exception)
+            {
                 break;
+            }
         }
 
         try

@@ -16,6 +16,6 @@
             </ListView.ItemContainerStyle>
         </ListView>
         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Deze clienten zijn nu online" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
-        <Button Command="{Binding Select}" Content="Selecteer deze gebruiker" Margin="10,61,568,315" FontSize="14"/>
+        <Button Command="{Binding Selection}" Content="Selecteer deze gebruiker" Margin="10,61,568,315" FontSize="14"/>
     </Grid>
 </UserControl>

@@ -10,18 +10,26 @@ namespace DoctorApplication
     /// </summary>
     public partial class App
     {
+
+        private NavigationStore _navigationStore;
+        
         protected override void OnStartup(StartupEventArgs e)
         {
-            NavigationStore navigationStore = new(new DoctorClient());
+            _navigationStore = new(new DoctorClient());
 
-            navigationStore.CurrentViewModel = new BeginViewModel(navigationStore);
+            _navigationStore.CurrentViewModel = new BeginViewModel(_navigationStore);
             
             MainWindow = new MainWindow()
             {
-                DataContext = new MainViewModel(navigationStore)
+                DataContext = new MainViewModel(_navigationStore)
             };
             MainWindow.Show();
             base.OnStartup(e);
+        }
+
+        private void App_Exit(object sender, ExitEventArgs e)
+        {
+            _navigationStore.Client.Stop();   
         }
     }
 }

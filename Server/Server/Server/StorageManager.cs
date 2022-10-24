@@ -41,13 +41,20 @@ public static class StorageManager
         }
     }
 
-    public static bool CheckIfNewUsername(string username, string type)
+    public static bool CheckIfNewUsername(string username)
     {
-        string[][] accounts = GetStorageFiles("clients.json")[type]!.ToObject<string[][]>()!;
-        foreach (string[] account in accounts)
+        string[][] clients = GetStorageFiles("clients.json")["clients"]!.ToObject<string[][]>()!;
+        foreach (string[] account in clients)
         {
             if (account[0] == username) return false;
         }
+        
+        string[][] doctors = GetStorageFiles("clients.json")["doctors"]!.ToObject<string[][]>()!;
+        foreach (string[] account in doctors)
+        {
+            if (account[0] == username) return false;
+        }
+        
         return true;
     }
 
@@ -63,25 +70,11 @@ public static class StorageManager
         return false;
     }
 
-    public static bool CheckIfAlreadyOpen(string username, List<Client> clients, bool type)
+    public static bool CheckIfAlreadyOpen(string username, List<Client> clients)
     {
-        if (type)
+        foreach (Client c in clients)
         {
-            foreach (var c in clients)
-            {
-                if (!c.IsDoctor) continue;
-                if (c.Uuid != username) continue;
-                return false;
-            }
-        }
-        else
-        {
-            foreach (var c in clients)
-            {
-                if (c.IsDoctor) continue;
-                if (c.Uuid != username) continue;
-                return false;
-            }
+            if (c.Uuid == username) return false;
         }
 
         return true;

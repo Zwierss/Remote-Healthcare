@@ -7,7 +7,7 @@ public class House
 
     private readonly VRClient _parent;
 
-    private static readonly string Path = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("FietsDemo", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
+    private static readonly string Path = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("ClientGUI", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
 
     public House(VRClient parent)
     {

@@ -29,14 +29,14 @@ public class SelectionViewModel : ObservableObject, IWindow
         }
     }
 
-    public ICommand Select;
-    
+    public ICommand Selection { get; }
+
     public SelectionViewModel(NavigationStore navigationStore)
     {
         NavigationStore = navigationStore;
         NavigationStore.Client.ViewModel = this;
         NavigationStore.Client.GetClients();
-        Select = new SelectCommand(this);
+        Selection = new SelectCommand(this);
     }
 
     public void OnChangedValues(State state, string value = "")
@@ -46,6 +46,9 @@ public class SelectionViewModel : ObservableObject, IWindow
             case Store:
                 List<string> clients = new List<string>(Clients){value};
                 Clients = clients;
+                break;
+            case Replace:
+                Clients.Clear();
                 break;
         }
     }

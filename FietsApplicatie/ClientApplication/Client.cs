@@ -149,11 +149,11 @@ public class Client : IHardwareCallback
 
     public void Stop()
     {
-        SendData(SendReplacedObject("client", Username, 1, "application\\server\\disconnect.json")!);
         HardwareConnector.Stop();
         _vr.Stop();
         SessionIsActive = false;
         ConnectedToServer = false;
+        SendData(SendReplacedObject("client", Username, 1, "application\\server\\disconnect.json")!);
     }
 
     public void SendDoctorMessage(string message)

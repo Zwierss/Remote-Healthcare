@@ -10,6 +10,7 @@ namespace DoctorLogic
     {
         Success,
         Error,
-        Store
+        Store,
+        Replace
     }
 }

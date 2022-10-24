@@ -54,10 +54,12 @@ namespace FietsDemo
         {
             if (_sim)
             {
+                if(_simThread == null) return;
                 _simThread.Abort();
             }
             else
             {
+                if (_bike == null || _heart == null) return;
                 _bike.Disconnect();
                 _heart.Disconnect();
             }

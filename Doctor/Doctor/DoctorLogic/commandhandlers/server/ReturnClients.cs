@@ -8,6 +8,7 @@ public class ReturnClients : ICommand
     public void OnCommandReceived(JObject packet, DoctorClient parent)
     {
         string[] clients = packet["data"]!["clients"]!.ToObject<string[]>()!;
+        parent.ViewModel.OnChangedValues(Replace);
         foreach (string s in clients)
         {
             parent.ViewModel.OnChangedValues(Store, s);
