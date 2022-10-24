@@ -7,8 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <TextBlock HorizontalAlignment="Center" Margin="0,126,0,0" TextWrapping="Wrap" Text="Gelukt! De fiets is klaar voor gebuik" VerticalAlignment="Top" FontSize="16"/>
-        <Image Source="resources/checkmark.png" HorizontalAlignment="Left" Height="100" Margin="341,180,0,0" VerticalAlignment="Top" Width="100"/>
+        <TextBlock HorizontalAlignment="Center" Margin="0,126,0,0" TextWrapping="Wrap" Text="{Binding Message}" VerticalAlignment="Top" FontSize="16"/>
+        <Image Source="{Binding Image}" HorizontalAlignment="Left" Height="100" Margin="341,180,0,0" VerticalAlignment="Top" Width="100"/>
         <Button Content="Stop simulatie en log uit" HorizontalAlignment="Center" Margin="0,322,0,0" VerticalAlignment="Top" Height="27" Width="144" Command="{Binding Stop}"/>
     </Grid>
 </UserControl>

@@ -8,8 +8,8 @@
              d:DesignHeight="450" d:DesignWidth="800"
              xmlns:gif = "https://github.com/XamlAnimatedGif/XamlAnimatedGif">
     <Grid>
-        <Image x:Name="loadingscreen" gif:AnimationBehavior.SourceUri="/resources/load.gif" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" Margin="352,135,0,0"/>
-        <TextBlock HorizontalAlignment="Center" Margin="0,333,0,0" TextWrapping="Wrap" Text="Een ogenblik geduld, we laden alles in..." VerticalAlignment="Top" FontSize="16"/>
+        <Image x:Name="loadingscreen" gif:AnimationBehavior.SourceUri="{Binding Image}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" Margin="352,135,0,0"/>
+        <TextBlock HorizontalAlignment="Center" Margin="0,333,0,0" TextWrapping="Wrap" Text="{Binding Message}" VerticalAlignment="Top" FontSize="16"/>
 
     </Grid>
 </UserControl>
