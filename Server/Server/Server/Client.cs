@@ -124,7 +124,7 @@ public class Client
         _commands.Add("client/stopsession", new StopSession());
         _commands.Add("client/emergencystop", new EmergencyStop());
         _commands.Add("client/doctormessage", new DoctorMessage());
-        _commands.Add("client/changeresistance", new ChangeResistance());
+        _commands.Add("client/setresistance", new ChangeResistance());
         _commands.Add("server/disconnect", new Disconnect());
         _commands.Add("server/create-account", new CreateAccount());
     }

@@ -7,6 +7,7 @@ public class SetResistance : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {
+        Console.WriteLine("works");
         HardwareConnector.SetResistance(packet["data"]!["data"]!["resistance"]!.ToObject<byte>());
     }
 }

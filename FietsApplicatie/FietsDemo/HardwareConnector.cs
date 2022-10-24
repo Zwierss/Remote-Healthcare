@@ -68,6 +68,11 @@ namespace FietsDemo
 
         public static void SetResistance(byte resistance)
         {
+            if (_sim)
+            {
+                Console.WriteLine("did no set resistance because it is a simulation, but it should've been " + resistance);
+                return;
+            }
             _bike.SetResistance(resistance);
         }
         

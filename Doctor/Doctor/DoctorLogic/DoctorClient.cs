@@ -137,7 +137,14 @@ public class DoctorClient
         ))!);
     }
 
-    public void SendData(JObject message)
+    public void ChangeResistance(string client, int value)
+    {
+        SendData(SendReplacedObject("client", client, 1, SendReplacedObject(
+            "resistance", value, 2, "client\\changeresistance.json"
+        ))!);
+    }
+
+    private void SendData(JObject message)
     {
         byte[] encryptedMessage = GetEncryptedMessage(message);
         _stream.Write(encryptedMessage, 0, encryptedMessage.Length);

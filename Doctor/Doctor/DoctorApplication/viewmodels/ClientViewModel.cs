@@ -132,7 +132,7 @@ public class ClientViewModel : ObservableObject, IWindow
 
     public void OnChangedResistance(int resistance)
     {
-        
+        NavigationStore.Client.ChangeResistance(UserId, resistance);
     }
 
     public void OnChangedValues(State state, string value = "")
