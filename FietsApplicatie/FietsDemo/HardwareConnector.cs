@@ -64,6 +64,11 @@ namespace FietsDemo
             }
         }
 
+        public static void SetResistance(byte resistance)
+        {
+            _bike.SetResistance(resistance);
+        }
+        
         private static void RunSimulation()
         {
             while (true)

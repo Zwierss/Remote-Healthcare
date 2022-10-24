@@ -1,5 +1,5 @@
 {
-  "id": "changeresistance",
+  "id": "client/setresistance",
   "data": {
     "client": "uuid",
     "data" : {
