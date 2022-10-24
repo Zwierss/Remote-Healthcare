@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Newtonsoft.Json.Linq;
 using Server.DataSaving;
 
 namespace Server
@@ -16,11 +17,13 @@ namespace Server
 
         static void Main(string[] args)
         {
-            //DataSaver.GetPatientData();
+            //DataSaver.ClientExists(new Client("123").patientId);
+            List<Tuple<int, string>> test = DataSaver.GetPatientSessions("123");
+            test.ForEach(p => Console.WriteLine(p));
             Network network = new Network();
 
             Thread thread = new Thread(network.RunServer);
-            thread.Start();
+            //thread.Start();
         }
 
         /*

@@ -63,6 +63,10 @@ namespace Server
             this.tcpClient = null;
         }
 
+        public Client(TcpClient tcpClient, string patientid)
+        {
+            this.patientId = patientid;
+        }
         public void HandleConnection()
         {
             
@@ -286,7 +290,7 @@ namespace Server
             sw.Flush();
         }
 
-        private static JObject ReadMessage(TcpClient client)
+        public static JObject ReadMessage(TcpClient client)
         {
             StreamReader sr = new(client.GetStream(), Encoding.ASCII);
             byte[] incomingMessage = Array.Empty<byte>();

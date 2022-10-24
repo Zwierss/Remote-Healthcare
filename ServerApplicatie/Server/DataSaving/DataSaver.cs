@@ -49,32 +49,45 @@ namespace Server.DataSaving
             return false;
         }
 
-        public static void AddPatientFile(TcpClient client, List<JObject> sessionData)
+        public static void AddPatientFile(string patientId)
         {
-            JObject jObject = Client.ReadMessage(client);
-            String patientId = jObject["data"]["patientId"].ToString();
+            //JObject jObject = Client.ReadMessage(client);
+
 
             int amountOfFiles = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients\\" + patientId).Length;
             string path = Environment.CurrentDirectory + "\\Clients\\" + patientId + "\\[" + patientId + "] session#" + amountOfFiles +
                           ".JSON";
 
             File.Create(path).Close();
-            File.WriteAllText(path, sessionData.ToString());
+            File.WriteAllText(path, "data");
         }
 
+        //get session
+        public static void GetPatientSession(string patientId, int session)
+        {
+            string[] files = Directory.GetDirectories(Environment.CurrentDirectory + "\\Clients\\" + patientId);
+            foreach (string file in files)
+                if (session.Equals(int.Parse(Regex.Replace(file.Substring(patientId.Length+1), "[^0-9]", ""))))
+                {
+
+                }
+        }
 
         //get list of session
-        public static List<Tuple<int, string>> GetPatientSessions(int patientid)
+        public static List<Tuple<int, string>> GetPatientSessions(string patientId)
         {
+            Console.WriteLine("a");
             var sessions = new List<Tuple<int, string>>();
-            string[] files = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients\\" + patientid);
+            string[] files = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients\\" + patientId);
             foreach (string file in files)
-                if(file.Contains("session#"))
+            {
+                if (file.Contains("session#"))
                 {
-                    string fileName = file.ToString();
-                    int sessionCount = int.Parse(Regex.Replace(fileName, "[^0-9]", ""));
+                    string fileName = Path.GetFileName(file);
+                    int sessionCount = int.Parse(Regex.Replace(fileName.Substring(patientId.Length+1), "[^0-9]", ""));
                     sessions.Add(new Tuple<int, string>(sessionCount, ""));
                 }
+            }
            
             return sessions;
         }
@@ -83,10 +96,10 @@ namespace Server.DataSaving
         public static string[] GetPatientIds()
         {
             Console.WriteLine(Environment.CurrentDirectory);
-            string[] files = Directory.GetFiles(Environment.CurrentDirectory + "\\Clients");
-            Console.WriteLine(Directory.GetFiles(Environment.CurrentDirectory + "\\Clients"));
+            string[] files = Directory.GetDirectories(Environment.CurrentDirectory + "\\Clients");
             foreach (string file in files)
-                Console.WriteLine(Path.GetFileName(file));
+            Console.WriteLine(Path.GetFileName(file));
+            Console.WriteLine("done + \n");
             return files;
         }
     }
