@@ -128,6 +128,15 @@ public class DoctorClient
         SendData(SendReplacedObject("client", client, 1, "client\\stopsession.json")!);
     }
 
+    public void SendDoctorMessage(string client, string messge)
+    {
+        SendData(SendReplacedObject("client", client, 1, SendReplacedObject(
+            "sender", Uuid, 2, SendReplacedObject(
+                "message", messge, 2, "client\\doctormessage.json"
+            )
+        ))!);
+    }
+
     public void SendData(JObject message)
     {
         byte[] encryptedMessage = GetEncryptedMessage(message);

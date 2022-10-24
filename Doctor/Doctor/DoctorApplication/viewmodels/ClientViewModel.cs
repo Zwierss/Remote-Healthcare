@@ -117,6 +117,7 @@ public class ClientViewModel : ObservableObject, IWindow
 
     public ICommand EmergencyStop { get; }
     public ICommand SessionC { get; }
+    public ICommand SendMessage { get; }
 
     public ClientViewModel(NavigationStore navigationStore, string userId)
     {
@@ -125,12 +126,13 @@ public class ClientViewModel : ObservableObject, IWindow
         NavigationStore.Client.ViewModel = this;
         EmergencyStop = new EmergencyStopCommand(this);
         SessionC = new SessionCommand(this);
+        SendMessage = new SendMesageCommand(this);
         SessionIsActive = false;
     }
 
     public void OnChangedResistance(int resistance)
     {
-        Console.WriteLine(resistance);
+        
     }
 
     public void OnChangedValues(State state, string value = "")
