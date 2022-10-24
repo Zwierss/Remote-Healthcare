@@ -1,30 +1,30 @@
 ﻿using Newtonsoft.Json.Linq;
+using VirtualReality.commands.route;
 using VirtualReality.commands.scene;
 using VirtualReality.commands.scene.node;
 using VirtualReality.commands.scene.panel;
+using VirtualReality.commands.scene.road;
+using VirtualReality.commands.scene.skybox;
 using VirtualReality.commands.scene.terrain;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.tunnel;
 
 public class TunnelCommand : ICommand
 {
 
-    private  Dictionary<string, TunnelCallback> _commands;
+    private readonly Dictionary<string, ITunnelCallback> _commands;
 
     public TunnelCommand()
     {
-        _commands = new();
+        _commands = new Dictionary<string, ITunnelCallback>();
         InitCommands();
     }
 
     public void OnCommandReceived(JObject ob, VRClient vrClient)
     {
-        foreach (string key in _commands.Keys)
+        foreach (var key in _commands.Keys.Where(key => key == ob["data"]!["data"]!["id"]!.ToObject<string>()))
         {
-            if (key == ob["data"]["data"]["id"].ToObject<string>())
-            {
-                _commands[key].OnCommandReceived((JObject)ob["data"]["data"], vrClient);
-            }
+            _commands[key].OnCommandReceived(((JObject)ob["data"]!["data"]!)!, vrClient);
         }
     }
 

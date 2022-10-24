@@ -9,7 +9,7 @@ public class HeightMap
 {
 
     private readonly VRClient _parent;
-    private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("FietsDemo", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
+    private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("ClientGUI", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
 
     public HeightMap(VRClient parent)
     {
@@ -25,10 +25,7 @@ public class HeightMap
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("id", _parent.TerrainId!, 1, "scene\\node\\deletenodescene.json")!, _parent.TunnelId!)!);
         Thread.Sleep(2000);
 
-        Console.WriteLine(Path + "heightmap-0.png");
-        
         using Bitmap heightmap = new Bitmap(Path + "heightmap-0.png");
-        //_parent.SendData(PacketSender.GetJsonThroughTunnel("pause.json", _parent._tunnelID));
 
         float[,] heightBits = new float[heightmap.Width, heightmap.Height];
 
@@ -39,8 +36,7 @@ public class HeightMap
                 heightBits[x, y] = (heightmap.GetPixel(x, y).R / 256.0f) * 12.0f;
             }
         }
-    
-        Console.WriteLine(heightBits.Length);
+        
         _parent.SendTunnel("scene/terrain/add", new
         {
             size = new[]{heightmap.Width, heightmap.Height},
@@ -71,6 +67,6 @@ public class HeightMap
                     "normal", Path + "grass_green.png", 1, "scene\\node\\addlayernodescene.json"
                 )!
             )!
-        )!, _parent.TunnelId)!);
+        )!, _parent.TunnelId!)!);
     }
 }

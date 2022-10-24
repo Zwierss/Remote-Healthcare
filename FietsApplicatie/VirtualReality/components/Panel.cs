@@ -14,11 +14,6 @@ public class Panel
 
     public void AddPanel()
     {
-        _parent.SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject(
-            "name", "Head", 1, "scene\\node\\findnodescene.json"
-        ), _parent.TunnelId!)!);
-        Thread.Sleep(1000);
-        
         _parent.SendTunnel("scene/node/add", new
         {
             name = "Panel",
@@ -27,7 +22,7 @@ public class Panel
             {
                 transform = new
                 {
-                   position = new[]{0.85,0.35,2},
+                   position = new[]{0,0, -2},
                    scale = 1,
                    rotation = new[]{0, 0, 0}
                 },
@@ -35,6 +30,7 @@ public class Panel
                 {
                     size = new[]{0.5,0.5},
                     resolution = new[]{512,512},
+                    castShadow = false
                 }
             }
         });
@@ -42,24 +38,42 @@ public class Panel
         Thread.Sleep(1000);
     }
 
-    public void UpdatePanel(double speed, double heartRate)
+    public void UpdatePanel(double speed, double heartRate, string message)
     {
+        string tunnelId = _parent.TunnelId!;
+        
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, string>(
             "id", _parent.PanelId!, 1, "scene\\panel\\clearpanelscene.json"
-        )!,_parent.TunnelId!)!);
+        )!,tunnelId)!);
         
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,JObject>(
             "id", _parent.PanelId!, 1, PacketSender.SendReplacedObject<string,string>(
-                "text" ,speed + " km/h" + "\n" + heartRate + " bpm", 1, "scene\\panel\\drawtextpanelscene.json"
+                "text" ,speed + " km/h", 1, "scene\\panel\\drawtextpanelscene.json"
             )!
-        )!,_parent.TunnelId!)!);
-
-       //   _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, string>(
-       //     "id", _parent.PanelId!, 1, "scene\\panel\\setclearcolorpanelscene.json"
-       // )!,_parent.TunnelId!)!);    
+        )!,tunnelId)!);
+        
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,JObject>(
+            "id", _parent.PanelId!, 1, PacketSender.SendReplacedObject<string,JObject>(
+                "text" ,heartRate + " bpm", 1, PacketSender.SendReplacedObject<int[],string>(
+                    "position", new[]{50,70}, 1, "scene\\panel\\drawtextpanelscene.json"
+                )!
+            )!
+        )!,tunnelId)!);
+        
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,JObject>(
+            "id", _parent.PanelId!, 1, PacketSender.SendReplacedObject<string,JObject>(
+                "text" ,message, 1, PacketSender.SendReplacedObject<int[],string>(
+                    "position", new[]{50,100}, 1, "scene\\panel\\drawtextpanelscene.json"
+                )!
+            )!
+        )!,tunnelId)!);
+        
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>(
+            "id", _parent.PanelId!, 1, "scene\\panel\\setclearcolorpanelscene.json"
+        )!, tunnelId)!);
         
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>(
             "id", _parent.PanelId!, 1, "scene\\panel\\swappanelscene.json"
-        )!, _parent.TunnelId!)!);
+        )!, tunnelId)!);
     }
 }

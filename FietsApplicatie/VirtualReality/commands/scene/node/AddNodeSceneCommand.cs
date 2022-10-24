@@ -1,8 +1,9 @@
 using Newtonsoft.Json.Linq;
+using VirtualReality.commands.tunnel;
 
 namespace VirtualReality.commands.scene.node;
 
-public class AddNodeSceneCommand : TunnelCallback
+public class AddNodeSceneCommand : ITunnelCallback
 {
 	public void OnCommandReceived(JObject o, VRClient parent)
 	{

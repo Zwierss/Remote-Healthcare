@@ -1,0 +1,8 @@
+{
+  "id": "server/client-enter",
+  "data": {
+    "uuid" : "uuid",
+    "pass" : "",
+    "doctor": true
+  }
+}

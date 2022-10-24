@@ -3,7 +3,7 @@
   "data": {
     "route": "routeid",
     "node":  "nodeid" ,
-    "speed": 1.0,
+    "speed": 0.0,
     "offset": 1.0,
     "rotate": "XZ",
     "smoothing": 1.0,

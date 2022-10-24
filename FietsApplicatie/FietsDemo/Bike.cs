@@ -10,6 +10,7 @@ public class Bike
 {
 
     private readonly BLE _ble;
+    public string Serial { get; set; }
 
     public Bike()
     {
@@ -20,18 +21,31 @@ public class Bike
     {
         Thread.Sleep(1000);
         
-        int errorCode = await _ble.OpenDevice("Tacx Flux 01140");
+        int errorCode = await _ble.OpenDevice("Tacx Flux " + Serial);
         if (errorCode == 1) return false;
         
         errorCode = await _ble.SetService("6e40fec1-b5a3-f393-e0a9-e50e24dcca9e");
         if (errorCode == 1) return false;
 
-        _ble.SubscriptionValueChanged += Controller.BleBike_SubscriptionValueChanged;
+        _ble.SubscriptionValueChanged += HardwareConnector.BleBike_SubscriptionValueChanged;
         errorCode = await _ble.SubscribeToCharacteristic("6e40fec2-b5a3-f393-e0a9-e50e24dcca9e");
         if (errorCode == 1) return false;
         
         Console.WriteLine("Connected");
         
         return true;
+    }
+
+    public void Disconnect()
+    {
+        _ble.CloseDevice();
+        _ble.Dispose();
+    }
+    
+    public async void SetResistance(byte resistance)
+    {
+        
+        byte[] message = { 0xA4, 0x09, 0x4E, 0x05, 0x30, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, resistance, };
+        int errorCode = await _ble.WriteCharacteristic("6e40fec3-b5a3-f393-e0a9-e50e24dcca9e", message);
     }
 }

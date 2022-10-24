@@ -12,9 +12,10 @@ public class Camera
         _parent = parent;
     }
 
-    public void SetCamera()
+    public void SetView()
     {
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("name", "Camera", 1, "scene\\node\\findnodescene.json")!, _parent.TunnelId!)!);
+        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("name", "Head", 1, "scene\\node\\findnodescene.json")!, _parent.TunnelId!)!);
         Thread.Sleep(2000);
 
         _parent.SendData(PacketSender.GetJsonThroughTunnel(PacketSender.SendReplacedObject<string,JObject>(

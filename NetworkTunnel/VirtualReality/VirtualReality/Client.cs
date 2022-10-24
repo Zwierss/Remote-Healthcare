@@ -6,6 +6,8 @@ using System.Text.Json.Nodes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtualReality.commands;
+using System.IO;
+using VirtualReality.commands;
 using VirtualReality.components;
 
 namespace VirtualReality;
@@ -32,12 +34,7 @@ public class Client
 
     private bool _tunnelCreated;
 
-    private readonly Skybox _skybox;
-    private readonly HeightMap _map;
-    private readonly Route _route;
-    private readonly Bike _bike;
-    private readonly Camera _camera;
-    private readonly Tree _tree;
+    private Skybox _skybox;
 
     public Client()
     {
@@ -62,9 +59,10 @@ public class Client
             _client = new TcpClient();
             await _client.ConnectAsync(Hostname, Port);
             _stream = _client.GetStream();
-            SendData(PacketSender.GetJson("sessionlist.json"));
+            SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/sessionlist.json"))));
+
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }
@@ -73,9 +71,8 @@ public class Client
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
-    public void SendData(JObject o)
+    public async void SendData(string message)
     {
-        string message = o.ToString();
         Console.WriteLine("Sending message " + message);
         byte[] requestLength = BitConverter.GetBytes(message.Length);
         byte[] request = Encoding.ASCII.GetBytes(message);
@@ -92,11 +89,27 @@ public class Client
         _stream.WriteAsync(d, 0, d.Length).Wait();
     }
 
+    public void SendData(JObject o)
+    {
+        SendData(o.ToString());
+    }
+
     public void SetTunnel(string id)
     {
         Console.WriteLine("Setting Tunnel ID");
         TunnelId = id;
         _tunnelCreated = true;
+    }
+
+    public void Sendtime(double time)
+    {
+
+        var jObject = JObject.Parse(File.ReadAllText("C:\\Users\\karsv\\OneDrive\\Documenten\\GitHub\\Remote-Healthcare\\NetworkTunnel\\VirtualReality\\VirtualReality\\JSON\\scene\\skybox\\set.time.json"));
+        jObject["data"]["dest"] = _tunnelID;
+        jObject["data"]["data"]["data"]["time"] = time;
+
+        var json = JsonConvert.SerializeObject(jObject);
+        SendData(json);
     }
 
     public void CreateTunnel(string id)
@@ -110,6 +123,7 @@ public class Client
 
     private void OnRead(IAsyncResult ar)
     {
+        Console.WriteLine("Method Checked");
         try
         {
             int rc = _stream.EndRead(ar);
@@ -121,6 +135,7 @@ public class Client
             return;
         }
         
+        Console.WriteLine("Didnt get returned");
         while (_totalBuffer.Length >= 4)
         {
             int packetSize = BitConverter.ToInt32(_totalBuffer, 0);
@@ -146,6 +161,10 @@ public class Client
                 break;
         }
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
+        Console.WriteLine("Begin Read " + _tunnelID);
+        Sendtime(19);
+        //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/scene/skybox/change.time.json"))));
+        //SendData((JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText("JSON/scene/skybox/set.time.json"))));
 
         if (!_tunnelCreated) return;
         
@@ -161,15 +180,17 @@ public class Client
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];
-        Buffer.BlockCopy(b1, 0, r, 0, b1.Length);
-        Buffer.BlockCopy(b2, 0, r, b1.Length, count);
+        System.Buffer.BlockCopy(b1, 0, r, 0, b1.Length);
+        System.Buffer.BlockCopy(b2, 0, r, b1.Length, count);
         return r;
     }
 
     private void InitCommands()
     {
-        _commands.Add("session/list", new SessionListCommand());
-        _commands.Add("tunnel/create", new CreateTunnelCommand());
-        _commands.Add("tunnel/send", new TunnelCommand());
+        _commands.Add("session/list", new SessionList());
+        _commands.Add("tunnel/create", new CreateTunnel());
+        _commands.Add("get", new ResetScene());
+        _commands.Add("time/change", new ChangeTime());
+        _commands.Add("tunnel/send", new TunnelSend());
     }
 }

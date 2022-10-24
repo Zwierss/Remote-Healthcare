@@ -1,9 +1,8 @@
 {
   "id": "scene/panel/drawtext",
   "data": {
-    "id": "panelid",
-    "text": "Hello World",
-    "position": [ 30, 40 ],
-    "size": 65.0
+    "id":  "panelid" ,
+    "text": "Hello",
+    "position": [ 50, 40 ]
   }
 }

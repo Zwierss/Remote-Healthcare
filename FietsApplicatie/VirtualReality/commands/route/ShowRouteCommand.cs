@@ -1,8 +1,9 @@
 using Newtonsoft.Json.Linq;
+using VirtualReality.commands.tunnel;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.route;
 
-public class ShowRouteCommand : TunnelCallback
+public class ShowRouteCommand : ITunnelCallback
 {
 	public void OnCommandReceived(JObject o, VRClient parent)
 	{

@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace VirtualReality;
+namespace VirtualReality.commands.tunnel;
 
-public interface TunnelCallback
+public interface ITunnelCallback
 {
     void OnCommandReceived(JObject ob, VRClient parent);
 }

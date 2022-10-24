@@ -4,7 +4,7 @@
     "id":  "guid" ,
     "parent":  "guid" ,
     "transform": {
-      "position": [ -300, 0, 0 ],
+      "position": [ 0, 0, 0 ],
       "scale": 100.0,
       "rotation": [ 0, 90, 0 ]
     }
