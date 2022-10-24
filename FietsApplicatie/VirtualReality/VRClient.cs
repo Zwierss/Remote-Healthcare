@@ -24,12 +24,13 @@ public class VRClient
     public string? TunnelId { get; set; }
     public string? TerrainId { get; set; }
     public string? RouteId { get; set; }
+    public string? CameraId { get; set; }
     public float[] Heights { get; set; }
     public string? BikeId { get; set; }
-    public string? CameraId { get; set; }
     public string? HeadId { get; set; }
     public string? PanelId { get; set; }
-    public bool IsSet { get; set; } = false;
+    public bool IsSet { get; set; }
+    public string CurrentMessage { get; set; }
 
     private const string Hostname = "145.48.6.10";
     private const int Port = 6666;
@@ -61,6 +62,7 @@ public class VRClient
         Heights = new float[200];
         IsSet = false;
         _currentSpeed = 0;
+        CurrentMessage = "";
     }
 
     public async Task StartConnection()
@@ -157,7 +159,7 @@ public class VRClient
         _map.RenderHeightMap();
         _route.CreateRoute();
         _bike.PlaceBike();
-        _camera.SetCamera();
+        _camera.SetView();
         _panel.AddPanel();
         _tree.PlaceTrees();
         IsSet = true;
@@ -179,7 +181,7 @@ public class VRClient
 
     public void UpdatePanel(double heartRate)
     {
-        _panel.UpdatePanel(_currentSpeed, heartRate);
+        _panel.UpdatePanel(_currentSpeed, heartRate, CurrentMessage);
     }
 
     public static byte[] Concat(byte[] b1, byte[] b2, int count)

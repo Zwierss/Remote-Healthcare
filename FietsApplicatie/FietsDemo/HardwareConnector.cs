@@ -48,7 +48,6 @@ namespace FietsDemo
             }
             _client.OnSuccessfulConnect();
             Connected = true;
-            Console.Read();
         }
 
         public static void Stop()
@@ -62,6 +61,7 @@ namespace FietsDemo
                 _bike.Disconnect();
                 _heart.Disconnect();
             }
+            StopSessionTimer();
         }
 
         public static void SetResistance(byte resistance)

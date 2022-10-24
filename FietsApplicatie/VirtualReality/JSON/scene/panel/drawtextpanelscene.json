@@ -2,7 +2,7 @@
   "id": "scene/panel/drawtext",
   "data": {
     "id":  "panelid" ,
-    "text": "Hello Kankermoeder",
+    "text": "Hello",
     "position": [ 50, 40 ]
   }
 }

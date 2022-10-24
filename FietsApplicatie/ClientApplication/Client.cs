@@ -45,6 +45,7 @@ public class Client : IHardwareCallback
     {
         _bikeNr = bikeNr;
         _sim = sim;
+        Username = username;
         
         try
         {
@@ -106,8 +107,6 @@ public class Client : IHardwareCallback
 
     public void OnNewBikeData(IReadOnlyList<int> values)
     {
-        Console.WriteLine(ConnectedToServer);
-
         if(!ConnectedToServer) return;
         if (!_vr.IsSet) return;
         
@@ -155,6 +154,11 @@ public class Client : IHardwareCallback
         _vr.Stop();
         SessionIsActive = false;
         ConnectedToServer = false;
+    }
+
+    public void SendDoctorMessage(string message)
+    {
+        _vr.CurrentMessage = message;
     }
 
     private void OnRead(IAsyncResult ar)

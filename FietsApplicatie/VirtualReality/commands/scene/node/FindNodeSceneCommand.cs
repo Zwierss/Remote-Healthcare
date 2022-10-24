@@ -7,7 +7,6 @@ public class FindNodeSceneCommand : ITunnelCallback
 {
 	public void OnCommandReceived(JObject o, VRClient parent)
 	{
-		Console.WriteLine(o.ToString());
 		switch (o["data"]![0]!["name"]!.ToString())
 		{
 			case "Camera":

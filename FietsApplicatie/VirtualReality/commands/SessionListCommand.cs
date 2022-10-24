@@ -15,8 +15,6 @@ public class SessionListCommand : ICommand
         foreach (var jToken in ob["data"]!)
         {
             var o = (JObject?)jToken;
-            Console.WriteLine(Environment.UserName);
-            Console.WriteLine(Environment.MachineName);
 
             if (!string.Equals(o!["clientinfo"]!["host"]!.ToObject<string>(), Environment.MachineName,
                     StringComparison.CurrentCultureIgnoreCase) ||
@@ -25,7 +23,6 @@ public class SessionListCommand : ICommand
             if (currentObject == null)
             {
                 currentObject = o;
-                Console.WriteLine(o["lastPing"]!.ToObject<string>());
                 string dateInString = o["lastPing"]!.ToObject<string>()!;
                 parsedDate = DateTime.ParseExact(dateInString!, Format, CultureInfo.InvariantCulture, DateTimeStyles.None);
             }
