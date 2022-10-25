@@ -16,6 +16,6 @@ public class SelectHistoryClientCommand : CommandBase
     {
         string item = _view.SelectedItem;
         if(string.IsNullOrEmpty(item)) return;
-        _view.NavigationStore.CurrentViewModel = new ViewHistoryViewModel(_view.NavigationStore, _view.Client, item);
+        _view.NavigationStore.CurrentViewModel = new LoadingHistoryViewModel(_view.NavigationStore, _view.Client, item);
     }
 }

@@ -30,6 +30,10 @@
                 <DataTemplate DataType="{x:Type viewmodels:ViewHistoryViewModel}">
                     <doctorApplication:ViewHistoryWinow/>                    
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:LoadingHistoryViewModel}">
+                    <doctorApplication:LoadingHistoryWindow/>
+                 </DataTemplate>
+         
             </ContentControl.Resources>
         </ContentControl>
 </Window>

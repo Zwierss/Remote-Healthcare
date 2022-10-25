@@ -206,5 +206,6 @@ public class DoctorClient
         _commands.Add("doctor/return-offline", new ReturnOffline());
         _commands.Add("doctor/return-sessions", new ReturnSessions());
         _commands.Add("doctor/return-sessiondata", new ReturnSessionData());
+        _commands.Add("doctor/loading-complete", new LoadingComplete());
     }
 }

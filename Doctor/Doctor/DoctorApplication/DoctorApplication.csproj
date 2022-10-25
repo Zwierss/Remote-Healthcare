@@ -77,6 +77,9 @@
     <Compile Include="BeginWindow.xaml.cs">
       <DependentUpon>BeginWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChartWindow.xaml.cs">
+      <DependentUpon>ChartWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,9 @@
     <Compile Include="HistoryWindow.xaml.cs">
       <DependentUpon>HistoryWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoadingHistoryWindow.xaml.cs">
+      <DependentUpon>LoadingHistoryWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectionWindow.xaml.cs">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
     </Compile>
@@ -111,20 +117,30 @@
     </Compile>
     <Compile Include="viewmodels\AccountViewModel.cs" />
     <Compile Include="viewmodels\BeginViewModel.cs" />
+    <Compile Include="viewmodels\ChartViewModel.cs" />
     <Compile Include="viewmodels\HistoryClientViewModel.cs" />
     <Compile Include="viewmodels\ClientViewModel.cs" />
     <Compile Include="viewmodels\HistoryViewModel.cs" />
+    <Compile Include="viewmodels\LoadingHistoryViewModel.cs" />
     <Compile Include="viewmodels\MainViewModel.cs" />
     <Compile Include="viewmodels\SelectionViewModel.cs" />
     <Compile Include="viewmodels\ViewHistoryViewModel.cs" />
     <Page Include="AccountWindow.xaml" />
     <Page Include="BeginWindow.xaml" />
+    <Page Include="ChartWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ClientWindow.xaml" />
     <Page Include="HistoryClientWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="HistoryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoadingHistoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,6 +189,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="commands\ViewHistoryView\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\load.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

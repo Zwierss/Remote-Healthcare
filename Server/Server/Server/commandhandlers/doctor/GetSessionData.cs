@@ -23,7 +23,6 @@ public class GetSessionData : ICommand
                 foreach (var d in data)
                 {
                     Thread.Sleep(100);
-                    Console.WriteLine(PacketSender.SendReplacedObject("values", d, 1, "doctor\\returnsessiondata.json")!);
                     parent.SendMessage(PacketSender.SendReplacedObject("values", d, 1, "doctor\\returnsessiondata.json")!);
                 }
 
@@ -31,5 +30,7 @@ public class GetSessionData : ICommand
             }
             break;
         }
+        Thread.Sleep(50);
+        parent.SendMessage(PacketSender.GetJson("doctor\\loadingcomplete.json"));
     }
 }
