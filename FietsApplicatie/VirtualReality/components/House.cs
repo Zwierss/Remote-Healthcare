@@ -27,6 +27,7 @@ public class House
         r.Add(new float[]{ 12, -10 });
         r.Add(new float[]{ 22, -20 });
         r.Add(new float[]{ 15, -52 });
+        r.Add(new float[]{ 35, -70 });
 
         float[][] coordinates = r.ToArray();
 
