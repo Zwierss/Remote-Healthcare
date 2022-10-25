@@ -17,7 +17,7 @@ namespace Server.DataSaving
             Console.WriteLine(Environment.CurrentDirectory);
             string directoryPath = Environment.CurrentDirectory + "\\Clients\\" + client.PatientId;
             Directory.CreateDirectory(directoryPath);
-            string path = Environment.CurrentDirectory + "\\Clients\\" + client.patientId + "\\" + "InitialPatientFilePatient[" + client.patientId + "].JSON";
+            string path = Environment.CurrentDirectory + "\\Clients\\" + client.PatientId + "\\" + "InitialPatientFilePatient[" + client.PatientId + "].JSON";
             File.Create(path).Close();
             
             string clientAsJson = JsonConvert.SerializeObject(client);
