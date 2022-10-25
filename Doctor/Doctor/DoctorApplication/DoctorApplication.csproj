@@ -44,6 +44,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -55,6 +56,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="XamlAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=20a987d8023d9690, processorArchitecture=MSIL">
+      <HintPath>..\packages\XamlAnimatedGif.2.0.3\lib\net45\XamlAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -78,7 +82,13 @@
     <Compile Include="commands\ClientView\SendMesageCommand.cs" />
     <Compile Include="commands\ClientView\SessionCommand.cs" />
     <Compile Include="commands\CommandBase.cs" />
-    <Compile Include="commands\SelectionView\SelectCommand.cs" />
+    <Compile Include="commands\HistoryClientView\GoBackHistoryClientCommand.cs" />
+    <Compile Include="commands\HistoryClientView\SelectHistoryClientCommand.cs" />
+    <Compile Include="commands\HistoryView\GoBackHistoryCommand.cs" />
+    <Compile Include="commands\HistoryView\SelectHistoryCommand.cs" />
+    <Compile Include="commands\SelectionView\GoBackSelectionCommand.cs" />
+    <Compile Include="commands\SelectionView\SelectSelectionCommand.cs" />
+    <Compile Include="commands\SelectionView\ViewHistoricCommand.cs" />
     <Compile Include="HistoryClientWindow.xaml.cs">
       <DependentUpon>HistoryClientWindow.xaml</DependentUpon>
     </Compile>
@@ -90,11 +100,17 @@
     </Compile>
     <Compile Include="stores\NavigationStore.cs" />
     <Compile Include="stores\UtilStore.cs" />
+    <Compile Include="ViewHistoryWinow.xaml.cs">
+      <DependentUpon>ViewHistoryWinow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="viewmodels\AccountViewModel.cs" />
     <Compile Include="viewmodels\BeginViewModel.cs" />
+    <Compile Include="viewmodels\HistoryClientViewModel.cs" />
     <Compile Include="viewmodels\ClientViewModel.cs" />
+    <Compile Include="viewmodels\HistoryViewModel.cs" />
     <Compile Include="viewmodels\MainViewModel.cs" />
     <Compile Include="viewmodels\SelectionViewModel.cs" />
+    <Compile Include="viewmodels\ViewHistoryViewModel.cs" />
     <Page Include="AccountWindow.xaml" />
     <Page Include="BeginWindow.xaml" />
     <Page Include="ClientWindow.xaml" />
@@ -119,6 +135,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SelectionWindow.xaml" />
+    <Page Include="ViewHistoryWinow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -147,6 +164,9 @@
   <ItemGroup>
     <Resource Include="resources\offline.png" />
     <Resource Include="resources\online.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="commands\ViewHistoryView" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

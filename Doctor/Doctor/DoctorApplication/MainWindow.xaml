@@ -21,6 +21,15 @@
                 <DataTemplate DataType="{x:Type viewmodels:ClientViewModel}">
                     <doctorApplication:ClientWindow/>                    
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:HistoryClientViewModel}">
+                    <doctorApplication:HistoryClientWindow/>                    
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:HistoryViewModel}">
+                    <doctorApplication:HistoryWindow/>                    
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:ViewHistoryViewModel}">
+                    <doctorApplication:ViewHistoryWinow/>                    
+                </DataTemplate>
             </ContentControl.Resources>
         </ContentControl>
 </Window>

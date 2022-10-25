@@ -15,8 +15,9 @@ public class StorageManager
 
     private JObject? _storeable;
 
-    private JObject GetStorageFiles(string filename)
+    public JObject GetStorageFiles(string filename)
     {
+        Console.WriteLine(filename);
         var stream = new FileStream(PathDir + filename, FileMode.Open, FileAccess.Read);
         byte[] bytes = new byte[stream.Length];
         long bytesToRead = stream.Length;
@@ -34,6 +35,7 @@ public class StorageManager
 
     private void WriteStorageFiles(JObject file, string filename)
     {
+        //data[0]
         byte[] a = GetEncryptedMessage(file);
         var stream = new FileStream(PathDir + filename,FileMode.Create, FileAccess.Write);
         stream.Write(a,0,a.Length);

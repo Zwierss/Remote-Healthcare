@@ -27,7 +27,8 @@ namespace DoctorApplication
 
         private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            
+            var item = (sender as ListViewItem)!.ToString();
+            ((dynamic)DataContext).SelectedItem = item!.Substring(38);
         }
     }
 }

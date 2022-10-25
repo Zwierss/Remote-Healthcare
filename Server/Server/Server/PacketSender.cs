@@ -57,6 +57,10 @@ public static class PacketSender
             case bool b:
                 currentObject![variable] = b;
                 break;
+            case double[] m:
+                JArray l = new JArray(m);
+                currentObject![variable] = l;
+                break;
         }
         
         return data;

@@ -3,11 +3,11 @@ using DoctorApplication.viewmodels;
 
 namespace DoctorApplication.commands.SelectionView;
 
-public class SelectCommand : CommandBase
+public class SelectSelectionCommand : CommandBase
 {
     private SelectionViewModel _view;
 
-    public SelectCommand(SelectionViewModel view)
+    public SelectSelectionCommand(SelectionViewModel view)
     {
         _view = view;
     }

@@ -7,15 +7,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListView x:Name="ViewList" ItemsSource="{Binding Clients}" Margin="10,140,10,10">
+        <ListView x:Name="ViewList" ItemsSource="{Binding Sessions}" Margin="10,140,10,10">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown" />
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <Button Command="{Binding }" Content="Ga terug" Margin="237,61,341,315" FontSize="14"/>
-        <Button Command="{Binding }" Content="Selecteer client" Margin="10,61,568,315" FontSize="14"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Selecteer een van deze clienten" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+        <Button Command="{Binding GoBack}" Content="Ga terug" Margin="237,61,341,315" FontSize="14"/>
+        <Button Command="{Binding Select}" Content="Selecteer sessie" Margin="10,61,568,315" FontSize="14"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding Client}" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
     </Grid>
 </UserControl>

@@ -33,13 +33,17 @@ public class SelectionViewModel : ObservableObject, IWindow
     }
 
     public ICommand Selection { get; }
+    public ICommand GoBack { get; }
+    public ICommand ViewHistoric { get; }
 
     public SelectionViewModel(NavigationStore navigationStore)
     {
         NavigationStore = navigationStore;
         NavigationStore.Client.ViewModel = this;
         NavigationStore.Client.GetClients();
-        Selection = new SelectCommand(this);
+        Selection = new SelectSelectionCommand(this);
+        GoBack = new GoBackSelectionCommand(this);
+        ViewHistoric = new ViewHistoricCommand(this);
     }
 
     public void OnChangedValues(State state, string[]? args = null)

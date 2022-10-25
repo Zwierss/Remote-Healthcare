@@ -165,6 +165,23 @@ public class DoctorClient
         SendData(GetJson("server\\getclients.json"));
     }
 
+    public void GetOfflineClients()
+    {
+        SendData(GetJson("server\\getoffline.json"));
+    }
+
+    public void GetSessions(string client)
+    {
+        SendData(SendReplacedObject("client", client, 1, "server\\getsessions.json")!);
+    }
+
+    public void GetSessionData(string client, string item)
+    {
+        SendData(SendReplacedObject("client", client, 1, SendReplacedObject(
+            "file", item, 1, "server\\getsessiondata.json"
+        ))!);
+    }
+
     public void Subscribe(string doctor, string client)
     {
         SendData(SendReplacedObject("client", client, 1, SendReplacedObject(
@@ -186,5 +203,8 @@ public class DoctorClient
         _commands.Add("doctor/return-client", new ReturnClient());
         _commands.Add("doctor/senddata", new ReceivedData());
         _commands.Add("doctor/subscribed", new Subscribed());
+        _commands.Add("doctor/return-offline", new ReturnOffline());
+        _commands.Add("doctor/return-sessions", new ReturnSessions());
+        _commands.Add("doctor/return-sessiondata", new ReturnSessionData());
     }
 }

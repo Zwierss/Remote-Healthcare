@@ -127,6 +127,9 @@ public class Client
         _commands.Add("doctor/subscribed", new Switch());
         _commands.Add("client/subscribe", new Switch());
         _commands.Add("client/unsubscribe", new Switch());
+        _commands.Add("server/get-offline", new GetOffline());
+        _commands.Add("server/getsessions", new GetSessions());
+        _commands.Add("server/getsessiondata", new GetSessionData());
     }
     
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
