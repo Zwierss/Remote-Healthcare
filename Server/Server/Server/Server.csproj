@@ -13,6 +13,9 @@
 
     <ItemGroup>
       <Folder Include="commands\client" />
+      <Folder Include="storage\Geert" />
+      <Folder Include="storage\ServoMotor" />
+      <Folder Include="storage\Xander" />
     </ItemGroup>
 
 </Project>

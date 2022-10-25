@@ -12,14 +12,14 @@ public class NewClient : ICommand
         bool exists;
         if (isDoctor)
         {
-            exists = StorageManager.CheckIfAccountExists(uuid, packet["data"]!["pass"]!.ToObject<string>()!, "doctors");
+            exists = parent.StorageManager.CheckIfAccountExists(uuid, packet["data"]!["pass"]!.ToObject<string>()!, "doctors");
         }
         else
         {
-            exists = StorageManager.CheckIfAccountExists(uuid, packet["data"]!["pass"]!.ToObject<string>()!, "clients");
+            exists = parent.StorageManager.CheckIfAccountExists(uuid, packet["data"]!["pass"]!.ToObject<string>()!, "clients");
         }
 
-        bool alreadyOpen = StorageManager.CheckIfAlreadyOpen(uuid, parent.Parent.Clients);
+        bool alreadyOpen = parent.StorageManager.CheckIfAlreadyOpen(uuid, parent.Parent.Clients);
             
         if (exists && alreadyOpen)
         {

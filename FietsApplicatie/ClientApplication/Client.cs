@@ -246,32 +246,24 @@ public class Client : IHardwareCallback
         {
             int rc = _stream!.EndRead(ar);
             _totalBuffer = Concat(_totalBuffer, _buffer, rc);
-        }
-        catch(IOException)
-        {
-            Stop();
-            return;
-        }
+            
+            while (_totalBuffer.Length >= 4)
+            {
+                JObject data = GetDecryptedMessage(_totalBuffer);
+                Console.WriteLine(data);
+                _totalBuffer = Array.Empty<byte>();
 
-        while (_totalBuffer.Length >= 4)
-        {
-            JObject data = GetDecryptedMessage(_totalBuffer);
-            Console.WriteLine(data);
-            _totalBuffer = Array.Empty<byte>();
+                if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
+                    _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
 
-            if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
-                _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
-
-            break;
-        }
-
-        try
-        {
+                break;
+            }
+            
             _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         }
-        catch (Exception)
+        catch(Exception e)
         {
-            Console.WriteLine("Stream closed");
+            Console.WriteLine(e.Message);
             Stop();
         }
     }

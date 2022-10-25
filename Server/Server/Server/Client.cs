@@ -14,15 +14,20 @@ public class Client
     private readonly NetworkStream _stream;
     private readonly Dictionary<string, ICommand> _commands;
 
-    public MainServer Parent { get; set; }
+    public MainServer Parent { get;}
+    public bool SessionActive { get; set; }
+    public string CurrentSessionTitle { get; set; }
     public bool IsDoctor { get; set; }
     public string Uuid { get; set; }
+    public StorageManager StorageManager { get; }
 
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
 
     public Client(TcpClient tcp, MainServer parent)
     {
+        StorageManager = new StorageManager();
+        SessionActive = false;
         Parent = parent;
         _tcp = tcp;
         _stream = _tcp.GetStream();
@@ -33,14 +38,12 @@ public class Client
 
     public void SendMessage(JObject packet)
     {
-        Console.WriteLine(packet);
         byte[] encryptedMessage = GetEncryptedMessage(packet);
         _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
     }
 
-    public async Task<Task> SendMessageAsync(JObject packet)
+    private async Task<Task> SendMessageAsync(JObject packet)
     {
-        Console.WriteLine(packet);
         byte[] encryptedMessage = GetEncryptedMessage(packet);
         await _stream.WriteAsync(encryptedMessage, 0, encryptedMessage.Length);
         return Task.CompletedTask;
@@ -56,7 +59,6 @@ public class Client
             while (_totalBuffer.Length >= 4)
             {
                 JObject data = GetDecryptedMessage(_totalBuffer);
-                Console.WriteLine(data);
                 _totalBuffer = Array.Empty<byte>();
 
                 if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
@@ -84,7 +86,7 @@ public class Client
         _tcp.Close();
     }
 
-    public async Task<Task> SendClientList()
+    private async Task<Task> SendClientList()
     {
         if (IsDoctor) return Task.CompletedTask;
         List<string> clientUuids = new();
@@ -112,10 +114,10 @@ public class Client
     private void InitCommands()
     {
         _commands.Add("server/client-enter", new NewClient());
-        _commands.Add("doctor/senddata", new Switch());
+        _commands.Add("doctor/senddata", new SendData());
         _commands.Add("server/getclients", new GetClient());
-        _commands.Add("client/startsession", new Switch());
-        _commands.Add("client/stopsession", new Switch());
+        _commands.Add("client/startsession", new StartSession());
+        _commands.Add("client/stopsession", new StopSession());
         _commands.Add("client/emergencystop", new Switch());
         _commands.Add("client/doctormessage", new Switch());
         _commands.Add("client/setresistance", new Switch());

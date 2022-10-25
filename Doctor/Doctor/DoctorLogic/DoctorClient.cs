@@ -87,6 +87,7 @@ public class DoctorClient
             {
                 JObject data = GetDecryptedMessage(_totalBuffer);
                 _totalBuffer = Array.Empty<byte>();
+                Console.WriteLine(data);
             
                 if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
                     _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data,this);
@@ -95,9 +96,9 @@ public class DoctorClient
             }
             _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            Console.WriteLine("Stream closed");
+            Console.WriteLine(e.Message);
             SelfDestruct();
         }
     }
@@ -149,7 +150,14 @@ public class DoctorClient
     private void SendData(JObject message)
     {
         byte[] encryptedMessage = GetEncryptedMessage(message);
-        _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
+        try
+        {
+            _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("problem while writing");
+        }
     }
 
     public void GetClients()

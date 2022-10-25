@@ -52,6 +52,15 @@ public static class PacketSender
                 JArray b = new JArray(i);
                 currentObject![variable] = b;
                 break;
+            case double[][] m:
+                JArray l = new JArray();
+                foreach (var t in m)
+                {
+                    JArray j = new JArray(t);
+                    l.Add(j);
+                }
+                currentObject![variable] = l;
+                break;
         }
 
         return data;

@@ -1,29 +1,50 @@
+using System.Text;
+using System.Threading.Channels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using static Server.Cryptographer;
 
 namespace Server;
 
-public static class StorageManager
+public class StorageManager
 {
-    private static readonly string PathDir =
+    public static readonly string PathDir =
         Environment.CurrentDirectory.Substring(0,
             Environment.CurrentDirectory.LastIndexOf("Server", StringComparison.Ordinal)) +
         "Server\\storage\\";
 
-    private static JObject GetStorageFiles(string filename)
+    private JObject? _storeable;
+
+    private JObject GetStorageFiles(string filename)
     {
-        string json;
-        using (StreamReader sr = new StreamReader(PathDir + filename))
+        var stream = new FileStream(PathDir + filename, FileMode.Open, FileAccess.Read);
+        byte[] bytes = new byte[stream.Length];
+        long bytesToRead = stream.Length;
+        int bytesRead = 0;
+        while (bytesToRead > 0)
         {
-            json = sr.ReadToEnd();
-             
+            int n = stream.Read(bytes, bytesRead, (int)bytesToRead);
+            bytesRead += n;
+            bytesToRead -= n;
         }
-        return JObject.Parse(json);
+        stream.Flush();
+        stream.Dispose();
+        return GetDecryptedMessage(bytes);
     }
 
-    public static void AddNewAccount(string username, string password, string type)
+    private void WriteStorageFiles(JObject file, string filename)
     {
-        JObject accounts = GetStorageFiles("clients.json");
+        byte[] a = GetEncryptedMessage(file);
+        var stream = new FileStream(PathDir + filename,FileMode.Create, FileAccess.Write);
+        stream.Write(a,0,a.Length);
+        stream.Flush();
+        stream.Dispose();
+        _storeable = null;
+    }
+
+    public void AddNewAccount(string username, string password, string type)
+    {
+        JObject accounts = GetStorageFiles("accounts.acc");
         List<string[]> accountTypes = accounts[type]!.ToObject<string[][]>()!.ToList();
         accountTypes.Add(new[]{username, password });
         JArray array = new JArray();
@@ -32,24 +53,49 @@ public static class StorageManager
             array.Add(new JArray(s));
         }
         accounts[type] = array;
+        
+        WriteStorageFiles(accounts, "accounts.acc");
+        Console.WriteLine("test");
 
-        File.WriteAllText(PathDir + "clients.json", accounts.ToString());
-        using StreamWriter sw = File.CreateText(PathDir + "clients.json");
-        using (JsonTextWriter writer = new JsonTextWriter(sw))
+        if (type != "clients") return;
+        if (!Directory.Exists(PathDir + "" + username))
         {
-            accounts.WriteTo(writer);
+            Directory.CreateDirectory(PathDir + "" + username);
         }
+
     }
 
-    public static bool CheckIfNewUsername(string username)
+    public void StoreSession(double[] session, string path)
     {
-        string[][] clients = GetStorageFiles("clients.json")["clients"]!.ToObject<string[][]>()!;
+        _storeable ??= GetJson("standard.json");
+
+        double[][] data = _storeable["data"]!.ToObject<double[][]>()!;
+        JArray array = new JArray();
+        foreach (double[] gram in data)
+        {
+            JArray a = new JArray(gram);
+            array.Add(a);
+        }
+        array.Add(new JArray(session));
+
+        _storeable["data"] = array;
+        Console.WriteLine(_storeable);
+    }
+
+    public void SaveSession(string path)
+    {
+        WriteStorageFiles(_storeable!, path);
+    }
+
+    public bool CheckIfNewUsername(string username)
+    {
+        string[][] clients = GetStorageFiles("accounts.acc")["clients"]!.ToObject<string[][]>()!;
         foreach (string[] account in clients)
         {
             if (account[0] == username) return false;
         }
         
-        string[][] doctors = GetStorageFiles("clients.json")["doctors"]!.ToObject<string[][]>()!;
+        string[][] doctors = GetStorageFiles("accounts.acc")["doctors"]!.ToObject<string[][]>()!;
         foreach (string[] account in doctors)
         {
             if (account[0] == username) return false;
@@ -58,9 +104,9 @@ public static class StorageManager
         return true;
     }
 
-    public static bool CheckIfAccountExists(string username, string password, string type)
+    public bool CheckIfAccountExists(string username, string password, string type)
     {
-        string[][] accounts = GetStorageFiles("clients.json")[type]!.ToObject<string[][]>()!;
+        string[][] accounts = GetStorageFiles("accounts.acc")[type]!.ToObject<string[][]>()!;
         foreach (string[] account in accounts)
         {
             if(account[0] != username) continue;
@@ -70,7 +116,7 @@ public static class StorageManager
         return false;
     }
 
-    public static bool CheckIfAlreadyOpen(string username, List<Client> clients)
+    public bool CheckIfAlreadyOpen(string username, List<Client> clients)
     {
         foreach (Client c in clients)
         {
@@ -78,5 +124,10 @@ public static class StorageManager
         }
 
         return true;
+    }
+
+    private JObject GetJson(string? filename)
+    {
+        return (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(PathDir + filename!)));
     }
 }
