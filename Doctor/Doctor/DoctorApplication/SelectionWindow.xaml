@@ -17,5 +17,7 @@
         </ListView>
         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Deze clienten zijn nu online" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
         <Button Command="{Binding Selection}" Content="Selecteer deze gebruiker" Margin="10,61,568,315" FontSize="14"/>
+        <Button Command="{Binding }" Content="Bekijk offline data" Margin="237,61,341,315" FontSize="14"/>
+        <Button Command="{Binding }" Content="Ga terug" Margin="464,61,114,315" FontSize="14"/>
     </Grid>
 </UserControl>

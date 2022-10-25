@@ -79,6 +79,12 @@
     <Compile Include="commands\ClientView\SessionCommand.cs" />
     <Compile Include="commands\CommandBase.cs" />
     <Compile Include="commands\SelectionView\SelectCommand.cs" />
+    <Compile Include="HistoryClientWindow.xaml.cs">
+      <DependentUpon>HistoryClientWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HistoryWindow.xaml.cs">
+      <DependentUpon>HistoryWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectionWindow.xaml.cs">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
     </Compile>
@@ -92,6 +98,14 @@
     <Page Include="AccountWindow.xaml" />
     <Page Include="BeginWindow.xaml" />
     <Page Include="ClientWindow.xaml" />
+    <Page Include="HistoryClientWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HistoryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
