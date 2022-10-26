@@ -45,7 +45,7 @@ public class ViewHistoryViewModel : ObservableObject, IWindow
         }
     }
 
-    public ICommand GoBack;
+    public ICommand GoBack { get; }
 
     public ViewHistoryViewModel(NavigationStore navigationStore, string client, string item, double[] speeds, double[] times, double[] beats)
     {

@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace DoctorApplication;
 
@@ -10,7 +11,7 @@ public partial class ClientWindow : UserControl
         InitializeComponent();
     }
 
-    private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void Slider_ValueChanged(object sender, DragCompletedEventArgs e)
     {
         var slider = sender as Slider;
         int value = (int)slider!.Value;
