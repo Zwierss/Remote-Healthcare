@@ -1,0 +1,7 @@
+{
+  "id": "client/startsession",
+  "data": {
+    "client": "uuid",
+    "doctor": "uuid"
+  }
+}

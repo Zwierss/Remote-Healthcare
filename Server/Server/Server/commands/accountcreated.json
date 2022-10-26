@@ -1,0 +1,6 @@
+{
+  "id": "client/account-created",
+  "data":{
+    "status": 0
+  }
+}

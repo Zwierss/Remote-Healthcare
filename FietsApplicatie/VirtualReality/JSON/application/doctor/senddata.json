@@ -1,0 +1,10 @@
+{
+  "id": "doctor/senddata",
+  "data": {
+    "uuid": "uuid",
+    "client": "uuid",
+    "data": {
+      
+    }
+  }
+}

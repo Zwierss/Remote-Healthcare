@@ -1,0 +1,39 @@
+﻿<Window x:Class="DoctorApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:DoctorApplication.viewmodels"
+        xmlns:doctorApplication="clr-namespace:DoctorApplication"
+        mc:Ignorable="d"
+        Title="Dokter Login" Height="450" Width="800">
+        <ContentControl Content="{Binding CurrentViewModel}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type viewmodels:BeginViewModel}">
+                    <doctorApplication:BeginWindow/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:SelectionViewModel}">
+                    <doctorApplication:SelectionWindow/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:AccountViewModel}">
+                    <doctorApplication:AccountWindow/>                    
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:ClientViewModel}">
+                    <doctorApplication:ClientWindow/>                    
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:HistoryClientViewModel}">
+                    <doctorApplication:HistoryClientWindow/>                    
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:HistoryViewModel}">
+                    <doctorApplication:HistoryWindow/>                    
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:ViewHistoryViewModel}">
+                    <doctorApplication:ViewHistoryWindow/>                    
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:LoadingHistoryViewModel}">
+                    <doctorApplication:LoadingHistoryWindow/>
+                 </DataTemplate>
+         
+            </ContentControl.Resources>
+        </ContentControl>
+</Window>

@@ -1,0 +1,8 @@
+{
+  "id": "server/create-account",
+  "data": {
+    "uuid": "",
+    "pass": "",
+    "doctor": false
+  }
+}

@@ -8,3 +8,13 @@ D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.Cor
 D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.CopyComplete
 D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.exe
 D:\proftaak remote healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.pdb
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\bin\Debug\FietsDemo.exe.config
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\bin\Debug\FietsDemo.exe
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\bin\Debug\FietsDemo.pdb
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\bin\Debug\BLELibrary.dll
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.AssemblyReference.cache
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.SuggestedBindingRedirects.cache
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.CoreCompileInputs.cache
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.csproj.CopyComplete
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.exe
+C:\Users\xande\OneDrive\Documenten\CSharp\Remote-Healthcare\FietsDemo\FietsDemo\obj\Debug\FietsDemo.pdb

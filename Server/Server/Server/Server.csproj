@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="storage\Geert" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="commands\client\**" />
+      <Compile Remove="storage\ServoMotor\**" />
+      <Compile Remove="storage\Xander\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="commands\client\**" />
+      <EmbeddedResource Remove="storage\ServoMotor\**" />
+      <EmbeddedResource Remove="storage\Xander\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="commands\client\**" />
+      <None Remove="storage\ServoMotor\**" />
+      <None Remove="storage\Xander\**" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,6 @@
+{
+  "id": "doctor/return-client",
+  "data": {
+    "client": "uuid"
+  }
+}
