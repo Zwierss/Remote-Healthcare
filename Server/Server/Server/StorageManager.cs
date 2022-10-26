@@ -15,6 +15,13 @@ public class StorageManager
 
     private JObject? _storeable;
 
+    /// <summary>
+    /// It reads the file, decrypts it, and returns the decrypted message
+    /// </summary>
+    /// <param name="filename">The name of the file to be read.</param>
+    /// <returns>
+    /// The file is being read and decrypted.
+    /// </returns>
     public JObject GetStorageFiles(string filename)
     {
         Console.WriteLine(filename);
@@ -33,9 +40,13 @@ public class StorageManager
         return GetDecryptedMessage(bytes);
     }
 
+    /// <summary>
+    /// It takes a JObject and a filename, encrypts the JObject, and writes it to a file
+    /// </summary>
+    /// <param name="JObject">The JObject to be encrypted</param>
+    /// <param name="filename">The name of the file to be written.</param>
     private void WriteStorageFiles(JObject file, string filename)
     {
-        //data[0]
         byte[] a = GetEncryptedMessage(file);
         var stream = new FileStream(PathDir + filename,FileMode.Create, FileAccess.Write);
         stream.Write(a,0,a.Length);
@@ -44,6 +55,15 @@ public class StorageManager
         _storeable = null;
     }
 
+    /// <summary>
+    /// It adds a new account to the accounts.acc file
+    /// </summary>
+    /// <param name="username">The username of the account</param>
+    /// <param name="password">The password of the account</param>
+    /// <param name="type">The type of account you want to add.</param>
+    /// <returns>
+    /// A JObject
+    /// </returns>
     public void AddNewAccount(string username, string password, string type)
     {
         JObject accounts = GetStorageFiles("accounts.acc");
@@ -67,6 +87,11 @@ public class StorageManager
 
     }
 
+    /// <summary>
+    /// It takes a session and adds it to the data array in the JSON file
+    /// </summary>
+    /// <param name="session">The session to store</param>
+    /// <param name="path">The path to the json file.</param>
     public void StoreSession(double[] session, string path)
     {
         _storeable ??= GetJson("standard.json");
@@ -84,11 +109,22 @@ public class StorageManager
         Console.WriteLine(_storeable);
     }
 
+    /// <summary>
+    /// > Save the current session to the specified path
+    /// </summary>
+    /// <param name="path">The path to the folder where the files will be saved.</param>
     public void SaveSession(string path)
     {
         WriteStorageFiles(_storeable!, path);
     }
 
+    /// <summary>
+    /// It checks if the username is already taken
+    /// </summary>
+    /// <param name="username">The username to check if it's new</param>
+    /// <returns>
+    /// A boolean value.
+    /// </returns>
     public bool CheckIfNewUsername(string username)
     {
         string[][] clients = GetStorageFiles("accounts.acc")["clients"]!.ToObject<string[][]>()!;
@@ -106,6 +142,15 @@ public class StorageManager
         return true;
     }
 
+    /// <summary>
+    /// It checks if the account exists
+    /// </summary>
+    /// <param name="username">The username of the account</param>
+    /// <param name="password">The password of the account</param>
+    /// <param name="type">The type of account you want to check.</param>
+    /// <returns>
+    /// A boolean value.
+    /// </returns>
     public bool CheckIfAccountExists(string username, string password, string type)
     {
         string[][] accounts = GetStorageFiles("accounts.acc")[type]!.ToObject<string[][]>()!;
@@ -118,6 +163,14 @@ public class StorageManager
         return false;
     }
 
+    /// <summary>
+    /// It checks if the username is already in use by another client
+    /// </summary>
+    /// <param name="username">The username of the client</param>
+    /// <param name="clients">The list of clients that are currently connected to the server.</param>
+    /// <returns>
+    /// A boolean value.
+    /// </returns>
     public bool CheckIfAlreadyOpen(string username, List<Client> clients)
     {
         foreach (Client c in clients)
@@ -128,6 +181,13 @@ public class StorageManager
         return true;
     }
 
+    /// <summary>
+    /// It takes a filename as a string, opens the file, reads the file, and returns the file as a JObject
+    /// </summary>
+    /// <param name="filename">The name of the file to be read.</param>
+    /// <returns>
+    /// A JObject
+    /// </returns>
     private JObject GetJson(string? filename)
     {
         return (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(PathDir + filename!)));

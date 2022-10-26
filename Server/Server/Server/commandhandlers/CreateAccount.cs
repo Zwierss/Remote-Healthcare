@@ -4,6 +4,12 @@ namespace Server.commandhandlers;
 
 public class CreateAccount : ICommand
 {
+    /// <summary>
+    /// It checks if the username is new, if it is, it adds it to the database, and sends a message to the client saying
+    /// that the account was created
+    /// </summary>
+    /// <param name="JObject">The packet that was received.</param>
+    /// <param name="Client">The client that sent the command</param>
     public void OnCommandReceived(JObject packet, Client parent)
     {
         string uuid = packet["data"]!["uuid"]!.ToObject<string>()!;

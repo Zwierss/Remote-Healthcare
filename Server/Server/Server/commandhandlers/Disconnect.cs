@@ -4,6 +4,14 @@ namespace Server.commandhandlers;
 
 public class Disconnect : ICommand
 {
+    /// <summary>
+    /// If the client is a doctor, send a list of all clients to the doctor
+    /// </summary>
+    /// <param name="JObject">The packet that was received.</param>
+    /// <param name="Client">The client that sent the command</param>
+    /// <returns>
+    /// A list of all the clients in the server.
+    /// </returns>
     public void OnCommandReceived(JObject packet, Client parent)
     {
         if (packet["data"]!["notify"]!.ToObject<bool>())

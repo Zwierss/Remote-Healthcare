@@ -4,6 +4,15 @@ namespace Server.commandhandlers;
 
 public class NewClient : ICommand
 {
+    /// <summary>
+    /// If the account exists, and the account isn't already open, then send a status of 1, otherwise send a status of 0 or
+    /// 2
+    /// </summary>
+    /// <param name="JObject">The packet that was received.</param>
+    /// <param name="Client">The client that sent the packet</param>
+    /// <returns>
+    /// A JObject
+    /// </returns>
     public void OnCommandReceived(JObject packet, Client parent)
     {
         string uuid = packet["data"]!["uuid"]!.ToObject<string>()!;

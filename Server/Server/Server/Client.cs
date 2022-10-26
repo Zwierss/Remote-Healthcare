@@ -24,6 +24,8 @@ public class Client
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
 
+    /* This is the constructor for the Client class. It initializes the client with a TcpClient, a MainServer, and a
+    NetworkStream. It also initializes the commands dictionary and starts reading from the stream. */
     public Client(TcpClient tcp, MainServer parent)
     {
         StorageManager = new StorageManager();
@@ -36,12 +38,23 @@ public class Client
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
+    /// <summary>
+    /// It takes a JObject, encrypts it, and sends it to the server
+    /// </summary>
+    /// <param name="JObject">This is the JSON object that you want to send to the server.</param>
     public void SendMessage(JObject packet)
     {
         byte[] encryptedMessage = GetEncryptedMessage(packet);
         _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
     }
 
+    /// <summary>
+    /// It encrypts the message and sends it to the server.
+    /// </summary>
+    /// <param name="JObject">The JSON object to be sent.</param>
+    /// <returns>
+    /// A Task object.
+    /// </returns>
     private async Task<Task> SendMessageAsync(JObject packet)
     {
         byte[] encryptedMessage = GetEncryptedMessage(packet);
@@ -49,6 +62,10 @@ public class Client
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// It reads data from the client, decrypts it, and then passes it to the appropriate command handler
+    /// </summary>
+    /// <param name="IAsyncResult">This is the result of the asynchronous operation.</param>
     private void OnRead(IAsyncResult ar)
     {
         try
@@ -77,6 +94,14 @@ public class Client
         }
     }
 
+    /// <summary>
+    /// It sends the client list to the client, removes the client from the server's client list, removes the client from
+    /// the server's online client list, and then closes the client's connection
+    /// </summary>
+    /// <param name="disconnect">If true, the client will be disconnected from the server.</param>
+    /// <returns>
+    /// A Task object.
+    /// </returns>
     public async void SelfDestruct(bool disconnect)
     {
         await SendClientList();
@@ -87,6 +112,12 @@ public class Client
         _tcp.Close();
     }
 
+    /// <summary>
+    /// It sends a list of all the clients in the server to all the doctors
+    /// </summary>
+    /// <returns>
+    /// A list of clients
+    /// </returns>
     private async Task<Task> SendClientList()
     {
         if (IsDoctor) return Task.CompletedTask;
@@ -112,6 +143,9 @@ public class Client
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// It adds all the commands to the dictionary
+    /// </summary>
     private void InitCommands()
     {
         _commands.Add("server/client-enter", new NewClient());
@@ -133,6 +167,16 @@ public class Client
         _commands.Add("server/getsessiondata", new GetSessionData());
     }
     
+    /// <summary>
+    /// It takes two byte arrays and a count, and returns a new byte array that is the concatenation of the first two
+    /// arrays, with the second array truncated to the specified count
+    /// </summary>
+    /// <param name="b1">The first byte array to concatenate.</param>
+    /// <param name="b2">The byte array to be appended to b1</param>
+    /// <param name="count">The number of bytes to copy from the second array.</param>
+    /// <returns>
+    /// The concatenated byte array.
+    /// </returns>
     private static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];
