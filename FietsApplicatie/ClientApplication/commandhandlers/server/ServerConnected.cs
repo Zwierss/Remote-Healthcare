@@ -19,5 +19,10 @@ public class ServerConnected : ICommand
             parent.Callback.OnCallback(Error, "Deze combinatie van wachtwoord en gebruikersnaam bestaat niet");
             parent.SelfDestruct();
         }
+        else if (status == 2) 
+        {
+            parent.Callback.OnCallback(Error, "Deze gebruiker is al ingelogd");
+            parent.SelfDestruct();
+        }
     }
 }

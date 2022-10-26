@@ -12,10 +12,25 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="commands\client" />
       <Folder Include="storage\Geert" />
-      <Folder Include="storage\ServoMotor" />
-      <Folder Include="storage\Xander" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="commands\client\**" />
+      <Compile Remove="storage\ServoMotor\**" />
+      <Compile Remove="storage\Xander\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="commands\client\**" />
+      <EmbeddedResource Remove="storage\ServoMotor\**" />
+      <EmbeddedResource Remove="storage\Xander\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="commands\client\**" />
+      <None Remove="storage\ServoMotor\**" />
+      <None Remove="storage\Xander\**" />
     </ItemGroup>
 
 </Project>

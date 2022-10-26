@@ -3,6 +3,6 @@
     "id": "scene/panel/setclearcolor",
     "data": {
       "id": "panelid",
-      "color": [ 0, 0, 0, 0 ]
+      "color": [ 0, 0, 0, 0.3 ]
     }
   }

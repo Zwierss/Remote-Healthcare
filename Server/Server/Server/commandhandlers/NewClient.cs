@@ -21,16 +21,21 @@ public class NewClient : ICommand
 
         bool alreadyOpen = parent.StorageManager.CheckIfAlreadyOpen(uuid, parent.Parent.Clients);
             
-        if (exists && alreadyOpen)
-        {
-            parent.SendMessage(PacketSender.SendReplacedObject("status", 1, 1, "serverconnected.json")!);
-        }
-        else
+        if (!exists)
         {
             parent.SendMessage(PacketSender.SendReplacedObject("status", 0, 1, "serverconnected.json")!);
-            parent.SelfDestruct();
+            parent.SelfDestruct(true);
+            return;
+            
+        }
+        if (!alreadyOpen)
+        {
+            parent.SendMessage(PacketSender.SendReplacedObject("status", 2, 1, "serverconnected.json")!);
+            parent.SelfDestruct(true);
             return;
         }
+        
+        parent.SendMessage(PacketSender.SendReplacedObject("status", 1, 1, "serverconnected.json")!);
         
         parent.Uuid = uuid;
         parent.IsDoctor = isDoctor;

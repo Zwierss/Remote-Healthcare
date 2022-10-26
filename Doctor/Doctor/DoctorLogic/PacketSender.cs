@@ -47,6 +47,9 @@ public static class PacketSender
             case int j:
                 currentObject![variable] = j;
                 break;
+            case bool g:
+                currentObject![variable] = g;
+                break;
         }
 
         return data;

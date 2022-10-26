@@ -3,6 +3,7 @@
   "data": {
     "id":  "panelid" ,
     "text": "Hello",
-    "position": [ 50, 40 ]
+    "position": [ 50, 40 ],
+    "color": [255,255,255,255]
   }
 }

@@ -133,8 +133,15 @@ public class Client : IHardwareCallback
 
     public void SelfDestruct()
     {
-        _stream?.Close(400);
-        _client?.Close();
+        try
+        {
+            _stream?.Close(1000);
+            _client?.Close();
+        }
+        catch (Exception) 
+        {
+            Console.WriteLine("Could not close stream properly");
+        }
     }
 
     public void OnNewBikeData(IReadOnlyList<int> values)
@@ -214,15 +221,24 @@ public class Client : IHardwareCallback
         Callback.OnCallback(Success);
     }
 
-    public void Stop()
+    public void Stop(bool notify)
     {
         if (!_isActive) return;
+        new Thread(_vr.Stop).Start();
         HardwareConnector.Stop();
-        _vr.Stop();
         SessionIsActive = false;
         ConnectedToServer = false;
         IsSubscribed = false;
-        SendData(SendReplacedObject("client", Username, 1, "application\\server\\disconnect.json")!);
+        
+        try
+        {
+            SendData(SendReplacedObject("client", Username, 1, SendReplacedObject("notify", notify, 1, "application\\server\\disconnect.json"))!);
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("No connection with this server available");
+        }
+        
         _isActive = false;
     }
 
@@ -263,8 +279,7 @@ public class Client : IHardwareCallback
         }
         catch(Exception e)
         {
-            Console.WriteLine(e.Message);
-            Stop();
+            Stop(false);
         }
     }
 
@@ -277,14 +292,13 @@ public class Client : IHardwareCallback
         }
         catch (Exception)
         {
-            Stop();
+            Stop(false);
         }
     }
 
     private void InitCommands()
     {
         _commands.Add("client/server-connected", new ServerConnected());
-        _commands.Add("client/disconnected", new Disconnected());
         _commands.Add("client/startsession", new StartSession());
         _commands.Add("client/stopsession", new StopSession());
         _commands.Add("client/emergencystop", new EmergencyStop());

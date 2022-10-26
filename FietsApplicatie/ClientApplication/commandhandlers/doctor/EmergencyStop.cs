@@ -10,6 +10,6 @@ public class EmergencyStop : ICommand
     {
         parent.Callback.OnCallback(Error, "De dokter heeft de applicatie gestopt");
         parent.SessionIsActive = false;
-        parent.Stop();
+        parent.Stop(true);
     }
 }

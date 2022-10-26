@@ -21,12 +21,18 @@ public class Disconnect : ICommand
             }
         }
 
-        foreach (Client d in doctors)
+        if (clientUuids.Count != 0 && doctors.Count != 0)
         {
-            d.SendMessage(PacketSender.SendReplacedObject("clients", clientUuids, 1, "doctor\\returnclients.json")!);
+            foreach (Client d in doctors)
+            {
+                d.SendMessage(PacketSender.SendReplacedObject("clients", clientUuids, 1, "doctor\\returnclients.json")!);
+            }
         }
         
-        parent.SendMessage(PacketSender.GetJson("disconnected.json"));
-        parent.SelfDestruct();
+        if (packet["data"]!["notify"]!.ToObject<bool>())
+        {
+            parent.SelfDestruct(true);
+        }
+
     }
 }

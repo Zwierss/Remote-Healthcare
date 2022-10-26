@@ -73,16 +73,17 @@ public class Client
         catch(Exception)
         {
             Console.WriteLine("Can no longer read from this client");
-            SelfDestruct();
+            SelfDestruct(false);
         }
     }
 
-    public async void SelfDestruct()
+    public async void SelfDestruct(bool disconnect)
     {
         await SendClientList();
         Parent.Clients.Remove(this);
         Parent.OnlineClients.Remove(this);
-        _stream.Close(400);
+        if (!disconnect) return;
+        _stream.Close(2000);
         _tcp.Close();
     }
 

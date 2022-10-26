@@ -13,7 +13,7 @@ public class ReceivedData : ICommand
         double speedAvg = packet["data"]!["data"]!["speedavg"]!.ToObject<double>();
         int heartrateAvg = packet["data"]!["data"]!["avgheartrate"]!.ToObject<int>();
         int distance = packet["data"]!["data"]!["distance"]!.ToObject<int>();
-        int time = packet["data"]!["data"]!["time"]!.ToObject<int>();
+        int time = packet["data"]!["data"]!["time"]!.ToObject<int>(); 
 
         string[] args;
         if ((int)speedAvg == -1 || heartrateAvg == -1 || distance == -1 || time == -1)
@@ -26,11 +26,14 @@ public class ReceivedData : ICommand
         }
         else
         {
+            int minutes = time / 60;
+            int seconds = time % 60;
+            string timeS = minutes + ":" + seconds;
             args = new[]
             {
                 speed.ToString(CultureInfo.InvariantCulture), heartrate.ToString(),
                 speedAvg.ToString(CultureInfo.InvariantCulture), heartrateAvg.ToString(), distance.ToString(),
-                time.ToString()
+                timeS
             };
         }
         parent.ViewModel.OnChangedValues(Data, args);

@@ -11,7 +11,7 @@ public class LoadingViewModel : ObservableObject, IClientCallback
 
     public NavigationStore NavigationStore { get; set; }
 
-    private string _image = "resources/load.gif";
+    private string _image;
     public string Image
     {
         get => _image;
@@ -34,10 +34,11 @@ public class LoadingViewModel : ObservableObject, IClientCallback
     }
 
 
-    public LoadingViewModel(NavigationStore navigationStore)
+    public LoadingViewModel(NavigationStore navigationStore, string user)
     {
         NavigationStore = navigationStore;
         NavigationStore.Client.Callback = this;
+        _image = "/resources/" + user + ".gif";
     }
 
     public void OnCallback(State state, string value = "")

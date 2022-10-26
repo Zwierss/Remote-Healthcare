@@ -20,22 +20,17 @@ public class ViewHistoryViewModel : ObservableObject, IWindow
     public NavigationStore NavigationStore { get; }
     public string Client { get; }
     public string Item { get; }
-    public Func<double, string> Formatter { get; set; }
-
-    public ChartViewModel ViewModel { get; set; }
 
     public ViewHistoryViewModel(NavigationStore navigationStore, string client, string item, double[] speeds, double[] times, double[] beats)
     {
         Times = times;
         Speeds = speeds;
         Beats = beats;
-        
+
         NavigationStore = navigationStore;
         Client = client;
         Item = item;
         NavigationStore.Client.ViewModel = this;
-
-        ViewModel = new ChartViewModel();
     }
 
     public void OnChangedValues(State state, string[] args = null)

@@ -29,8 +29,7 @@ namespace ClientGUI
 
         private void App_Exit(object sender, ExitEventArgs e)
         {
-            _navigationStore.Client.Stop();
-            _navigationStore.Client.SelfDestruct();
+            _navigationStore.Client.Stop(false);
         }
     }
 }

@@ -80,14 +80,12 @@ public class VRClient
             await _client.ConnectAsync(Hostname, Port);
             _stream = _client.GetStream();
             SendData(PacketSender.GetJson("sessionlist.json"));
+            _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         }
         catch(Exception e)
         {
             Console.WriteLine(e.Message);
         }
-        
-        _stream = _client.GetStream();
-        _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
     public void SendData(JObject o)
@@ -232,8 +230,10 @@ public class VRClient
         UpdateBikeSpeed(0.0);
         _stopRunning = true;
         IsSet = false;
+        _isActive = false;
+        SendData(PacketSender.GetJson("scene\\resetscene.json"));
+        Thread.Sleep(2000);
         _stream.Close(400);
         _client.Close();
-        _isActive = false;
     }
 }

@@ -22,14 +22,14 @@ public class Panel
             {
                 transform = new
                 {
-                   position = new[]{0,0, -2},
+                   position = new[]{0,0.1, -1.6},
                    scale = 1,
                    rotation = new[]{0, 0, 0}
                 },
                 panel = new
                 {
                     size = new[]{0.5,0.5},
-                    resolution = new[]{512,512},
+                    resolution = new[]{512,200},
                     castShadow = false
                 }
             }

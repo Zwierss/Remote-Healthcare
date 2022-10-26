@@ -20,6 +20,6 @@ public class CreateAccount : ICommand
         {
             parent.SendMessage(PacketSender.SendReplacedObject("status", 0, 1, "accountcreated.json")!);
         }
-        parent.SelfDestruct();
+        parent.SelfDestruct(true);
     }
 }

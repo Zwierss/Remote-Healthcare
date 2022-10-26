@@ -13,7 +13,7 @@ public class GoBackSelectionCommand : CommandBase
 
     public override void Execute(object parameter)
     {
-        _view.NavigationStore.Client.Stop();
+        _view.NavigationStore.Client.Stop(true);
         _view.NavigationStore.CurrentViewModel = new BeginViewModel(_view.NavigationStore);
     }
 }

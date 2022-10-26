@@ -98,8 +98,7 @@ public class DoctorClient
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
-            SelfDestruct();
+            Stop(false);
         }
     }
 
@@ -109,9 +108,9 @@ public class DoctorClient
         _tcp.Close();
     }
 
-    public void Stop()
+    public void Stop(bool notify)
     {
-        SendData(SendReplacedObject("client", Uuid, 1, "server\\disconnect.json")!);
+        SendData(SendReplacedObject("client", Uuid, 1, SendReplacedObject("notify", notify, 1, "server\\disconnect.json"))!);
     }
 
     public void EmergencyStop(string client)
@@ -197,7 +196,6 @@ public class DoctorClient
     private void InitCommands()
     {
         _commands.Add("client/server-connected", new ServerConnected());
-        _commands.Add("client/disconnected", new Disconnected());
         _commands.Add("client/account-created", new AccountCreated());
         _commands.Add("doctor/return-clients", new ReturnClients());
         _commands.Add("doctor/return-client", new ReturnClient());

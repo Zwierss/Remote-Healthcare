@@ -1,6 +1,7 @@
 {
   "id": "server/disconnect",
   "data": {
-    "client": ""
+    "client": "",
+    "notify": false
   }
 }

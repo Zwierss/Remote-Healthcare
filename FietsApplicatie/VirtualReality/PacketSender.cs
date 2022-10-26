@@ -61,6 +61,9 @@ public static class PacketSender
                 }
                 currentObject![variable] = l;
                 break;
+            case bool g:
+                currentObject![variable] = g;
+                break;
         }
 
         return data;
