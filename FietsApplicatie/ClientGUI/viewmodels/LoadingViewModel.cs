@@ -1,4 +1,5 @@
 using System;
+using System.Security;
 using System.Threading;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -49,12 +50,25 @@ public class LoadingViewModel : ObservableObject, IClientCallback
         }
     }
 
+    private string _user;
+    private string _pass;
+    private string _ip;
+    private int _port;
+    private string _bike;
+    private bool _sim;
     private Thread _threadCounter;
 
     public ICommand GoBack { get; }
 
     public LoadingViewModel(NavigationStore navigationStore, string user, string pass, string ip, int port, string bike, bool sim)
     {
+        _user = user;
+        _pass = pass;
+        _ip = ip;
+        _port = port;
+        _bike = bike;
+        _sim = sim;
+
         NavigationStore = navigationStore;
         NavigationStore.Client.Callback = this;
         if (user.ToLower() == "rick") 
@@ -62,8 +76,9 @@ public class LoadingViewModel : ObservableObject, IClientCallback
             _image = "/resources/rick.gif";
         }
 
-        NavigationStore.Client.SetupConnection(user, pass, ip, port, bike, sim);
+        
         GoBack = new GoBackCommand(this);
+        new Thread(SetupConnection).Start();
         _threadCounter = new Thread(StartCountdown);
     }
 
@@ -76,6 +91,11 @@ public class LoadingViewModel : ObservableObject, IClientCallback
         }
         NavigationStore.CurrentViewModel = new BeginViewModel(NavigationStore);
         NavigationStore.Client.Stop(true);
+    }
+
+    public void SetupConnection() 
+    {
+        NavigationStore.Client.SetupConnection(_user, _pass, _ip, _port, _bike, _sim);
     }
 
     public void OnCallback(State state, string value = "")

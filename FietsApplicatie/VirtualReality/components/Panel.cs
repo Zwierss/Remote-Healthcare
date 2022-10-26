@@ -59,14 +59,41 @@ public class Panel
                 )!
             )!
         )!,tunnelId)!);
-        
-        _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,JObject>(
-            "id", _parent.PanelId!, 1, PacketSender.SendReplacedObject<string,JObject>(
-                "text" ,message, 1, PacketSender.SendReplacedObject<int[],string>(
-                    "position", new[]{50,140}, 1, "scene\\panel\\drawtextpanelscene.json"
+
+        if (!string.IsNullOrEmpty(message))
+        {
+            string[] uncoveredMessage = message.Split(' ');
+            int newLines = 0;
+            string newMessage = "";
+
+            foreach (string s in uncoveredMessage)
+            {
+                newMessage += s + " ";
+                if (newMessage.Length + s.Length > 22 || s == uncoveredMessage[uncoveredMessage.Length - 1]) 
+                {
+                    int pos = 160 + newLines * 40;
+                    _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, JObject>(
+                        "id", _parent.PanelId!, 1, PacketSender.SendReplacedObject<string, JObject>(
+                            "text", newMessage, 1, PacketSender.SendReplacedObject<int[], string>(
+                                "position", new[] { 50, pos }, 1, "scene\\panel\\drawtextpanelscene.json"
+                            )!
+                        )!
+                    )!, tunnelId)!);
+                    newLines++;
+                    newMessage = "";
+                }
+            }
+        }
+        else 
+        {
+            _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string, JObject>(
+                "id", _parent.PanelId!, 1, PacketSender.SendReplacedObject<string, JObject>(
+                    "text", message, 1, PacketSender.SendReplacedObject<int[], string>(
+                        "position", new[] { 50, 160 }, 1, "scene\\panel\\drawtextpanelscene.json"
+                    )!
                 )!
-            )!
-        )!,tunnelId)!);
+            )!, tunnelId)!);
+        }
         
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>(
             "id", _parent.PanelId!, 1, "scene\\panel\\setclearcolorpanelscene.json"

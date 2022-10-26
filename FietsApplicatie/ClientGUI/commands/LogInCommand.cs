@@ -47,6 +47,16 @@ public class LogInCommand : CommandBase
             return;
         }
 
+        if (string.IsNullOrEmpty(_view.Username)) 
+        {
+            _view.ErrorMessage = "Voer een gebruikersnaam in";
+        }
+
+        if (string.IsNullOrEmpty(_view.Ip)) 
+        {
+            _view.ErrorMessage = "Voer een IP-adres in";
+        }
+
         _view.NavigationStore.CurrentViewModel = new LoadingViewModel(_view.NavigationStore, _view.Username, password, _view.Ip, port, _view.FietsNr,_view.IsChecked);
     }
     
