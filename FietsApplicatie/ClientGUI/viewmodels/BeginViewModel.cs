@@ -95,17 +95,6 @@ public class BeginViewModel : ObservableObject, IClientCallback
             case Error:
                 ErrorMessage = value;
                 break;
-            case Success:
-                if (Username.ToLower() == "rick")
-                {
-                    NavigationStore.CurrentViewModel = new LoadingViewModel(NavigationStore, "rick");
-                }
-                else 
-                {
-                    NavigationStore.CurrentViewModel = new LoadingViewModel(NavigationStore, "load");
-                }
-                
-                break;
         }
     }
 }

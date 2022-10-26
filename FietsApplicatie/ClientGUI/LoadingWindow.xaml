@@ -8,8 +8,11 @@
              d:DesignHeight="450" d:DesignWidth="800"
              xmlns:gif = "https://github.com/XamlAnimatedGif/XamlAnimatedGif">
     <Grid>
-        <Image x:Name="loadingscreen" gif:AnimationBehavior.SourceUri="{Binding Image}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" Margin="352,135,0,0"/>
-        <TextBlock HorizontalAlignment="Center" Margin="0,333,0,0" TextWrapping="Wrap" Text="{Binding Message}" VerticalAlignment="Top" FontSize="16"/>
+        <Image x:Name="loadingscreen" gif:AnimationBehavior.SourceUri="{Binding Image}" Margin="331,156,331,156"/>
+
+        <Button Command="{Binding GoBack}" Content="Ga terug " Margin="338,344,0,0" FontSize="14" Height="39" VerticalAlignment="Top" HorizontalAlignment="Left" Width="124"/>
+        <TextBlock HorizontalAlignment="Center" Margin="0,76,0,0" TextWrapping="Wrap" Text="{Binding Message}" VerticalAlignment="Top" FontSize="20"/>
+        <TextBlock HorizontalAlignment="Center" Margin="0,305,0,0" TextWrapping="Wrap" Text="{Binding Countdown}" VerticalAlignment="Top" FontSize="14"/>
 
     </Grid>
 </UserControl>

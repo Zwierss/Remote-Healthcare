@@ -11,7 +11,6 @@ public class ServerConnected : ICommand
         if (status == 1)
         {
             parent.ConnectedToServer = true;
-            parent.Callback.OnCallback(Success);
             new Thread(parent.SetupRest).Start();
         }
         else if (status == 0)

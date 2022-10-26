@@ -41,7 +41,13 @@ public class LogInCommand : CommandBase
             return;
         }
 
-        _view.NavigationStore.Client.SetupConnection(_view.Username, password, _view.Ip, port, _view.FietsNr, _view.IsChecked);
+        if (string.IsNullOrEmpty(_view.FietsNr)) 
+        {
+            _view.ErrorMessage = "Voer een geldig fietsnummer in";
+            return;
+        }
+
+        _view.NavigationStore.CurrentViewModel = new LoadingViewModel(_view.NavigationStore, _view.Username, password, _view.Ip, port, _view.FietsNr,_view.IsChecked);
     }
     
     

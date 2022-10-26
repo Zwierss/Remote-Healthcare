@@ -277,7 +277,7 @@ public class Client : IHardwareCallback
             
             _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         }
-        catch(Exception e)
+        catch(Exception)
         {
             Stop(false);
         }

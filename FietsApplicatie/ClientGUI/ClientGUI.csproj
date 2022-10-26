@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="commands\CommandBase.cs" />
     <Compile Include="commands\CreateCommand.cs" />
+    <Compile Include="commands\GoBackCommand.cs" />
     <Compile Include="commands\LogInCommand.cs" />
     <Compile Include="commands\MakeAccountCommand.cs" />
     <Compile Include="commands\StopCommand.cs" />
