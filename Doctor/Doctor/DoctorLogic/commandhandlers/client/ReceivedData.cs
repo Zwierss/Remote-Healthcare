@@ -6,6 +6,20 @@ namespace DoctorLogic.commandhandlers.client;
 
 public class ReceivedData : ICommand
 {
+    /// <summary>
+    /// The function takes the data from the packet and puts it into the correct format for the view model to use. 
+    /// 
+    /// The function takes the packet and the parent client as parameters. The parent client is used to call the view model.
+    /// 
+    /// 
+    /// The function then takes the data from the packet and puts it into the correct format for the view model to use. 
+    /// 
+    /// The function then creates a string array with the data in the correct format. 
+    /// 
+    /// The function then calls the view model with the data.
+    /// </summary>
+    /// <param name="JObject">The packet received from the server.</param>
+    /// <param name="DoctorClient">The client that received the command.</param>
     public void OnCommandReceived(JObject packet, DoctorClient parent)
     {
         double speed = packet["data"]!["data"]!["speed"]!.ToObject<double>();

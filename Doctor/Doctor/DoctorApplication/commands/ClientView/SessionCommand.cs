@@ -7,11 +7,19 @@ public class SessionCommand : CommandBase
 
     private ClientViewModel _view;
 
+    /* A constructor. */
     public SessionCommand(ClientViewModel view)
     {
         _view = view;
     }
 
+    /// <summary>
+    /// If the session is active, stop it, otherwise start it
+    /// </summary>
+    /// <param name="parameter">The parameter that was passed to the command.</param>
+    /// <returns>
+    /// The result of the method is being returned.
+    /// </returns>
     public override void Execute(object parameter)
     {
         if (!_view.IsOnline)
@@ -35,7 +43,10 @@ public class SessionCommand : CommandBase
         _view.SessionIsActive = !_view.SessionIsActive;
     }
 
-    public void OverrideViews()
+    /// <summary>
+    /// It sets all the values of the view to "--"
+    /// </summary>
+    private void OverrideViews()
     {
         _view.Speed = "--";
         _view.Heartbeat = "--";

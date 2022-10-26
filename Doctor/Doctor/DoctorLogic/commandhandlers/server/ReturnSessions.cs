@@ -5,6 +5,11 @@ namespace DoctorLogic.commandhandlers.server;
 
 public class ReturnSessions : ICommand
 {
+    /// <summary>
+    /// It takes the data from the packet, and sends it to the ViewModel to be displayed
+    /// </summary>
+    /// <param name="JObject">The packet that was received from the client.</param>
+    /// <param name="DoctorClient">The client that sent the command</param>
     public void OnCommandReceived(JObject packet, DoctorClient parent)
     {
         try

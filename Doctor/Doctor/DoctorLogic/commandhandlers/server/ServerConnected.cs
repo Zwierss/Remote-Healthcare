@@ -6,6 +6,12 @@ namespace DoctorLogic.commandhandlers.server;
 
 public class ServerConnected : ICommand
 {
+    /// <summary>
+    /// It checks if the login was successful, and if so, it will call the OnChangedValues function of the ViewModel, which
+    /// will change the view to the next view
+    /// </summary>
+    /// <param name="JObject">The packet that was received from the server.</param>
+    /// <param name="DoctorClient">The client that sent the packet</param>
     public void OnCommandReceived(JObject packet, DoctorClient parent)
     {
         int approved = packet["data"]["status"].ToObject<int>();

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DoctorLogic
 {
+    /* Defining an enumeration of states that the program can be in. */
     public enum State
     {
         Success,
