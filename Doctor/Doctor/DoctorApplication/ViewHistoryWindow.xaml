@@ -14,17 +14,18 @@
             </wpf:CartesianChart.Series>
         </wpf:CartesianChart>
 
-        <Label Content="Snelheid" HorizontalAlignment="Left" Margin="357,12,0,0" VerticalAlignment="Top"/>
-        <Label Content="Hartslag" HorizontalAlignment="Left" Margin="357,184,0,0" VerticalAlignment="Top"/>
+        <Label Content="Snelheid (km/h)" HorizontalAlignment="Left" Margin="357,12,0,0" VerticalAlignment="Top"/>
+        <Label Content="Hartslag (bpm)" HorizontalAlignment="Left" Margin="357,184,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" Text="{Binding Item}" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
-        <TextBlock HorizontalAlignment="Left" Margin="163,121,0,0" TextWrapping="Wrap" Text="{Binding BpmAvg}" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="163,81,0,0" TextWrapping="Wrap" Text="{Binding SpeedAvg}" VerticalAlignment="Top"/>
-        <Label Content="Gemiddelde snelheid:" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top"/>
-        <Label Content="Gemiddelde hartslag:" HorizontalAlignment="Left" Margin="10,116,0,0" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="178,121,0,0" TextWrapping="Wrap" Text="{Binding BpmAvg}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="178,81,0,0" TextWrapping="Wrap" Text="{Binding SpeedAvg}" VerticalAlignment="Top"/>
+        <Label Content="Gemiddelde snelheid (km/h):" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top"/>
+        <Label Content="Gemiddelde hartslag (bpm):" HorizontalAlignment="Left" Margin="10,116,0,0" VerticalAlignment="Top"/>
         <wpf:CartesianChart Margin="233,220,20,86">
             <wpf:CartesianChart.Series>
                 <wpf:LineSeries Values="{Binding Beats}"  DataLabels="False" x:Name="Hartslag"/>
             </wpf:CartesianChart.Series>
         </wpf:CartesianChart>
+        <Button Command="{Binding GoBack}" Content="Home" HorizontalAlignment="Left" Margin="10,163,0,0" VerticalAlignment="Top" Height="33" Width="96"/>
     </Grid>
 </UserControl>

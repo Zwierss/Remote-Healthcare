@@ -213,6 +213,7 @@ public class ClientViewModel : ObservableObject, IWindow
                     OnlineStr = "Online";
                     IsOnline = true;
                     ErrorMessage = "";
+                    NavigationStore.Client.Subscribe(NavigationStore.Client.Uuid, UserId);
                 }
                 else
                 {

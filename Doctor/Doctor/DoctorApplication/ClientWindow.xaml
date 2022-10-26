@@ -9,8 +9,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
         <TextBlock Text="{Binding UserId}" HorizontalAlignment="Left" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
-        <Image Margin="193,9,571,413" Source="{Binding OnlineSrc}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="279,14,0,0" TextWrapping="Wrap" Text="{Binding OnlineStr}" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
+        <Image HorizontalAlignment="Left" Source="{Binding OnlineSrc}" Height="32" Margin="211,20,0,0" VerticalAlignment="Top" Width="32"/>
+        <TextBlock HorizontalAlignment="Left" Margin="264,25,0,0" TextWrapping="Wrap" Text="{Binding OnlineStr}" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
         <Button Command="{Binding SessionC}" Content="{Binding SessionBtn}" HorizontalAlignment="Left" Margin="10,277,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
         <Button Command="{Binding EmergencyStop}" Content="Noodstop" HorizontalAlignment="Left" Margin="158,277,0,0" VerticalAlignment="Top" Height="40" Width="106"/>
         <Button Command="{Binding GoBack}" Content="Ga terug" HorizontalAlignment="Left" Margin="290,277,0,0" VerticalAlignment="Top" Height="40" Width="110"/>
@@ -19,7 +19,7 @@
         <Label Content="Snelheid (km/h):" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top"/>
         <Label Content="Hartslag (bpm):" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
         <Label Content="Hartslag gem. (bpm):" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top"/>
-        <Label Content="Afstand afgelegd:" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top"/>
+        <Label Content="Afstand afgelegd (m):" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="158,125,0,0" TextWrapping="Wrap" Text="{Binding SpeedAvg}" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="158,155,0,0" TextWrapping="Wrap" Text="{Binding HeartbeatAvg}" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="158,185,0,0" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top"/>
@@ -41,7 +41,8 @@
                 <wpf:LineSeries Values="{Binding Beats}"  DataLabels="False" x:Name="Hartslag1"/>
             </wpf:CartesianChart.Series>
         </wpf:CartesianChart>
-        <Label Content="Snelheid" HorizontalAlignment="Left" Margin="438,10,0,0" VerticalAlignment="Top"/>
-        <Label Content="Hartslag" HorizontalAlignment="Left" Margin="438,201,0,0" VerticalAlignment="Top"/>
+        <Label Content="Snelheid (km/h)" HorizontalAlignment="Left" Margin="438,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Hartslag (bpm)" HorizontalAlignment="Left" Margin="438,201,0,0" VerticalAlignment="Top"/>
+        
     </Grid>
 </UserControl>

@@ -95,6 +95,7 @@
     <Compile Include="commands\SelectionView\GoBackSelectionCommand.cs" />
     <Compile Include="commands\SelectionView\SelectSelectionCommand.cs" />
     <Compile Include="commands\SelectionView\ViewHistoricCommand.cs" />
+    <Compile Include="commands\ViewHistoryView\GoBackViewCommand.cs" />
     <Compile Include="HistoryClientWindow.xaml.cs">
       <DependentUpon>HistoryClientWindow.xaml</DependentUpon>
     </Compile>
@@ -181,9 +182,7 @@
     <Resource Include="resources\offline.png" />
     <Resource Include="resources\online.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="commands\ViewHistoryView\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="resources\load.gif" />
   </ItemGroup>

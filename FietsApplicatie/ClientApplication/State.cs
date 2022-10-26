@@ -4,4 +4,5 @@ public enum State
 {
     Success,
     Error,
+    Chat
 }

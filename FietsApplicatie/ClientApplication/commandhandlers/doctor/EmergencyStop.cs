@@ -9,6 +9,7 @@ public class EmergencyStop : ICommand
     public void OnCommandReceived(JObject packet, Client parent)
     {
         parent.Callback.OnCallback(Error, "De dokter heeft de applicatie gestopt");
+        parent.SendDoctorMessage("Noodstop: De applicatie is gestopt");
         parent.SessionIsActive = false;
         parent.Stop(true);
     }

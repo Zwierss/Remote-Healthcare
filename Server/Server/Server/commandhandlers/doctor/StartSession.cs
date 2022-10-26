@@ -5,6 +5,11 @@ namespace Server.commandhandlers.doctor;
 
 public class StartSession : ICommand
 {
+    /// <summary>
+    /// It checks if the client is already in a session, and if not, it creates a new session for them
+    /// </summary>
+    /// <param name="JObject">The packet that was received from the client.</param>
+    /// <param name="Client">The client that sent the command</param>
     public void OnCommandReceived(JObject packet, Client parent)
     {
         string username = packet["data"]!["client"]!.ToObject<string>()!;

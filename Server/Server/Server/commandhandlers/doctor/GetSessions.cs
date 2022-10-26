@@ -5,6 +5,11 @@ namespace Server.commandhandlers.doctor;
 
 public class GetSessions: ICommand
 {
+    /// <summary>
+    /// It gets all the session names for a client and sends them to the client
+    /// </summary>
+    /// <param name="JObject">The packet received from the client.</param>
+    /// <param name="Client">The client that sent the packet</param>
     public void OnCommandReceived(JObject packet, Client parent)
     {
         string client = packet["data"]!["client"]!.ToObject<string>()!;

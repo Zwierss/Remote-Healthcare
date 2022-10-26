@@ -17,5 +17,7 @@ public class DoctorSubscribe : ICommand
             parent.Doctor = doctor;
             parent.IsSubscribed = true;
         }
+
+        parent.SendDoctorMessage("Dokter " + doctor + " kijkt nu mee.");
     }
 }

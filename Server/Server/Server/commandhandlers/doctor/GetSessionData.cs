@@ -5,6 +5,12 @@ namespace Server.commandhandlers.doctor;
 
 public class GetSessionData : ICommand
 {
+    /// <summary>
+    /// It gets the client and file name from the packet, then it searches for the client's folder, then it searches for the
+    /// file in the client's folder, then it gets the data from the file, then it sends the data to the client
+    /// </summary>
+    /// <param name="JObject">The packet that was received.</param>
+    /// <param name="Client">The client's name</param>
     public void OnCommandReceived(JObject packet, Client parent)
     {
         string client = packet["data"]!["client"]!.ToObject<string>()!;

@@ -10,5 +10,6 @@
         <TextBlock HorizontalAlignment="Center" Margin="0,126,0,0" TextWrapping="Wrap" Text="{Binding Message}" VerticalAlignment="Top" FontSize="16"/>
         <Image Source="{Binding Image}" HorizontalAlignment="Left" Height="100" Margin="341,180,0,0" VerticalAlignment="Top" Width="100"/>
         <Button Content="Stop simulatie en log uit" HorizontalAlignment="Center" Margin="0,322,0,0" VerticalAlignment="Top" Height="27" Width="144" Command="{Binding Stop}"/>
+        <ListView x:Name="ViewList" ItemsSource="{Binding Chats}" Margin="10,10,586,10"/>
     </Grid>
 </UserControl>

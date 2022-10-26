@@ -24,6 +24,7 @@ public class DoctorClient
     private TcpClient _tcp;
     private NetworkStream _stream;
     private readonly Dictionary<string, ICommand> _commands;
+    private bool _isActive;
 
     public string Uuid { get; set; }
 
@@ -31,6 +32,7 @@ public class DoctorClient
     {
         _commands = new Dictionary<string, ICommand>();
         InitCommands();
+        _isActive = false;
     }
 
     public async void SetupConnection(string uuid, string password, string hostname, int port)
@@ -74,6 +76,7 @@ public class DoctorClient
         _tcp = new TcpClient();
         await _tcp.ConnectAsync(hostname, port);
         _stream = _tcp.GetStream();
+        _isActive = true;
     }
 
     [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: System.Net.Sockets.OverlappedAsyncResult")]
@@ -148,6 +151,7 @@ public class DoctorClient
 
     private void SendData(JObject message)
     {
+        if (!_isActive) return;
         byte[] encryptedMessage = GetEncryptedMessage(message);
         try
         {

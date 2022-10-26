@@ -254,6 +254,9 @@ public class Client : IHardwareCallback
     public void SendDoctorMessage(string message)
     {
         _vr.CurrentMessage = message;
+        Callback.OnCallback(Chat, message + "\n");
+        Thread.Sleep(8000);
+        _vr.CurrentMessage = "";
     }
 
     private void OnRead(IAsyncResult ar)
@@ -266,7 +269,6 @@ public class Client : IHardwareCallback
             while (_totalBuffer.Length >= 4)
             {
                 JObject data = GetDecryptedMessage(_totalBuffer);
-                Console.WriteLine(data);
                 _totalBuffer = Array.Empty<byte>();
 
                 if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))

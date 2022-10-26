@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
+using DoctorApplication.commands.ViewHistoryView;
 using DoctorApplication.stores;
 using DoctorLogic;
 using LiveCharts;
@@ -8,14 +10,12 @@ using LiveCharts.Helpers;
 using LiveCharts.Wpf;
 using MvvmHelpers;
 using static DoctorLogic.State;
+using ICommand = System.Windows.Input.ICommand;
 
 namespace DoctorApplication.viewmodels;
 
 public class ViewHistoryViewModel : ObservableObject, IWindow
 {
-    private double[] _speedArray;
-    private double[] _beatArray;
-
     public string SpeedAvg { get; set; }
     public string BpmAvg { get; set; }
 
@@ -45,10 +45,11 @@ public class ViewHistoryViewModel : ObservableObject, IWindow
         }
     }
 
+    public ICommand GoBack;
+
     public ViewHistoryViewModel(NavigationStore navigationStore, string client, string item, double[] speeds, double[] times, double[] beats)
     {
-        _speedArray = speeds;
-        _beatArray = beats;
+        GoBack = new GoBackViewCommand(this);
 
         double speedMax = 0;
         foreach(double speed in speeds) 
@@ -69,8 +70,9 @@ public class ViewHistoryViewModel : ObservableObject, IWindow
         Item = item;
         NavigationStore.Client.ViewModel = this;
 
-        Speeds = _speedArray.AsEnumerable().AsChartValues<double>();
-        Beats = _beatArray.AsEnumerable().AsChartValues<double>();
+        Speeds = speeds.AsEnumerable().AsChartValues<double>();
+        Beats = beats.AsEnumerable().AsChartValues<double>();
+
     }
 
 

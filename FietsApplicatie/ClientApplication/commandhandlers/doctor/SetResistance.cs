@@ -9,5 +9,6 @@ public class SetResistance : ICommand
     {
         Console.WriteLine("works");
         HardwareConnector.SetResistance(packet["data"]!["data"]!["resistance"]!.ToObject<byte>());
+        parent.SendDoctorMessage("Weerstand: is veranderd naar " + packet["data"]!["data"]!["resistance"]!.ToObject<byte>());
     }
 }
