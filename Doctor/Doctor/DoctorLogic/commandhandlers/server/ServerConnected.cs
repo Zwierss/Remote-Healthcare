@@ -18,5 +18,10 @@ public class ServerConnected : ICommand
             parent.ViewModel.OnChangedValues(Error,new[]{"Deze combinatie van gebruikersnaam en wachtwoord bestaat niet." });
             parent.SelfDestruct();
         }
+        else if(approved == 2)
+        {
+            parent.ViewModel.OnChangedValues(Error, new[] { "Dit account is al ingelogd op deze server" });
+            parent.SelfDestruct();
+        }
     }
 }

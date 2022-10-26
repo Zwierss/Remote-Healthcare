@@ -13,25 +13,66 @@ namespace DoctorApplication.viewmodels;
 
 public class ViewHistoryViewModel : ObservableObject, IWindow
 {
-    public double[] Times { get; set; }
-    public double[] Speeds { get; set; }
-    public double[] Beats { get; set; }
+    private double[] _speedArray;
+    private double[] _beatArray;
 
-    public NavigationStore NavigationStore { get; }
-    public string Client { get; }
-    public string Item { get; }
+    public string SpeedAvg { get; set; }
+    public string BpmAvg { get; set; }
+
+    public NavigationStore NavigationStore { get; set; }
+    public string Client { get; set; }
+    public string Item { get; set; }
+
+    private ChartValues<double> _speeds;
+    public ChartValues<double> Speeds 
+    {
+        get => _speeds;
+        set 
+        {
+            _speeds = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private ChartValues<double> _beats;
+    public ChartValues<double> Beats 
+    {
+        get => _beats;
+        set
+        {
+            _beats = value;
+            OnPropertyChanged();
+        }
+    }
 
     public ViewHistoryViewModel(NavigationStore navigationStore, string client, string item, double[] speeds, double[] times, double[] beats)
     {
-        Times = times;
-        Speeds = speeds;
-        Beats = beats;
+        _speedArray = speeds;
+        _beatArray = beats;
+
+        double speedMax = 0;
+        foreach(double speed in speeds) 
+        { 
+            speedMax += speed;
+        }
+        SpeedAvg = Math.Round((speedMax / speeds.Length), 1, MidpointRounding.AwayFromZero).ToString();
+
+        int bpmMax = 0;
+        foreach (double bpm in beats)
+        {
+            bpmMax += (int)bpm;
+        }
+        BpmAvg = (bpmMax / beats.Length).ToString();
 
         NavigationStore = navigationStore;
         Client = client;
         Item = item;
         NavigationStore.Client.ViewModel = this;
+
+        Speeds = _speedArray.AsEnumerable().AsChartValues<double>();
+        Beats = _beatArray.AsEnumerable().AsChartValues<double>();
     }
+
 
     public void OnChangedValues(State state, string[] args = null)
     {

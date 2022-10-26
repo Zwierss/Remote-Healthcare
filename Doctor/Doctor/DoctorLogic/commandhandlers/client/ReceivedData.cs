@@ -26,8 +26,27 @@ public class ReceivedData : ICommand
         }
         else
         {
-            int minutes = time / 60;
-            int seconds = time % 60;
+            string minutes; 
+            string seconds;
+
+            if (time / 60 < 10)
+            {
+                minutes = "0" + ((int)(time / 60)).ToString();
+            }
+            else 
+            {
+                minutes = ((int)(time / 60)).ToString();
+            }
+
+            if (time % 60 < 10)
+            {
+                seconds = "0" + ((int)(time % 60)).ToString();
+            }
+            else 
+            {
+                    seconds = ((int)(time % 60)).ToString();
+            }
+
             string timeS = minutes + ":" + seconds;
             args = new[]
             {

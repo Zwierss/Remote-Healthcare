@@ -6,6 +6,11 @@ public class Disconnect : ICommand
 {
     public void OnCommandReceived(JObject packet, Client parent)
     {
+        if (packet["data"]!["notify"]!.ToObject<bool>())
+        {
+            parent.SelfDestruct(true);
+        }
+        
         List<string> clientUuids = new();
         List<Client> doctors = new();
         
@@ -21,18 +26,10 @@ public class Disconnect : ICommand
             }
         }
 
-        if (clientUuids.Count != 0 && doctors.Count != 0)
+        if (clientUuids.Count == 0 || doctors.Count == 0) return;
+        foreach (Client d in doctors)
         {
-            foreach (Client d in doctors)
-            {
-                d.SendMessage(PacketSender.SendReplacedObject("clients", clientUuids, 1, "doctor\\returnclients.json")!);
-            }
+            d.SendMessage(PacketSender.SendReplacedObject("clients", clientUuids, 1, "doctor\\returnclients.json")!);
         }
-        
-        if (packet["data"]!["notify"]!.ToObject<bool>())
-        {
-            parent.SelfDestruct(true);
-        }
-
     }
 }

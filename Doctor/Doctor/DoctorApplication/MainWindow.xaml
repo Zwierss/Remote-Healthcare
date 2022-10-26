@@ -28,7 +28,7 @@
                     <doctorApplication:HistoryWindow/>                    
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:ViewHistoryViewModel}">
-                    <doctorApplication:ViewHistoryWinow/>                    
+                    <doctorApplication:ViewHistoryWindow/>                    
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:LoadingHistoryViewModel}">
                     <doctorApplication:LoadingHistoryWindow/>

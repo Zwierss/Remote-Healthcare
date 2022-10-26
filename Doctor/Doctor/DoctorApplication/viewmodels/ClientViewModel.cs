@@ -8,6 +8,7 @@ using DoctorLogic;
 using MvvmHelpers;
 using ICommand = System.Windows.Input.ICommand;
 using static DoctorLogic.State;
+using LiveCharts;
 
 namespace DoctorApplication.viewmodels;
 
@@ -129,6 +130,28 @@ public class ClientViewModel : ObservableObject, IWindow
         }
     }
 
+    private ChartValues<double> _speeds;
+    public ChartValues<double> Speeds
+    {
+        get => _speeds;
+        set
+        {
+            _speeds = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private ChartValues<int> _beats;
+    public ChartValues<int> Beats
+    {
+        get => _beats;
+        set
+        {
+            _beats = value;
+            OnPropertyChanged();
+        }
+    }
+
     public ICommand EmergencyStop { get; }
     public ICommand SessionC { get; }
     public ICommand SendMessage { get; }
@@ -136,6 +159,8 @@ public class ClientViewModel : ObservableObject, IWindow
 
     public ClientViewModel(NavigationStore navigationStore, string userId)
     {
+        Speeds = new ChartValues<double>();
+        Beats = new ChartValues<int>();
         IsOnline = true;
         UserId = userId;
         NavigationStore = navigationStore;
@@ -158,6 +183,22 @@ public class ClientViewModel : ObservableObject, IWindow
         switch (state)
         {
             case Data:
+                ChartValues<double> speeds = Speeds;
+                speeds.Add(double.Parse(args![0]));
+                if (speeds.Count > 30) 
+                {
+                    speeds.RemoveAt(0);
+                }
+                Speeds = speeds;
+
+                ChartValues<int> beats = Beats;
+                beats.Add(int.Parse(args![1]));
+                if (beats.Count > 30)
+                {
+                    beats.RemoveAt(0);
+                }
+                Beats = beats;
+
                 Speed = args![0];
                 Heartbeat = args[1];
                 SpeedAvg = args[2];

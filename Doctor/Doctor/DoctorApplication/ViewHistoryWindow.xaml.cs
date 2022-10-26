@@ -2,9 +2,9 @@ using System.Windows.Controls;
 
 namespace DoctorApplication;
 
-public partial class ViewHistoryWinow : UserControl
+public partial class ViewHistoryWindow : UserControl
 {
-    public ViewHistoryWinow()
+    public ViewHistoryWindow()
     {
         InitializeComponent();
     }

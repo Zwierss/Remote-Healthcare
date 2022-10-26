@@ -4,32 +4,44 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DoctorApplication"
+             xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
         <TextBlock Text="{Binding UserId}" HorizontalAlignment="Left" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
-        <Image HorizontalAlignment="Left" Height="28" Margin="730,46,0,0" VerticalAlignment="Top" Width="36" Source="{Binding OnlineSrc}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="682,51,0,0" TextWrapping="Wrap" Text="{Binding OnlineStr}" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
-        <Button Command="{Binding SessionC}" Content="{Binding SessionBtn}" HorizontalAlignment="Left" Margin="10,318,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
-        <Button Command="{Binding EmergencyStop}" Content="Noodstop" HorizontalAlignment="Left" Margin="158,318,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
-        <Button Command="{Binding GoBack}" Content="Ga terug" HorizontalAlignment="Left" Margin="299,318,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
-        <TextBox x:Name="bericht" HorizontalAlignment="Left" Margin="451,285,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="215" Height="28" Text="{Binding DoctorMsg}"/>
-        <Button Command="{Binding SendMessage}" Content="Stuur bericht" HorizontalAlignment="Left" Margin="451,318,0,0" VerticalAlignment="Top" Height="40" Width="215"/>
-        <Label Content="Snelheid (km/h):" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top"/>
-        <Label Content="Hartslag (bpm):" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
-        <Label Content="Hartslag gem. (bpm):" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top"/>
-        <Label Content="Afstand afgelegd:" HorizontalAlignment="Left" Margin="10,207,0,0" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,157,0,0" TextWrapping="Wrap" Text="{Binding SpeedAvg}" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,185,0,0" TextWrapping="Wrap" Text="{Binding HeartbeatAvg}" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,212,0,0" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,233,0,0" TextWrapping="Wrap" Text="{Binding Time}" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,92,0,0" TextWrapping="Wrap" Text="{Binding Speed}" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="158,123,0,0" TextWrapping="Wrap" Text="{Binding Heartbeat}" VerticalAlignment="Top"/>
-        <Label Content="Snelheid gem. (km/h):" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top"/>
-        <Slider HorizontalAlignment="Left" Margin="451,245,0,0" VerticalAlignment="Top" Width="215" Maximum="255" ValueChanged="Slider_ValueChanged"/>
-        <TextBlock HorizontalAlignment="Left" Margin="451,0,0,0" TextWrapping="Wrap" Text="Pas weerstand aan" VerticalAlignment="Center"/>
-        <Label Content="Tijd:" HorizontalAlignment="Left" Margin="10,233,0,0" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,380,0,0" TextWrapping="Wrap" Text="{Binding ErrorMessage}" VerticalAlignment="Top" FontSize="11" FontStyle="Italic" Foreground="#FFCC2E2E"/>
-
+        <Image Margin="193,9,571,413" Source="{Binding OnlineSrc}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="279,14,0,0" TextWrapping="Wrap" Text="{Binding OnlineStr}" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
+        <Button Command="{Binding SessionC}" Content="{Binding SessionBtn}" HorizontalAlignment="Left" Margin="10,277,0,0" VerticalAlignment="Top" Height="40" Width="126"/>
+        <Button Command="{Binding EmergencyStop}" Content="Noodstop" HorizontalAlignment="Left" Margin="158,277,0,0" VerticalAlignment="Top" Height="40" Width="106"/>
+        <Button Command="{Binding GoBack}" Content="Ga terug" HorizontalAlignment="Left" Margin="290,277,0,0" VerticalAlignment="Top" Height="40" Width="110"/>
+        <TextBox x:Name="bericht" HorizontalAlignment="Left" Margin="158,328,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="242" Height="28" Text="{Binding DoctorMsg}"/>
+        <Button Command="{Binding SendMessage}" Content="Stuur bericht" HorizontalAlignment="Left" Margin="10,322,0,0" VerticalAlignment="Top" Height="40" Width="126" RenderTransformOrigin="0.506,-0.275"/>
+        <Label Content="Snelheid (km/h):" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top"/>
+        <Label Content="Hartslag (bpm):" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
+        <Label Content="Hartslag gem. (bpm):" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top"/>
+        <Label Content="Afstand afgelegd:" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,125,0,0" TextWrapping="Wrap" Text="{Binding SpeedAvg}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,155,0,0" TextWrapping="Wrap" Text="{Binding HeartbeatAvg}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,185,0,0" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,215,0,0" TextWrapping="Wrap" Text="{Binding Time}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,65,0,0" TextWrapping="Wrap" Text="{Binding Speed}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="158,95,0,0" TextWrapping="Wrap" Text="{Binding Heartbeat}" VerticalAlignment="Top"/>
+        <Label Content="Snelheid gem. (km/h):" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top"/>
+        <Slider TickPlacement="BottomRight" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" TickFrequency="10" HorizontalAlignment="Left" Margin="158,240,0,0" VerticalAlignment="Top" Width="242" Maximum="200" ValueChanged="Slider_ValueChanged"/>
+        <TextBlock HorizontalAlignment="Left" Margin="15,240,0,0" TextWrapping="Wrap" Text="Pas weerstand aan" VerticalAlignment="Top"/>
+        <Label Content="Tijd:" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,367,0,0" TextWrapping="Wrap" Text="{Binding ErrorMessage}" VerticalAlignment="Top" FontSize="11" FontStyle="Italic" Foreground="#FFCC2E2E"/>
+        <wpf:CartesianChart Margin="438,50,10,254">
+            <wpf:CartesianChart.Series>
+                <wpf:LineSeries Values="{Binding Speeds}"  DataLabels="False" x:Name="Hartslag"/>
+            </wpf:CartesianChart.Series>
+        </wpf:CartesianChart>
+        <wpf:CartesianChart Margin="438,226,10,78">
+            <wpf:CartesianChart.Series>
+                <wpf:LineSeries Values="{Binding Beats}"  DataLabels="False" x:Name="Hartslag1"/>
+            </wpf:CartesianChart.Series>
+        </wpf:CartesianChart>
+        <Label Content="Snelheid" HorizontalAlignment="Left" Margin="438,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Hartslag" HorizontalAlignment="Left" Margin="438,201,0,0" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

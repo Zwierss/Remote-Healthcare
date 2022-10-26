@@ -109,8 +109,8 @@
     </Compile>
     <Compile Include="stores\NavigationStore.cs" />
     <Compile Include="stores\UtilStore.cs" />
-    <Compile Include="ViewHistoryWinow.xaml.cs">
-      <DependentUpon>ViewHistoryWinow.xaml</DependentUpon>
+    <Compile Include="ViewHistoryWindow.xaml.cs">
+      <DependentUpon>ViewHistoryWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="viewmodels\AccountViewModel.cs" />
     <Compile Include="viewmodels\BeginViewModel.cs" />
@@ -149,7 +149,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SelectionWindow.xaml" />
-    <Page Include="ViewHistoryWinow.xaml" />
+    <Page Include="ViewHistoryWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
