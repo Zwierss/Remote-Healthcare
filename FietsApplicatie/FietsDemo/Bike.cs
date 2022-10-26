@@ -12,11 +12,19 @@ public class Bike
     private readonly BLE _ble;
     public string Serial { get; set; }
 
+    /* Creating a new BLE object. */
     public Bike()
     {
         _ble = new BLE();
     }
 
+    /// <summary>
+    /// It connects to the Tacx Flux, sets the service, subscribes to the characteristic, and returns true if it was
+    /// successful
+    /// </summary>
+    /// <returns>
+    /// The error code.
+    /// </returns>
     public async Task<bool> MakeConnection()
     {
         Thread.Sleep(1000);
@@ -36,12 +44,19 @@ public class Bike
         return true;
     }
 
+    /// <summary>
+    /// It disconnects the device from the BLE.
+    /// </summary>
     public void Disconnect()
     {
         _ble.CloseDevice();
         _ble.Dispose();
     }
     
+    /// <summary>
+    /// It sets the resistance of the bike.
+    /// </summary>
+    /// <param name="resistance">0-255</param>
     public async void SetResistance(byte resistance)
     {
         

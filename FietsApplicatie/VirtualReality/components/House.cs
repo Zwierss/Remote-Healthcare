@@ -9,11 +9,16 @@ public class House
 
     private static readonly string Path = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("ClientGUI", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
 
+    /* A constructor. */
     public House(VRClient parent)
     {
         _parent = parent;
     }
 
+    /// <summary>
+    /// It takes a list of coordinates, sends them to the server, waits for the server to send back the heights of the
+    /// terrain at those coordinates, then places a random house at each coordinate
+    /// </summary>
     public void PlaceHouses()
     {
         List<float[]> r = new();

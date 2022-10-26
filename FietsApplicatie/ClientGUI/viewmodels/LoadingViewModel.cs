@@ -18,6 +18,7 @@ public class LoadingViewModel : ObservableObject, IClientCallback
     public NavigationStore NavigationStore { get; set; }
 
     private string _image = "/resources/load.gif";
+    /* A property that is used to set the image of the loading screen. */
     public string Image
     {
         get => _image;
@@ -29,6 +30,7 @@ public class LoadingViewModel : ObservableObject, IClientCallback
     }
 
     private string _message = "Een ogenblik geduld, we laden alles in...";
+    /* This is a property that is used to set the message of the loading screen. */
     public string Message
     {
         get => _message;
@@ -40,6 +42,7 @@ public class LoadingViewModel : ObservableObject, IClientCallback
     }
 
     private string _countdown = "";
+    /* This is a property that is used to set the countdown of the loading screen. */
     public string Countdown 
     {
         get => _countdown;
@@ -60,6 +63,7 @@ public class LoadingViewModel : ObservableObject, IClientCallback
 
     public ICommand GoBack { get; }
 
+    /* This is the constructor of the LoadingViewModel. It is used to set the properties of the LoadingViewModel. */
     public LoadingViewModel(NavigationStore navigationStore, string user, string pass, string ip, int port, string bike, bool sim)
     {
         _user = user;
@@ -82,6 +86,9 @@ public class LoadingViewModel : ObservableObject, IClientCallback
         _threadCounter = new Thread(StartCountdown);
     }
 
+    /// <summary>
+    /// It counts down from 5 to 0 and then navigates to the BeginViewModel
+    /// </summary>
     public void StartCountdown() 
     {
         for (int i = 5; i >= 0; i--) 
@@ -93,11 +100,21 @@ public class LoadingViewModel : ObservableObject, IClientCallback
         NavigationStore.Client.Stop(true);
     }
 
+    /// <summary>
+    /// > This function sets up the connection to the server
+    /// </summary>
     public void SetupConnection() 
     {
         NavigationStore.Client.SetupConnection(_user, _pass, _ip, _port, _bike, _sim);
     }
 
+    /// <summary>
+    /// If the state is Success, then navigate to the SuccessViewModel. If the state is Error, then set the Message and
+    /// Image properties and start the thread counter
+    /// </summary>
+    /// <param name="State">This is an enum that you can define yourself. It's used to determine what the callback should
+    /// do.</param>
+    /// <param name="value">The value of the message to be displayed.</param>
     public void OnCallback(State state, string value = "")
     {
         switch (state)

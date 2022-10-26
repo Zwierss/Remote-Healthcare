@@ -33,6 +33,8 @@ public class Client : IHardwareCallback
     public List<int> CollectedRates { get; }
 
     private int _prevDistance;
+    /* A property that returns the value of _prevDistance. When the value is set, it checks if the value is 0. If it is, it
+    sets _distanceCorrection to 0. */
     public int PrevDistance
     {
         get => _prevDistance;
@@ -54,6 +56,9 @@ public class Client : IHardwareCallback
     private int _distanceCorrection;
     private int _distanceLoopCounter;
 
+    /* This is the constructor of the Client class. It initializes the VRClient, the commands dictionary, the
+    sessionIsActive, connectedToServer, isActive, distanceCorrection, distanceLoopCounter, prevDistance,
+    collectedSpeeds, collectedRates and isSubscribed variables. */
     public Client()
     {
         _vr = new VRClient();
@@ -70,6 +75,18 @@ public class Client : IHardwareCallback
         IsSubscribed = false;
     }
 
+    /// <summary>
+    /// It connects to the server, sends the username and password, and starts listening for incoming data
+    /// </summary>
+    /// <param name="username">The username of the user.</param>
+    /// <param name="password">The password of the user.</param>
+    /// <param name="hostname">The hostname of the server.</param>
+    /// <param name="port">The port to connect to.</param>
+    /// <param name="bikeNr">The number of the bike you want to connect to.</param>
+    /// <param name="sim">Whether or not the client is a simulator.</param>
+    /// <returns>
+    /// The return type is void, so nothing is being returned.
+    /// </returns>
     public async void SetupConnection(string username, string password, string hostname, int port, string bikeNr, bool sim)
     {
         _bikeNr = bikeNr;
@@ -92,6 +109,16 @@ public class Client : IHardwareCallback
         _stream!.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
+    /// <summary>
+    /// It connects to the server, sends a request to create an account, and then waits for a response
+    /// </summary>
+    /// <param name="username">The username of the account you want to create</param>
+    /// <param name="password">The password of the account</param>
+    /// <param name="hostname">The hostname of the server</param>
+    /// <param name="port">The port of the server</param>
+    /// <returns>
+    /// A string
+    /// </returns>
     public async void CreateAccount(string username, string password, string hostname, int port)
     {
         try
@@ -108,6 +135,11 @@ public class Client : IHardwareCallback
         _stream!.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
+    /// <summary>
+    /// It creates a new TCP client, connects to the specified hostname and port, and then gets the stream from the client
+    /// </summary>
+    /// <param name="hostname">The hostname of the server you want to connect to.</param>
+    /// <param name="port">The port to connect to.</param>
     private async Task Connect(string hostname, int port)
     {
         _client = new TcpClient();
@@ -115,6 +147,10 @@ public class Client : IHardwareCallback
         _stream = _client.GetStream();
     }
 
+    /// <summary>
+    /// It starts a connection with the VR server, waits until the connection is set, then sets up the hardware and sends a
+    /// message to the VR server that the client is ready
+    /// </summary>
     public async void SetupRest()
     {
         _isActive = true;
@@ -131,6 +167,9 @@ public class Client : IHardwareCallback
         SendData(SendReplacedObject("uuid", Username, 1, "application\\server\\clientready.json")!);
     }
 
+    /// <summary>
+    /// It closes the stream and the client
+    /// </summary>
     public void SelfDestruct()
     {
         try
@@ -144,6 +183,13 @@ public class Client : IHardwareCallback
         }
     }
 
+    /// <summary>
+    /// It sends bike data to the server
+    /// </summary>
+    /// <param name="values">The values from the bike.</param>
+    /// <returns>
+    /// A JObject
+    /// </returns>
     public void OnNewBikeData(IReadOnlyList<int> values)
     {
         if(!ConnectedToServer) return;
@@ -207,6 +253,14 @@ public class Client : IHardwareCallback
         SendData(o);
     }
 
+    /// <summary>
+    /// > If the server is connected and the VR headset is set, update the panel with the new heartrate data
+    /// </summary>
+    /// <param name="values">A list of ints, where the first value is the timestamp and the second value is the
+    /// heartrate.</param>
+    /// <returns>
+    /// The heartrate data is being returned.
+    /// </returns>
     public void OnNewHeartrateData(IReadOnlyList<int> values)
     {
         if(!ConnectedToServer) return;
@@ -216,11 +270,22 @@ public class Client : IHardwareCallback
         _lastHeartrateData = values[1];
     }
 
+    /// <summary>
+    /// > When the connection is successful, call the callback function with the success parameter
+    /// </summary>
     public void OnSuccessfulConnect()
     {
         Callback.OnCallback(Success);
     }
 
+    /// <summary>
+    /// It stops the client and sends a disconnect message to the server
+    /// </summary>
+    /// <param name="notify">If true, the server will send a message to all other clients that this client has
+    /// disconnected.</param>
+    /// <returns>
+    /// A string
+    /// </returns>
     public void Stop(bool notify)
     {
         if (!_isActive) return;
@@ -242,9 +307,20 @@ public class Client : IHardwareCallback
         _isActive = false;
     }
 
+    /// <summary>
+    /// > Send a JSON object to the client with the doctor's UUID, the client's UUID, and the status of the subscription
+    /// </summary>
+    /// <param name="doctor">The doctor's uuid</param>
+    /// <param name="client">The doctor's uuid</param>
+    /// <param name="status">0 - unsubscribed, 1 - subscribed</param>
     public void Subscribed(string doctor, string client, int status)
     {
         SendData(SendReplacedObject("client", doctor, 1, SendReplacedObject(
+    /// <summary>
+    /// The function takes a string as an argument, sets the current message to the string, calls the callback function, and
+    /// then waits for 8 seconds before setting the current message to an empty string
+    /// </summary>
+    /// <param name="message">The message to send to the doctor</param>
             "uuid", client, 1, SendReplacedObject(
                 "status", status, 1, "application\\doctor\\subscribed.json"
             )
@@ -254,6 +330,10 @@ public class Client : IHardwareCallback
     public void SendDoctorMessage(string message)
     {
         _vr.CurrentMessage = message;
+    /// <summary>
+    /// It reads the data from the stream, decrypts it, and then calls the appropriate command handler
+    /// </summary>
+    /// <param name="IAsyncResult">The result of the asynchronous operation.</param>
         Callback.OnCallback(Chat, message + "\n");
         Thread.Sleep(8000);
         _vr.CurrentMessage = "";
@@ -285,6 +365,10 @@ public class Client : IHardwareCallback
         }
     }
 
+    /// <summary>
+    /// It takes a JObject, encrypts it, and sends it to the server
+    /// </summary>
+    /// <param name="JObject">This is the message that you want to send.</param>
     private void SendData(JObject message)
     {
         byte[] encryptedMessage = GetEncryptedMessage(message);
@@ -298,6 +382,9 @@ public class Client : IHardwareCallback
         }
     }
 
+    /// <summary>
+    /// It adds all the commands to the dictionary
+    /// </summary>
     private void InitCommands()
     {
         _commands.Add("client/server-connected", new ServerConnected());

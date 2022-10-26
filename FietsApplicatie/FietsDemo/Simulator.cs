@@ -31,9 +31,9 @@ public static class Simulator
         private static bool _heartrateRising = true;
         private static bool _speedRising = true;
 
-        private static readonly Random Random = new Random();
+        private static readonly Random Random = new();
 
-        private static readonly string[] RandomCodes = new string[]
+        private static readonly string[] RandomCodes =
         {
             "A4-09-4E-05-19-0D-00-D7-20-00-60-20-45",
             "A4-09-4E-05-19-0E-00-D7-20-00-60-20-46",
@@ -46,28 +46,29 @@ public static class Simulator
             "A4-09-4E-05-19-15-00-D7-20-00-60-20-5D"
         };
 
-        static List<double> DataItems = new List<double>()
+        static List<double> DataItems = new()
         {
             Sync, MsgLength, MsgId, Channel, DataPageNumber, EquipmentType, _time, _distanceTraveled, SpeedLsb, SpeedMsb, _heartRate, Field, Checksum
         };
 
+        /// <summary>
+        /// This function simulates the data that would be sent from the bike to the computer
+        /// </summary>
+        /// <returns>
+        /// An array of integers.
+        /// </returns>
         public static int[] SimulateGeneralData()
         {
-            //Speed++;
             Tuple<short, short> speeds = SetSpeed() ?? throw new ArgumentNullException("SetSpeed()");
             DataItems[8] = speeds.Item1;
             DataItems[9] = speeds.Item2;
             _heartRate = SetHeartRate(_heartRate);
             DataItems[10] = _heartRate;
             DataItems[7] = CalculateDistanceTraveled();
-            IncreaseTime();
+            _time++;
             DataItems[6] = _time;
             DataItems[12] = CalculateChecksum(DataItems);
-
-            for(int i = 0; i < 13; i++)
-            {
-                string dataString = Convert.ToString((short)DataItems[i], 16 )+ "-";
-            }
+            
 
             int[] values = new int[DataItems.Count];
 
@@ -79,12 +80,25 @@ public static class Simulator
             return values;
         }
 
+        /// <summary>
+        /// It returns an array of two integers, the first being 0 and the second being a random number between 75 and 125
+        /// </summary>
+        /// <returns>
+        /// An array of two integers.
+        /// </returns>
         public static int[] SimulateHeartRate()
         {
             int rate = new Random().Next(50) + 75;
             return new[]{0, rate };
         }
 
+        /// <summary>
+        /// It takes a random string from the RandomCodes array, splits it into an array of strings, converts each string to
+        /// an integer, and returns the array of integers
+        /// </summary>
+        /// <returns>
+        /// An array of integers.
+        /// </returns>
         public static int[] SimulateBikeData()
         {
             string[] data = RandomCodes[Random.Next(8)].Split('-');
@@ -97,6 +111,12 @@ public static class Simulator
             return values;
         }
 
+        /// <summary>
+        /// It generates a random speed value between 0 and 10, and returns it as a tuple of two bytes
+        /// </summary>
+        /// <returns>
+        /// The speed of the motor.
+        /// </returns>
         private static Tuple<short, short> SetSpeed()
         {
             if (_speedRising)
@@ -129,6 +149,15 @@ public static class Simulator
             return new Tuple<short, short>(Lsb, Msb);
         }
 
+        /// <summary>
+        /// If the heart rate is rising, add 10 to the heart rate. If the heart rate is not rising, subtract 10 from the
+        /// heart rate. If the heart rate is greater than or equal to 150, set the heart rate to rising. If the heart rate
+        /// is less than or equal to 50, set the heart rate to not rising
+        /// </summary>
+        /// <param name="heartRate">The current heart rate.</param>
+        /// <returns>
+        /// The heart rate is being returned.
+        /// </returns>
         private static int SetHeartRate(int heartRate)
         {
             if (_heartrateRising)
@@ -151,6 +180,13 @@ public static class Simulator
             return heartRate;
         }
 
+        /// <summary>
+        /// It takes the distance traveled, adds the speed times 0.25, and then makes sure the distance traveled is less
+        /// than 256
+        /// </summary>
+        /// <returns>
+        /// The distance traveled is being returned.
+        /// </returns>
         private static double CalculateDistanceTraveled()
         {
             _distanceTraveled += _speed * 0.25;
@@ -161,6 +197,13 @@ public static class Simulator
             return _distanceTraveled;
         }
 
+        /// <summary>
+        /// It takes a list of doubles, adds them together, and returns the sum modulo 256
+        /// </summary>
+        /// <param name="dataItems">The list of data items to be sent.</param>
+        /// <returns>
+        /// The checksum is being returned.
+        /// </returns>
         private static int CalculateChecksum(List<double> dataItems)
         {
             int checksum = 0;
@@ -175,10 +218,5 @@ public static class Simulator
             
 
             return checksum;
-        }
-
-        private static void IncreaseTime()
-        {
-            _time++;
         }
 }

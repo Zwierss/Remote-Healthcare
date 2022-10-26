@@ -10,11 +10,12 @@ namespace ClientGUI.viewmodels;
 
 public class AccountViewModel : ObservableObject, IClientCallback
 {
-    public NavigationStore NavigationStore { get; set; }
+    public NavigationStore NavigationStore { get; }
 
     public ICommand Create { get; }
 
     private string _username;
+    /* A property that is used to bind the username to the textbox in the view. */
     public string Username
     {
         get => _username;
@@ -26,6 +27,7 @@ public class AccountViewModel : ObservableObject, IClientCallback
     }
     
     private SecureString _securePassword;
+    /* A property that is used to bind the password to the textbox in the view. */
     public SecureString SecurePassword
     {
         get => _securePassword;
@@ -33,6 +35,7 @@ public class AccountViewModel : ObservableObject, IClientCallback
     }
     
     private string _ip = "localhost";
+    /* This is a property that is used to bind the ip to the textbox in the view. */
     public string Ip
     {
         get => _ip;
@@ -44,6 +47,7 @@ public class AccountViewModel : ObservableObject, IClientCallback
     }
 
     private string _port = "6666";
+    /* This is a property that is used to bind the port to the textbox in the view. */
     public string Port
     {
         get => _port;
@@ -55,6 +59,7 @@ public class AccountViewModel : ObservableObject, IClientCallback
     }
     
     private string _errorMessage;
+    /* This is a property that is used to bind the error message to the textbox in the view. */
     public string ErrorMessage
     {
         get => _errorMessage;
@@ -65,6 +70,7 @@ public class AccountViewModel : ObservableObject, IClientCallback
         }
     }
 
+    /* This is the constructor of the AccountViewModel. It is used to create a new instance of the AccountViewModel. */
     public AccountViewModel(NavigationStore navigationStore)
     {
         NavigationStore = navigationStore;
@@ -72,6 +78,11 @@ public class AccountViewModel : ObservableObject, IClientCallback
         Create = new CreateCommand(this);
     }
 
+    /// <summary>
+    /// > The function is called when the user clicks the "Login" button
+    /// </summary>
+    /// <param name="State">This is an enum that you can use to determine what state the callback is in.</param>
+    /// <param name="value">The value of the callback.</param>
     public void OnCallback(State state, string value = "")
     {
         switch (state)

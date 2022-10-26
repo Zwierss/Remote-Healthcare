@@ -7,11 +7,15 @@ public class Panel
 
     private VRClient _parent;
     
+    /* The constructor of the class. It is called when the class is instantiated. */
     public Panel(VRClient parent)
     {
         _parent = parent;
     }
 
+    /// <summary>
+    /// > Add a panel to the scene
+    /// </summary>
     public void AddPanel()
     {
         _parent.SendTunnel("scene/node/add", new
@@ -38,6 +42,12 @@ public class Panel
         Thread.Sleep(1000);
     }
 
+    /// <summary>
+    /// It clears the panel, draws the speed, heart rate and message, sets the clear color to black and swaps the panel
+    /// </summary>
+    /// <param name="speed">The speed of the player in km/h</param>
+    /// <param name="heartRate">The heart rate of the user.</param>
+    /// <param name="message">The message to be displayed on the panel.</param>
     public void UpdatePanel(double speed, double heartRate, string message)
     {
         string tunnelId = _parent.TunnelId!;

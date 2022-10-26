@@ -7,11 +7,15 @@ public class Camera
 
     private readonly VRClient _parent;
 
+    /* A constructor. */
     public Camera(VRClient parent)
     {
         _parent = parent;
     }
 
+    /// <summary>
+    /// > We find the camera and head nodes, then we update the camera node's parent to be the bike node
+    /// </summary>
     public void SetView()
     {
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,string>("name", "Camera", 1, "scene\\node\\findnodescene.json")!, _parent.TunnelId!)!);

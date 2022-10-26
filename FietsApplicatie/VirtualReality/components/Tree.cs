@@ -9,6 +9,7 @@ public class Tree
     
     private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("ClientGUI", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
     
+    /* Creating a constructor for the Tree class. */
     public Tree(VRClient parent)
     {
         _parent = parent;

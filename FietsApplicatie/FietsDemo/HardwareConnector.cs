@@ -17,6 +17,16 @@ namespace FietsDemo
         public static bool Connected { get; set; } = false;
         public static int Time { get; set; } = 0;
 
+        /// <summary>
+        /// This function is used to connect to the hardware. It takes in a callback function, a bike serial number, and a
+        /// boolean value to determine if the hardware is being simulated. If the hardware is being simulated, a thread is
+        /// created to run the simulation. If the hardware is not being simulated, the bike and heart rate monitor are
+        /// created and connected to
+        /// </summary>
+        /// <param name="IHardwareCallback">This is an interface that the client must implement. It is used to send data
+        /// back to the client.</param>
+        /// <param name="bikeSerial">The serial number of the bike you want to connect to.</param>
+        /// <param name="sim">true if you want to run the simulation, false if you want to connect to the hardware</param>
         public static void SetupHardware(IHardwareCallback client, string bikeSerial, bool sim)
         {
             _client = client;
@@ -50,6 +60,12 @@ namespace FietsDemo
             Connected = true;
         }
 
+        /// <summary>
+        /// If we're in simulation mode, abort the simulation thread. Otherwise, disconnect the bike and heart rate monitor
+        /// </summary>
+        /// <returns>
+        /// The method is returning the current session time.
+        /// </returns>
         public static void Stop()
         {
             if (_sim)
@@ -66,6 +82,13 @@ namespace FietsDemo
             StopSessionTimer();
         }
 
+        /// <summary>
+        /// It sets the resistance of the bike
+        /// </summary>
+        /// <param name="resistance">0-255</param>
+        /// <returns>
+        /// The resistance level of the bike.
+        /// </returns>
         public static void SetResistance(byte resistance)
         {
             if (_sim)
@@ -76,6 +99,11 @@ namespace FietsDemo
             _bike.SetResistance(resistance);
         }
         
+        /// <summary>
+        /// The function runs in an infinite loop, and every 500 milliseconds it calls the `SimulateGeneralData` and
+        /// `SimulateHeartRate` functions from the `Simulator` class, and then calls the `OnNewBikeData` and
+        /// `OnNewHeartrateData` functions from the `Client` class
+        /// </summary>
         private static void RunSimulation()
         {
             while (true)
@@ -91,6 +119,11 @@ namespace FietsDemo
             }
         }
 
+        /// <summary>
+        /// It takes the data from the BLE subscription and converts it to an array of integers
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="BLESubscriptionValueChangedEventArgs"></param>
         public static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             string[] data = BitConverter.ToString(e.Data).Split('-');
@@ -121,6 +154,9 @@ namespace FietsDemo
             }
         }
 
+        /// <summary>
+        /// It creates a new thread that runs the SessionTimer function
+        /// </summary>
         public static void StartSessionTimer()
         {
             _timer = new Thread(SessionTimer);
@@ -128,11 +164,17 @@ namespace FietsDemo
             Time = 0;
         }
 
+        /// <summary>
+        /// It stops the timer.
+        /// </summary>
         public static void StopSessionTimer()
         {
             _timer?.Abort();
         }
 
+        /// <summary>
+        /// It's a while loop that runs forever, and every second it increments a variable called Time
+        /// </summary>
         private static void SessionTimer()
         {
             while (true)
@@ -140,43 +182,6 @@ namespace FietsDemo
                 Time++;
                 Thread.Sleep(1000);
             }
-        }
-
-        private static void PrintGeneralData(IReadOnlyList<int> values)
-        {
-            Console.WriteLine("Received General Data");
-            Console.WriteLine("-----------");
-            Console.WriteLine("Equipment Type: " + values[5]);
-            Console.WriteLine("Elapsed Time: " + (values[6])+ " seconds");
-            Console.WriteLine("Distance Traveled: " + values[7] + " meters");
-            double speed = (values[8] + values[9] * 255) * 0.001;
-            Console.WriteLine("Speed: " + speed + " m/s");
-
-            Console.WriteLine("Heart Rate: " + values[10] + " bpm");
-            Console.WriteLine("-----------");
-        }
-
-        private static void PrintBikeData(IReadOnlyList<int> values)
-        {
-            Console.WriteLine("Received Bike Data");
-            Console.WriteLine("-----------");
-            Console.WriteLine("Event Count: " + values[5]);
-            Console.WriteLine("Instantaneous Cadence: " + values[6] + " rpm");
-            Console.WriteLine("Accumulated Power LSB: " + values[7] + " W");
-            Console.WriteLine("Accumulated Power MSB: " + values[8] + " W");
-            Console.WriteLine("Instantaneous Power LSB: " + values[9] + " W");
-            string splitted = Convert.ToString(values[10], 2);
-            Console.WriteLine("Instantaneous Power MSB: " + Convert.ToInt32(splitted.Substring(0,4), 2) + " W");
-            Console.WriteLine("Trainer Status: " + Convert.ToInt32(splitted.Substring(3,4), 2));
-            Console.WriteLine("-----------");
-        }
-
-        private static void PrintHeartData(IReadOnlyList<int> values)
-        {
-            Console.WriteLine("Received Heart Rate Data");
-            Console.WriteLine("-----------");
-            Console.WriteLine(values[1] + " bpm");
-            Console.WriteLine("-----------");
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System.Net.Sockets;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 
 using Newtonsoft.Json;
@@ -39,8 +37,7 @@ public class VRClient
     private bool _stopRunning;
     private double _currentSpeed;
     private bool _isActive;
-
-    private readonly Skybox _skybox;
+    
     private readonly HeightMap _map;
     private readonly Route _route;
     private readonly Bike _bike;
@@ -49,12 +46,12 @@ public class VRClient
     private readonly Panel _panel;
     private readonly House _house;
     
+    /* This is the constructor of the VRClient class. It initializes all the variables and creates the commands dictionary. */
     public VRClient()
     {
         _commands = new Dictionary<string, ICommand>();
         InitCommands();
         _tunnelCreated = false;
-        _skybox = new Skybox(this);
         _map = new HeightMap(this);
         _route = new Route(this);
         _bike = new Bike(this);
@@ -69,6 +66,10 @@ public class VRClient
         _isActive = false;
     }
 
+    /// <summary>
+    /// It creates a new TCP client, connects to the server, gets the stream, sends the sessionlist.json packet, and then
+    /// begins reading the stream
+    /// </summary>
     public async Task StartConnection()
     {
         _stopRunning = false;
@@ -88,6 +89,10 @@ public class VRClient
         }
     }
 
+    /// <summary>
+    /// It takes a JObject, converts it to a string, converts the string to a byte array, and sends it to the server
+    /// </summary>
+    /// <param name="JObject">The data you want to send.</param>
     public void SendData(JObject o)
     {
         string message = o.ToString();
@@ -104,6 +109,11 @@ public class VRClient
         }
     }
     
+    /// <summary>
+    /// It sends a message to the server, which then sends it to the other client
+    /// </summary>
+    /// <param name="tunnelId">The id of the tunnel you want to send data to.</param>
+    /// <param name="dynamic">This is the data you want to send to the client.</param>
     public void SendTunnel(string tunnelId, dynamic jsonData)
     {
         var command = new { id = "tunnel/send", data = (dynamic)new { dest = TunnelId, data = new { id = tunnelId, data = jsonData } } };
@@ -119,17 +129,32 @@ public class VRClient
         }
     }
 
+    /// <summary>
+    /// > This function sets the tunnel id and sets the tunnel created flag to true
+    /// </summary>
+    /// <param name="id">The id of the tunnel you want to connect to.</param>
     public void SetTunnel(string id)
     {
         TunnelId = id;
         _tunnelCreated = true;
     }
 
+    /// <summary>
+    /// It creates a tunnel between the client and the server.
+    /// </summary>
+    /// <param name="id">The id of the session you want to create a tunnel for.</param>
     public void CreateTunnel(string id)
     {
         SendData(PacketSender.SendReplacedObject<string,string>("session", id, 1, "createtunnel.json")!);
     }
 
+    /// <summary>
+    /// It reads the data from the server and then checks if the data is a command. If it is, it will execute the command
+    /// </summary>
+    /// <param name="IAsyncResult">The result of the asynchronous operation.</param>
+    /// <returns>
+    /// The data that is being returned is the data that is being sent from the server.
+    /// </returns>
     private void OnRead(IAsyncResult ar)
     {
         try
@@ -190,6 +215,13 @@ public class VRClient
         IsSet = true;
     }
 
+    /// <summary>
+    /// It sends a JSON object to the server, which is then sent to the bike
+    /// </summary>
+    /// <param name="speed">The speed of the bike in km/h</param>
+    /// <returns>
+    /// A JObject
+    /// </returns>
     public void UpdateBikeSpeed(double speed)
     {
         if(_stopRunning) return;
@@ -203,11 +235,28 @@ public class VRClient
         _currentSpeed = speed;
     }
 
+    /// <summary>
+    /// This function updates the panel with the current speed, heart rate, and message
+    /// </summary>
+    /// <param name="heartRate">The current heart rate of the player.</param>
     public void UpdatePanel(double heartRate)
     {
         _panel.UpdatePanel(_currentSpeed, heartRate, CurrentMessage);
     }
 
+    /// <summary>
+    /// It takes two byte arrays and a count, and returns a new byte array that is the concatenation of the first two
+    /// arrays, with the second array truncated to the specified count
+    /// </summary>
+    /// <param name="b1">The first byte array to concatenate.</param>
+    /// <param name="b2">The array to copy from</param>
+    /// <param name="count">The number of bytes to copy from the second array.</param>
+    /// <returns>
+    /// <summary>
+    /// It adds two commands to the dictionary
+    /// </summary>
+    /// A byte array
+    /// </returns>
     public static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         byte[] r = new byte[b1.Length + count];
@@ -223,6 +272,12 @@ public class VRClient
         _commands.Add("tunnel/send", new TunnelCommand());
     }
 
+    /// <summary>
+    /// The function stops the bike by setting the speed to 0, closing the connection to the server, and closing the stream
+    /// </summary>
+    /// <returns>
+    /// The method is returning the current speed of the bike.
+    /// </returns>
     public void Stop()
     {
         if(!_isActive) return;

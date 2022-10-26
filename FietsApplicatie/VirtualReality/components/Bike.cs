@@ -8,11 +8,15 @@ public class Bike
     private readonly VRClient _parent;
     
     private static readonly string BikePath = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("ClientGUI", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
+    /* A constructor. It is called when a new instance of the class is created. */
     public Bike(VRClient parent)
     {
         _parent = parent;
     }
 
+    /// <summary>
+    /// It places a bike on the route and sets the route to follow the bike
+    /// </summary>
     public void PlaceBike()
     {
 

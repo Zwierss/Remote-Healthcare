@@ -11,11 +11,15 @@ public class HeightMap
     private readonly VRClient _parent;
     private static readonly string Path = Environment.CurrentDirectory.Substring(0,Environment.CurrentDirectory.LastIndexOf("ClientGUI", StringComparison.Ordinal)) + "VirtualReality\\resources\\";
 
+    /* A constructor. */
     public HeightMap(VRClient parent)
     {
         _parent = parent;
     }
 
+    /// <summary>
+    /// It resets the scene, removes the old terrain, adds a new terrain, and then adds a layer to the terrain
+    /// </summary>
     public void RenderHeightMap()
     {
         _parent.SendData(PacketSender.GetJsonThroughTunnel<string>("scene\\resetscene.json", _parent.TunnelId!)!);

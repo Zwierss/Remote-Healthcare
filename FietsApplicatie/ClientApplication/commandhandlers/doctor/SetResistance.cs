@@ -5,6 +5,11 @@ namespace ClientApplication.commandhandlers.doctor;
 
 public class SetResistance : ICommand
 {
+    /// <summary>
+    /// It sets the resistance of the hardware connector to the resistance that was sent by the client
+    /// </summary>
+    /// <param name="JObject">The packet that was received.</param>
+    /// <param name="Client">The client that sent the command</param>
     public void OnCommandReceived(JObject packet, Client parent)
     {
         Console.WriteLine("works");

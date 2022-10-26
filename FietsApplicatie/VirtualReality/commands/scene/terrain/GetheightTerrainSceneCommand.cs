@@ -5,6 +5,11 @@ namespace VirtualReality.commands.scene.terrain;
 
 public class GetheightTerrainSceneCommand : ITunnelCallback
 {
+	/// <summary>
+	/// It takes the heights array from the JSON object and assigns it to the VRClient's Heights property
+	/// </summary>
+	/// <param name="JObject">The JSON object that was received from the server.</param>
+	/// <param name="VRClient">The VRClient that sent the command.</param>
 	public void OnCommandReceived(JObject o, VRClient parent)
 	{
 		try

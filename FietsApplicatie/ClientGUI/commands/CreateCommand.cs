@@ -9,11 +9,19 @@ public class CreateCommand : CommandBase
 
     private AccountViewModel _view;
 
+    /* A constructor. */
     public CreateCommand(AccountViewModel view)
     {
         _view = view;
     }
 
+    /// <summary>
+    /// It takes the data from the view, and sends it to the server
+    /// </summary>
+    /// <param name="parameter">The parameter passed to the command. In this case, it's the view.</param>
+    /// <returns>
+    /// The password is being returned as a string.
+    /// </returns>
     public override void Execute(object parameter)
     {
         int port;

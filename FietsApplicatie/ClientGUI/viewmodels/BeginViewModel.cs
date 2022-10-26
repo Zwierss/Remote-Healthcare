@@ -16,6 +16,7 @@ public class BeginViewModel : ObservableObject, IClientCallback
     public string Username { get; set; }
 
     private SecureString _secureString;
+    /* A property that is used to get and set the value of the SecureString. */
     public SecureString SecurePassword
     {
         get => _secureString;
@@ -23,6 +24,7 @@ public class BeginViewModel : ObservableObject, IClientCallback
     }
 
     private string _ip = "localhost";
+    /* A property that is used to get and set the value of the SecureString. */
     public string Ip
     {
         get => _ip;
@@ -34,6 +36,7 @@ public class BeginViewModel : ObservableObject, IClientCallback
     }
 
     private string _port = "6666";
+    /* A property that is used to get and set the value of the SecureString. */
     public string Port
     {
         get => _port;
@@ -45,6 +48,7 @@ public class BeginViewModel : ObservableObject, IClientCallback
     }
 
     private string _errorMessage;
+    /* This is a property that is used to get and set the value of the ErrorMessage. */
     public string ErrorMessage
     {
         get => _errorMessage;
@@ -56,6 +60,7 @@ public class BeginViewModel : ObservableObject, IClientCallback
     }
 
     private string _fietsNr = "01140";
+    /* This is a property that is used to get and set the value of the FietsNr. */
     public string FietsNr
     {
         get => _fietsNr;
@@ -67,6 +72,7 @@ public class BeginViewModel : ObservableObject, IClientCallback
     }
 
     private bool _isChecked;
+    /* This is a property that is used to get and set the value of the IsChecked. */
     public bool IsChecked
     {
         get => _isChecked;
@@ -80,6 +86,8 @@ public class BeginViewModel : ObservableObject, IClientCallback
     public ICommand LogIn { get; }
     public ICommand MakeNew { get; }
 
+    /* This is the constructor of the BeginViewModel. It is used to initialize the NavigationStore, the Client and the
+    Commands. */
     public BeginViewModel(NavigationStore navigationStore)
     {
         NavigationStore = navigationStore;
@@ -88,6 +96,12 @@ public class BeginViewModel : ObservableObject, IClientCallback
         MakeNew = new MakeAccountCommand(this);
     }
 
+    /// <summary>
+    /// Called by active client
+    /// `Callback` function
+    /// </summary>
+    /// <param name="State">This is the state of the callback.</param>
+    /// <param name="value">The value of the callback.</param>
     public void OnCallback(State state, string value = "")
     {
         switch (state)

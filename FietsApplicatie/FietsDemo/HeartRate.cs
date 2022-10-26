@@ -10,11 +10,19 @@ public class HeartRate
 
     private readonly BLE _ble;
 
+    /* Creating a new instance of the BLE class. */
     public HeartRate()
     {
         _ble = new BLE();
     }
 
+    /// <summary>
+    /// It opens a connection to the device, sets the service to the HeartRate service, subscribes to the
+    /// HeartRateMeasurement characteristic, and returns true if the connection was successful
+    /// </summary>
+    /// <returns>
+    /// A boolean value.
+    /// </returns>
     public async Task<bool> MakeConnection()
     {
         Thread.Sleep(1000);
@@ -29,6 +37,9 @@ public class HeartRate
         return true;
     }
 
+    /// <summary>
+    /// It disconnects the device from the BLE.
+    /// </summary>
     public void Disconnect()
     {
         _ble.CloseDevice();

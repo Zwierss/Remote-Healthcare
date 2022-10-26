@@ -11,11 +11,20 @@ public class LogInCommand : CommandBase
     
     private readonly BeginViewModel _view;
 
+    /* A constructor. */
     public LogInCommand(BeginViewModel view)
     {
         _view = view;
     }
 
+    /// <summary>
+    /// It checks if the user has entered a valid username, password, ip address, port and bike number. If so, it will
+    /// navigate to the loading screen.
+    /// </summary>
+    /// <param name="parameter">The parameter passed to the command.</param>
+    /// <returns>
+    /// The current viewmodel is being returned.
+    /// </returns>
     public override void Execute(object parameter)
     {
         int port;

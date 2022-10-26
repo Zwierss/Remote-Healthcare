@@ -2,6 +2,8 @@
 
 namespace ClientApplication;
 
+/* This is the main class for its project, it only exists because the project wont run otherwise */
+
 public static class Program
 {
     public static void Main(string[] args)
