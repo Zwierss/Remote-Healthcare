@@ -1,8 +1,0 @@
-﻿{
-  "id" : "tunnel/create",
-  "data" :
-  {
-    "session" : "_tunnelID",
-    "key" : ""
-  }
-}

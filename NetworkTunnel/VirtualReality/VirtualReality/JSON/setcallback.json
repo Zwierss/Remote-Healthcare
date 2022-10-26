@@ -1,8 +1,0 @@
-﻿{
-  "id": "setcallback",
-  "data": {
-    "type": "button",
-    "button": "trigger",
-    "hand": "left"
-  }
-}

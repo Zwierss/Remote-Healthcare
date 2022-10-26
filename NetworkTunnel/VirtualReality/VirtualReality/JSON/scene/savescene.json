@@ -1,7 +1,0 @@
-{
-  "id": "scene/save",
-  "data": {
-    "filename": "cookie.json",
-    "overwrite": false
-  }
-}
