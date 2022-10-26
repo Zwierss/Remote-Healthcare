@@ -4,7 +4,7 @@
     "id":  "panelid" ,
     "text": "Hello",
     "position": [ 50, 40 ],
-    "size":  32.0,
+    "size":  50.0,
     "color": [255,255,255,255]
   }
 }

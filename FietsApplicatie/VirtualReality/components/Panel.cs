@@ -55,7 +55,7 @@ public class Panel
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,JObject>(
             "id", _parent.PanelId!, 1, PacketSender.SendReplacedObject<string,JObject>(
                 "text" ,heartRate + " bpm", 1, PacketSender.SendReplacedObject<int[],string>(
-                    "position", new[]{50,70}, 1, "scene\\panel\\drawtextpanelscene.json"
+                    "position", new[]{50,80}, 1, "scene\\panel\\drawtextpanelscene.json"
                 )!
             )!
         )!,tunnelId)!);
@@ -63,7 +63,7 @@ public class Panel
         _parent.SendData(PacketSender.GetJsonThroughTunnel<JObject>(PacketSender.SendReplacedObject<string,JObject>(
             "id", _parent.PanelId!, 1, PacketSender.SendReplacedObject<string,JObject>(
                 "text" ,message, 1, PacketSender.SendReplacedObject<int[],string>(
-                    "position", new[]{50,100}, 1, "scene\\panel\\drawtextpanelscene.json"
+                    "position", new[]{50,140}, 1, "scene\\panel\\drawtextpanelscene.json"
                 )!
             )!
         )!,tunnelId)!);
