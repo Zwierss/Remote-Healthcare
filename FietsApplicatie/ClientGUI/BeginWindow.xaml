@@ -12,8 +12,8 @@
         <Label Content="Wachtwoord" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         <TextBox x:Name="uuid" HorizontalAlignment="Left" Margin="110,51,0,0" TextWrapping="Wrap" Text="{Binding Username}" VerticalAlignment="Top" Width="198"/>
         <PasswordBox x:Name="pass" HorizontalAlignment="Left" Margin="110,82,0,0" PasswordChanged="PasswordBox_OnPasswordChanged" VerticalAlignment="Top" Width="198"/>
-        <Button x:Name="login_btn" Content="Log in" HorizontalAlignment="Left" Margin="10,226,0,0" VerticalAlignment="Top" Width="144" Command="{Binding LogIn}"/>
-        <Button Content="Maak nieuw account" Command="{Binding MakeNew}" HorizontalAlignment="Left" Margin="164,225,0,0" VerticalAlignment="Top" Width="144"/>
+        <Button x:Name="login_btn" Content="Log in" HorizontalAlignment="Left" Margin="10,268,0,0" VerticalAlignment="Top" Width="144" Command="{Binding LogIn}"/>
+        <Button Content="Maak nieuw account" Command="{Binding MakeNew}" HorizontalAlignment="Left" Margin="164,268,0,0" VerticalAlignment="Top" Width="144"/>
         <TextBox x:Name="ip" Text="{Binding Ip}" HorizontalAlignment="Left" Margin="110,113,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198"/>
         <Label Content="IP-adres" HorizontalAlignment="Left" Margin="10,109,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         <Label Content="Poort"  HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
@@ -22,5 +22,7 @@
         <Label Content="Fietsnummer"  HorizontalAlignment="Left" Margin="10,170,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         <TextBox x:Name="fietsnr" Text="{Binding FietsNr}" HorizontalAlignment="Left" Margin="110,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198"/>
         <CheckBox Content="Start Simulatie" IsChecked="{Binding IsChecked}" HorizontalAlignment="Center" Margin="0,175,0,0" VerticalAlignment="Top" FontSize="11"/>
+        <Label Content="VR Client"  HorizontalAlignment="Left" Margin="10,201,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
+        <TextBox x:Name="uuid_Copy" HorizontalAlignment="Left" Margin="110,205,0,0" TextWrapping="Wrap" Text="{Binding Vr}" VerticalAlignment="Top" Width="198"/>
     </Grid>
 </UserControl>

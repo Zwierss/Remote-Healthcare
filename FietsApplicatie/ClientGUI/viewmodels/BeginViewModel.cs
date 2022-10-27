@@ -83,6 +83,18 @@ public class BeginViewModel : ObservableObject, IClientCallback
         }
     }
 
+    private string _vr;
+    /* This is a property that is used to get and set the value of the VR Client. */
+    public string Vr 
+    {
+        get => _vr;
+        set 
+        {
+            _vr = value;
+            OnPropertyChanged();
+        }
+    }
+        
     public ICommand LogIn { get; }
     public ICommand MakeNew { get; }
 

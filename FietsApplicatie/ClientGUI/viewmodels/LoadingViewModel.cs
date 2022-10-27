@@ -59,12 +59,13 @@ public class LoadingViewModel : ObservableObject, IClientCallback
     private int _port;
     private string _bike;
     private bool _sim;
+    private string _vr;
     private Thread _threadCounter;
 
     public ICommand GoBack { get; }
 
     /* This is the constructor of the LoadingViewModel. It is used to set the properties of the LoadingViewModel. */
-    public LoadingViewModel(NavigationStore navigationStore, string user, string pass, string ip, int port, string bike, bool sim)
+    public LoadingViewModel(NavigationStore navigationStore, string user, string pass, string ip, int port, string bike, bool sim, string vr)
     {
         _user = user;
         _pass = pass;
@@ -72,6 +73,7 @@ public class LoadingViewModel : ObservableObject, IClientCallback
         _port = port;
         _bike = bike;
         _sim = sim;
+        _vr = vr;
 
         NavigationStore = navigationStore;
         NavigationStore.Client.Callback = this;
@@ -105,7 +107,7 @@ public class LoadingViewModel : ObservableObject, IClientCallback
     /// </summary>
     public void SetupConnection() 
     {
-        NavigationStore.Client.SetupConnection(_user, _pass, _ip, _port, _bike, _sim);
+        NavigationStore.Client.SetupConnection(_user, _pass, _ip, _port, _bike, _sim, _vr);
     }
 
     /// <summary>

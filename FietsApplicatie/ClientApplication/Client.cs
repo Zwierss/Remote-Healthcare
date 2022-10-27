@@ -55,6 +55,7 @@ public class Client : IHardwareCallback
     private bool _sim;
     private int _distanceCorrection;
     private int _distanceLoopCounter;
+    private string _vrs;
 
     /* This is the constructor of the Client class. It initializes the VRClient, the commands dictionary, the
     sessionIsActive, connectedToServer, isActive, distanceCorrection, distanceLoopCounter, prevDistance,
@@ -87,10 +88,11 @@ public class Client : IHardwareCallback
     /// <returns>
     /// The return type is void, so nothing is being returned.
     /// </returns>
-    public async void SetupConnection(string username, string password, string hostname, int port, string bikeNr, bool sim)
+    public async void SetupConnection(string username, string password, string hostname, int port, string bikeNr, bool sim, string vr)
     {
         _bikeNr = bikeNr;
         _sim = sim;
+        _vrs = vr;
         Username = username;
         
         try
@@ -155,7 +157,7 @@ public class Client : IHardwareCallback
     {
         _isActive = true;
         
-        await _vr.StartConnection();
+        await _vr.StartConnection(_vrs);
         
         while (!_vr.IsSet)
         {

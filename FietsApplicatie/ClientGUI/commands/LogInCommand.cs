@@ -66,7 +66,12 @@ public class LogInCommand : CommandBase
             _view.ErrorMessage = "Voer een IP-adres in";
         }
 
-        _view.NavigationStore.CurrentViewModel = new LoadingViewModel(_view.NavigationStore, _view.Username, password, _view.Ip, port, _view.FietsNr,_view.IsChecked);
+        if (string.IsNullOrEmpty(_view.Vr)) 
+        {
+            _view.Vr = Environment.UserName;
+        }
+
+        _view.NavigationStore.CurrentViewModel = new LoadingViewModel(_view.NavigationStore, _view.Username, password, _view.Ip, port, _view.FietsNr,_view.IsChecked, _view.Vr);
     }
     
     

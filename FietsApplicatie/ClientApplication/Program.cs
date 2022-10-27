@@ -10,7 +10,7 @@ public static class Program
     {
         
         Client client = new();
-        client.SetupConnection("Test","Test", "localhost", 6666, "01140", true);
+        client.SetupConnection("Test","Test", "localhost", 6666, "01140", true, "");
 
         while (true)
         {

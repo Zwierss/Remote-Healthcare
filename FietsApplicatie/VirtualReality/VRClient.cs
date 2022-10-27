@@ -29,6 +29,7 @@ public class VRClient
     public string? PanelId { get; set; }
     public bool IsSet { get; set; }
     public string CurrentMessage { get; set; }
+    public string Session { get; set; }
 
     private const string Hostname = "145.48.6.10";
     private const int Port = 6666;
@@ -70,10 +71,11 @@ public class VRClient
     /// It creates a new TCP client, connects to the server, gets the stream, sends the sessionlist.json packet, and then
     /// begins reading the stream
     /// </summary>
-    public async Task StartConnection()
+    public async Task StartConnection(string session)
     {
         _stopRunning = false;
         _isActive = true;
+        Session = session;
         
         try
         {
