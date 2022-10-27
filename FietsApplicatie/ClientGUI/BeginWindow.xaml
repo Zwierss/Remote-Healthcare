@@ -18,7 +18,7 @@
         <Label Content="IP-adres" HorizontalAlignment="Left" Margin="10,109,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         <Label Content="Poort"  HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         <TextBox x:Name="port" Text="{Binding Port}" HorizontalAlignment="Left" Margin="110,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,276,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="11" FontStyle="Italic" Foreground="#FFC12C2C" Text="{Binding ErrorMessage}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,296,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="11" FontStyle="Italic" Foreground="#FFC12C2C" Text="{Binding ErrorMessage}"/>
         <Label Content="Fietsnummer"  HorizontalAlignment="Left" Margin="10,170,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         <TextBox x:Name="fietsnr" Text="{Binding FietsNr}" HorizontalAlignment="Left" Margin="110,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198"/>
         <CheckBox Content="Start Simulatie" IsChecked="{Binding IsChecked}" HorizontalAlignment="Center" Margin="0,175,0,0" VerticalAlignment="Top" FontSize="11"/>
