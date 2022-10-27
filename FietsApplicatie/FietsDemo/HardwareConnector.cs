@@ -43,18 +43,8 @@ namespace FietsDemo
                 _heart = new HeartRate();
             
                 Console.WriteLine("Trying connection with devices");
-                bool bikeConnection = _bike.MakeConnection().Result;
-                while (!bikeConnection)
-                {
-                    Thread.Sleep(1000);
-                    bikeConnection = _bike.MakeConnection().Result;
-                }
+                bool bikeConnection = _bike.MakeConnection().Result;     
                 bool hearRateConnection = _heart.MakeConnection().Result;
-                while (!hearRateConnection)
-                {
-                    Thread.Sleep(1000);
-                    hearRateConnection = _bike.MakeConnection().Result;
-                }
             }
             _client.OnSuccessfulConnect();
             Connected = true;

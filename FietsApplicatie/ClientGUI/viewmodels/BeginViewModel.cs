@@ -13,7 +13,16 @@ public class BeginViewModel : ObservableObject, IClientCallback
 {
     public NavigationStore NavigationStore { get; set; }
 
-    public string Username { get; set; }
+    private string _username = "";
+    public string Username 
+    {
+        get => _username; 
+        set 
+        {
+            _username = value;
+            OnPropertyChanged();
+        }
+    }
 
     private SecureString _secureString;
     /* A property that is used to get and set the value of the SecureString. */
@@ -83,6 +92,18 @@ public class BeginViewModel : ObservableObject, IClientCallback
         }
     }
 
+    private string _vr;
+    /* This is a property that is used to get and set the value of the VR Client. */
+    public string Vr 
+    {
+        get => _vr;
+        set 
+        {
+            _vr = value;
+            OnPropertyChanged();
+        }
+    }
+        
     public ICommand LogIn { get; }
     public ICommand MakeNew { get; }
 

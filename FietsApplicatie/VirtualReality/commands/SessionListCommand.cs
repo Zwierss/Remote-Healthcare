@@ -28,9 +28,7 @@ public class SessionListCommand : ICommand
         {
             var o = (JObject?)jToken;
 
-            if (!string.Equals(o!["clientinfo"]!["host"]!.ToObject<string>(), Environment.MachineName,
-                    StringComparison.CurrentCultureIgnoreCase) ||
-                !string.Equals(o["clientinfo"]!["user"]!.ToObject<string>()!, Environment.UserName,
+            if (!string.Equals(o["clientinfo"]!["user"]!.ToObject<string>()!, vrClient.Session,
                     StringComparison.CurrentCultureIgnoreCase)) continue;
             if (currentObject == null)
             {

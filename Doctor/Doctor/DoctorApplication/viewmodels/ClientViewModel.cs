@@ -184,7 +184,7 @@ public class ClientViewModel : ObservableObject, IWindow
         {
             case Data:
                 ChartValues<double> speeds = Speeds;
-                speeds.Add(double.Parse(args![0]));
+                speeds.Add(double.Parse(args![0]) / 10 );
                 if (speeds.Count > 30) 
                 {
                     speeds.RemoveAt(0);

@@ -31,12 +31,12 @@ public class LogInCommand : CommandBase
         {
             password = UtilStore.SecureStringToString(_view.SecurePassword);
         }
-        catch(Exception)
+        catch (Exception)
         {
             _view.ErrorMessage = "Voer alstublieft een (geldig) wachtwoord in";
             return;
         }
-        
+
         try
         {
             port = int.Parse(_view.Port);
@@ -44,6 +44,18 @@ public class LogInCommand : CommandBase
         catch (Exception)
         {
             _view.ErrorMessage = "Port moet een getal zijn";
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_view.Username)) 
+        {
+            _view.ErrorMessage = "Vul een gebruikersnaam in";
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_view.Ip)) 
+        {
+            _view.ErrorMessage = "vul een IP adres in";
             return;
         }
 
