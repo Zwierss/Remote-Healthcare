@@ -27,7 +27,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="158,65,0,0" TextWrapping="Wrap" Text="{Binding Speed}" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="158,95,0,0" TextWrapping="Wrap" Text="{Binding Heartbeat}" VerticalAlignment="Top"/>
         <Label Content="Snelheid gem. (km/h):" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top"/>
-        <Slider TickPlacement="BottomRight" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" TickFrequency="20" HorizontalAlignment="Left" Margin="158,240,0,0" VerticalAlignment="Top" Width="242" Maximum="200" Thumb.DragCompleted="Slider_ValueChanged"/>
+        <Slider TickPlacement="BottomRight" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" TickFrequency="10" HorizontalAlignment="Left" Margin="158,240,0,0" VerticalAlignment="Top" Width="242" Maximum="100" Thumb.DragCompleted="Slider_ValueChanged"/>
         <TextBlock HorizontalAlignment="Left" Margin="15,240,0,0" TextWrapping="Wrap" Text="Pas weerstand aan" VerticalAlignment="Top"/>
         <Label Content="Tijd:" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,367,0,0" TextWrapping="Wrap" Text="{Binding ErrorMessage}" VerticalAlignment="Top" FontSize="11" FontStyle="Italic" Foreground="#FFCC2E2E"/>
