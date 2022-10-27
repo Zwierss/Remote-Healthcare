@@ -13,7 +13,16 @@ public class BeginViewModel : ObservableObject, IClientCallback
 {
     public NavigationStore NavigationStore { get; set; }
 
-    public string Username { get; set; }
+    private string _username = "";
+    public string Username 
+    {
+        get => _username; 
+        set 
+        {
+            _username = value;
+            OnPropertyChanged();
+        }
+    }
 
     private SecureString _secureString;
     /* A property that is used to get and set the value of the SecureString. */
