@@ -37,6 +37,16 @@ public class CreateCommand : CommandBase
             return;
         }
 
+        if(string.IsNullOrEmpty(_view.Username))
+        {
+            _view.ErrorMessage = "Voer alstublieft een gebruikersnaam in";
+        }
+
+        if(string.IsNullOrEmpty(_view.Ip))
+        {
+            _view.ErrorMessage = "Voer alstublieft een IP-adres in";
+        }
+
         try
         {
             port = int.Parse(_view.Port);
